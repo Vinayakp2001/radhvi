@@ -51,7 +51,10 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
 }
 
 interface AuthContextType {
-  state: AuthState;
+  user: User | null;
+  isAuthenticated: boolean;
+  loading: boolean;
+  error: string | null;
   login: (username: string, password: string) => Promise<void>;
   register: (userData: {
     username: string;
@@ -134,7 +137,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ state, login, register, logout }}>
+    <AuthContext.Provider value={{ 
+      user: state.user,
+      isAuthenticated: state.isAuthenticated,
+      loading: state.loading,
+      error: state.error,
+      login, 
+      register, 
+      logout 
+    }}>
       {children}
     </AuthContext.Provider>
   );
