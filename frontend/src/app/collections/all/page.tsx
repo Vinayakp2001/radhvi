@@ -21,11 +21,12 @@ interface SearchParams {
 }
 
 interface CollectionsPageProps {
-  searchParams: SearchParams;
+  searchParams: Promise<SearchParams>;
 }
 
 export default async function CollectionsPage({ searchParams }: CollectionsPageProps) {
-  const { search, category, sort = 'name' } = searchParams;
+  const resolvedSearchParams = await searchParams;
+  const { search, category, sort = 'name' } = resolvedSearchParams;
   
   const products = await apiServices.fetchProducts({
     search,
