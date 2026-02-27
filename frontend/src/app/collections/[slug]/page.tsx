@@ -10,18 +10,19 @@ import { apiServices, productToCardProps } from '@/lib/api-services';
 import type { Metadata } from 'next';
 
 interface CollectionPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     search?: string;
     sort?: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: CollectionPageProps): Promise<Metadata> {
+  const { slug } = await params;
   const category = await apiServices.fetchCategories().then(cats => 
-    cats.find(cat => cat.slug === params.slug)
+    cats.find(cat => cat.slug === slug)
   );
 
   if (!category) {
@@ -39,8 +40,9 @@ export async function generateMetadata({ params }: CollectionPageProps): Promise
 }
 
 export default async function CollectionPage({ params, searchParams }: CollectionPageProps) {
-  const { slug } = params;
-  const { search, sort = 'name' } = searchParams;
+  const { slug } = await params;
+  const resolvedSearchParams = await searchParams;
+  const { search, sort = 'name' } = resolvedSearchParams;
   
   const categories = await apiServices.fetchCategories();
   const category = categories.find(cat => cat.slug === slug);

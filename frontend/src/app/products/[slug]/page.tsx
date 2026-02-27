@@ -15,13 +15,14 @@ import { apiServices, productToCardProps } from '@/lib/api-services';
 import type { Metadata } from 'next';
 
 interface ProductPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
-  const product = await apiServices.fetchProduct(params.slug);
+  const { slug } = await params;
+  const product = await apiServices.fetchProduct(slug);
 
   if (!product) {
     return {
@@ -43,7 +44,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  const { slug } = params;
+  const { slug } = await params;
   
   const product = await apiServices.fetchProduct(slug);
   
