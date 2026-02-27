@@ -14,16 +14,16 @@ export default function WishlistPage() {
   const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { state: authState } = useAuth();
+  const { isAuthenticated, loading: authLoading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
     // Wait for auth to initialize
-    if (authState.loading) {
+    if (authLoading) {
       return;
     }
 
-    if (!authState.isAuthenticated) {
+    if (!isAuthenticated) {
       router.push('/login?redirect=/wishlist');
       return;
     }
@@ -49,7 +49,7 @@ export default function WishlistPage() {
     };
     
     loadWishlist();
-  }, [authState.isAuthenticated, authState.loading, router]);
+  }, [isAuthenticated, authLoading, router]);
 
   const handleRemove = async (productId: number) => {
     try {
@@ -60,7 +60,7 @@ export default function WishlistPage() {
     }
   };
 
-  if (authState.loading || loading) {
+  if (authLoading || loading) {
     return (
       <div className="min-h-screen flex flex-col">
         <AnnouncementBar message="🎉 Free Shipping on orders above ₹999" />
