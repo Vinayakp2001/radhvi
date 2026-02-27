@@ -9,11 +9,9 @@ import Script from 'next/script';
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { state: authState } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const { state: cartState, clearCart } = useCart();
   
-  const user = authState.user;
-  const isAuthenticated = authState.isAuthenticated;
   const cart = cartState.cart;
   
   const [currentStep, setCurrentStep] = useState(1);
