@@ -10,7 +10,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { api } from '@/lib/api';
 
 export default function AccountPage() {
-  const { state, logout } = useAuth();
+  const { user, isAuthenticated, loading, logout } = useAuth();
   const router = useRouter();
   const [recentOrders, setRecentOrders] = useState<any[]>([]);
   const [orderStats, setOrderStats] = useState({ total: 0, pending: 0, delivered: 0 });
@@ -34,10 +34,10 @@ export default function AccountPage() {
   };
   
   useEffect(() => {
-    if (state.isAuthenticated) {
+    if (isAuthenticated) {
       loadOrders();
     }
-  }, [state.isAuthenticated]);
+  }, [isAuthenticated]);
   
   const loadOrders = async () => {
     try {
@@ -70,7 +70,7 @@ export default function AccountPage() {
     return badges[status] || 'bg-gray-100 text-gray-800';
   };
 
-  if (state.loading) {
+  if (loading) {
     return (
       <div className="min-h-screen flex flex-col">
         <AnnouncementBar message="🎉 Free Shipping on orders above ₹999" />
@@ -86,7 +86,7 @@ export default function AccountPage() {
     );
   }
 
-  if (!state.isAuthenticated) {
+  if (!isAuthenticated) {
     return (
       <div className="min-h-screen flex flex-col">
         <AnnouncementBar message="🎉 Free Shipping on orders above ₹999" />
@@ -154,16 +154,16 @@ export default function AccountPage() {
                   <div>
                     <label className="text-sm text-gray-600">Name</label>
                     <p className="font-medium">
-                      {state.user?.first_name} {state.user?.last_name}
+                      {user?.first_name} {user?.last_name}
                     </p>
                   </div>
                   <div>
                     <label className="text-sm text-gray-600">Email</label>
-                    <p className="font-medium">{state.user?.email}</p>
+                    <p className="font-medium">{user?.email}</p>
                   </div>
                   <div>
                     <label className="text-sm text-gray-600">Username</label>
-                    <p className="font-medium">{state.user?.username}</p>
+                    <p className="font-medium">{user?.username}</p>
                   </div>
                 </div>
               </div>
