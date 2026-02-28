@@ -25,11 +25,11 @@ interface ProductGridProps {
 
 export default function ProductGrid({ products }: ProductGridProps) {
   const [wishlistItems, setWishlistItems] = useState<Set<number>>(new Set());
-  const { state: authState } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const router = useRouter();
 
   const handleWishlistToggle = async (productId: number) => {
-    if (!authState.isAuthenticated) {
+    if (!isAuthenticated) {
       alert('Please login to add items to wishlist');
       router.push('/login');
       return;

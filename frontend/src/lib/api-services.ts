@@ -132,6 +132,7 @@ export const apiServices = {
     search?: string;
     ordering?: string;
     limit?: number;
+    price_range?: string;
   }): Promise<Product[]> => {
     try {
       const response = await api.get('/products/', { params });

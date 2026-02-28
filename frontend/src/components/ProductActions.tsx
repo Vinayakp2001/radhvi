@@ -16,14 +16,14 @@ export default function ProductActions({ productId, productName }: ProductAction
   const [isAddingToWishlist, setIsAddingToWishlist] = useState(false);
   const [isInWishlist, setIsInWishlist] = useState(false);
   const { addToCart } = useCart();
-  const { state: authState } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (authState.isAuthenticated) {
+    if (isAuthenticated) {
       checkWishlistStatus();
     }
-  }, [authState.isAuthenticated, productId]);
+  }, [isAuthenticated, productId]);
 
   const checkWishlistStatus = async () => {
     try {
@@ -35,7 +35,7 @@ export default function ProductActions({ productId, productName }: ProductAction
   };
 
   const handleAddToCart = async () => {
-    if (!authState.isAuthenticated) {
+    if (!isAuthenticated) {
       alert('Please login to add items to cart');
       router.push('/login');
       return;
@@ -54,7 +54,7 @@ export default function ProductActions({ productId, productName }: ProductAction
   };
 
   const handleBuyNow = async () => {
-    if (!authState.isAuthenticated) {
+    if (!isAuthenticated) {
       alert('Please login to proceed');
       router.push('/login');
       return;
@@ -75,7 +75,7 @@ export default function ProductActions({ productId, productName }: ProductAction
   };
 
   const handleWishlist = async () => {
-    if (!authState.isAuthenticated) {
+    if (!isAuthenticated) {
       alert('Please login to add items to wishlist');
       router.push('/login');
       return;

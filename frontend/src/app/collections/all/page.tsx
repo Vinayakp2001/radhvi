@@ -5,6 +5,8 @@ import Footer from '@/components/Footer';
 import ProductGrid from '@/components/ProductGrid';
 import SearchBar from '@/components/SearchBar';
 import SkeletonLoader from '@/components/SkeletonLoader';
+import ProductFilters from '@/components/ProductFilters';
+import ProductSort from '@/components/ProductSort';
 import { apiServices } from '@/lib/api-services';
 import type { Metadata } from 'next';
 
@@ -18,6 +20,7 @@ interface SearchParams {
   search?: string;
   category?: string;
   sort?: string;
+  price_range?: string;
 }
 
 interface CollectionsPageProps {
@@ -26,13 +29,14 @@ interface CollectionsPageProps {
 
 export default async function CollectionsPage({ searchParams }: CollectionsPageProps) {
   const resolvedSearchParams = await searchParams;
-  const { search, category, sort = 'name' } = resolvedSearchParams;
+  const { search, category, sort = 'name', price_range } = resolvedSearchParams;
   
   const products = await apiServices.fetchProducts({
     search,
     category,
     ordering: sort,
     limit: 24,
+    price_range,
   });
 
   const categories = await apiServices.fetchCategories();
@@ -74,47 +78,7 @@ export default async function CollectionsPage({ searchParams }: CollectionsPageP
           <div className="container-custom">
             <div className="flex flex-col lg:flex-row gap-8">
               <aside className="lg:w-64 flex-shrink-0">
-                <div className="bg-white rounded-lg shadow-sm p-6 sticky top-24">
-                  <h3 className="font-semibold text-gray-900 mb-4">Filters</h3>
-                  
-                  <div className="mb-6">
-                    <h4 className="font-medium text-gray-700 mb-3">Categories</h4>
-                    <div className="space-y-2">
-                      <label className="flex items-center">
-                        <input type="radio" name="category" value="" defaultChecked={!category} className="mr-2" />
-                        <span className="text-sm">All Categories</span>
-                      </label>
-                      {categories.map((cat) => (
-                        <label key={cat.id} className="flex items-center">
-                          <input type="radio" name="category" value={cat.slug} defaultChecked={category === cat.slug} className="mr-2" />
-                          <span className="text-sm">{cat.name}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="mb-6">
-                    <h4 className="font-medium text-gray-700 mb-3">Price Range</h4>
-                    <div className="space-y-2">
-                      <label className="flex items-center">
-                        <input type="checkbox" className="mr-2" />
-                        <span className="text-sm">Under ₹500</span>
-                      </label>
-                      <label className="flex items-center">
-                        <input type="checkbox" className="mr-2" />
-                        <span className="text-sm">₹500 - ₹1000</span>
-                      </label>
-                      <label className="flex items-center">
-                        <input type="checkbox" className="mr-2" />
-                        <span className="text-sm">₹1000 - ₹2000</span>
-                      </label>
-                      <label className="flex items-center">
-                        <input type="checkbox" className="mr-2" />
-                        <span className="text-sm">Above ₹2000</span>
-                      </label>
-                    </div>
-                  </div>
-                </div>
+                <ProductFilters categories={categories} currentCategory={category} />
               </aside>
 
               <div className="flex-1">
@@ -123,22 +87,7 @@ export default async function CollectionsPage({ searchParams }: CollectionsPageP
                     Showing {products.length} products
                   </p>
                   
-                  <div className="flex items-center gap-2">
-                    <label htmlFor="sort" className="text-sm font-medium text-gray-700">
-                      Sort by:
-                    </label>
-                    <select 
-                      id="sort"
-                      defaultValue={sort}
-                      className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
-                    >
-                      {sortOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                  <ProductSort currentSort={sort} options={sortOptions} />
                 </div>
 
                 <Suspense fallback={<SkeletonLoader type="product" count={12} />}>

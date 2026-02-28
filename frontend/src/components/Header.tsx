@@ -13,7 +13,7 @@ export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const pathname = usePathname();
   const { state: cartState } = useCart();
-  const { state: authState } = useAuth();
+  const { user, isAuthenticated } = useAuth();
 
   const navigation = [
     { name: 'Home', href: '/' },
