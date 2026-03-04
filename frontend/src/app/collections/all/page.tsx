@@ -131,7 +131,7 @@ export default async function CollectionsPage({ searchParams }: CollectionsPageP
                             Products length: {products.length}
                           </p>
                           <p className="text-sm text-yellow-800">
-                            Condition (totalPages > 1): {totalPages > 1 ? 'TRUE' : 'FALSE'}
+                            Condition (totalPages &gt; 1): {totalPages > 1 ? 'TRUE' : 'FALSE'}
                           </p>
                         </div>
                         {totalPages > 1 ? (
