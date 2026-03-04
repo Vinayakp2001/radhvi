@@ -9,6 +9,7 @@ import ProductFilters from '@/components/ProductFilters';
 import ProductSort from '@/components/ProductSort';
 import { apiServices } from '@/lib/api-services';
 import type { Metadata } from 'next';
+import PaginationControls from '@/components/PaginationControls';
 
 export const metadata: Metadata = {
   title: 'All Products - Premium Gifts Collection | Radhvi',
@@ -35,14 +36,16 @@ export default async function CollectionsPage({ searchParams }: CollectionsPageP
   const currentPage = parseInt(page);
   const pageSize = 12;
   
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/products/?${new URLSearchParams({
+  const apiUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/products/?${new URLSearchParams({
     ...(search && { search }),
     ...(category && { category }),
     ordering: sort,
     page: currentPage.toString(),
     page_size: pageSize.toString(),
     ...(price_range && { price_range }),
-  })}`, {
+  })}`;
+  
+  const response = await fetch(apiUrl, {
     cache: 'no-store', // Disable caching for pagination
   });  
   const data = await response.json();
@@ -107,59 +110,11 @@ export default async function CollectionsPage({ searchParams }: CollectionsPageP
                       <ProductGrid products={products} />
                       
                       {totalPages > 1 && (
-                        <div className="mt-8 flex justify-center items-center gap-2">
-                          {currentPage > 1 && (
-                            <a
-                              href={`/collections/all?${new URLSearchParams({
-                                ...(search && { search }),
-                                ...(category && { category }),
-                                sort,
-                                ...(price_range && { price_range }),
-                                page: (currentPage - 1).toString(),
-                              })}`}
-                              className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                            >
-                              Previous
-                            </a>
-                          )}
-                          
-                          <div className="flex gap-1">
-                            {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-                              <a
-                                key={pageNum}
-                                href={`/collections/all?${new URLSearchParams({
-                                  ...(search && { search }),
-                                  ...(category && { category }),
-                                  sort,
-                                  ...(price_range && { price_range }),
-                                  page: pageNum.toString(),
-                                })}`}
-                                className={`px-4 py-2 border rounded-md transition-colors ${
-                                  pageNum === currentPage
-                                    ? 'bg-primary-600 text-white border-primary-600'
-                                    : 'border-gray-300 hover:bg-gray-50'
-                                }`}
-                              >
-                                {pageNum}
-                              </a>
-                            ))}
-                          </div>
-                          
-                          {currentPage < totalPages && (
-                            <a
-                              href={`/collections/all?${new URLSearchParams({
-                                ...(search && { search }),
-                                ...(category && { category }),
-                                sort,
-                                ...(price_range && { price_range }),
-                                page: (currentPage + 1).toString(),
-                              })}`}
-                              className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
-                            >
-                              Next
-                            </a>
-                          )}
-                        </div>
+                        <PaginationControls
+                          currentPage={currentPage}
+                          totalPages={totalPages}
+                          searchParams={resolvedSearchParams}
+                        />
                       )}
                     </>
                   ) : (
