@@ -33,15 +33,14 @@ export default async function CollectionsPage({ searchParams }: CollectionsPageP
   const { search, category, sort = 'name', price_range, page = '1' } = resolvedSearchParams;
   
   const currentPage = parseInt(page);
-  const limit = 12;
-  const offset = (currentPage - 1) * limit;
+  const pageSize = 12;
   
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/products/?${new URLSearchParams({
     ...(search && { search }),
     ...(category && { category }),
     ordering: sort,
-    limit: limit.toString(),
-    offset: offset.toString(),
+    page: currentPage.toString(),
+    page_size: pageSize.toString(),
     ...(price_range && { price_range }),
   })}`, {
     cache: 'no-store', // Disable caching for pagination
@@ -49,7 +48,7 @@ export default async function CollectionsPage({ searchParams }: CollectionsPageP
   const data = await response.json();
   const products = data.results || [];
   const totalCount = data.count || 0;
-  const totalPages = Math.ceil(totalCount / limit);
+  const totalPages = Math.ceil(totalCount / pageSize);
 
   const categories = await apiServices.fetchCategories();
 
@@ -96,7 +95,7 @@ export default async function CollectionsPage({ searchParams }: CollectionsPageP
               <div className="flex-1">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
                   <p className="text-gray-600 mb-4 sm:mb-0">
-                    Showing {products.length > 0 ? offset + 1 : 0}-{Math.min(offset + products.length, totalCount)} of {totalCount} products
+                    Showing {products.length > 0 ? (currentPage - 1) * pageSize + 1 : 0}-{Math.min((currentPage - 1) * pageSize + products.length, totalCount)} of {totalCount} products
                   </p>
                   
                   <ProductSort currentSort={sort} options={sortOptions} />
