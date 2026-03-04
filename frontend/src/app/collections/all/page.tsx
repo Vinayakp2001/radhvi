@@ -134,12 +134,24 @@ export default async function CollectionsPage({ searchParams }: CollectionsPageP
                             Condition (totalPages &gt; 1): {totalPages > 1 ? 'TRUE' : 'FALSE'}
                           </p>
                         </div>
+                        
+                        <div className="mt-4 p-4 bg-blue-100 border border-blue-300 rounded">
+                          <p className="text-sm text-blue-800">
+                            FORCED PAGINATION TEST - This should always show:
+                          </p>
+                        </div>
+                        <PaginationControls
+                          currentPage={currentPage}
+                          totalPages={Math.max(totalPages, 2)}
+                          searchParams={resolvedSearchParams}
+                        />
+                        
                         {totalPages > 1 ? (
-                          <PaginationControls
-                            currentPage={currentPage}
-                            totalPages={totalPages}
-                            searchParams={resolvedSearchParams}
-                          />
+                          <div className="mt-4 p-4 bg-green-100 border border-green-300 rounded">
+                            <p className="text-sm text-green-800">
+                              Normal pagination would show here (condition is TRUE)
+                            </p>
+                          </div>
                         ) : (
                           <div className="mt-4 p-4 bg-red-100 border border-red-300 rounded">
                             <p className="text-sm text-red-800">
