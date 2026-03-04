@@ -26,6 +26,12 @@ export default function PaginationControls({
   const urlSearchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
+  // Debug logging
+  console.log('=== PAGINATION CONTROLS DEBUG ===');
+  console.log('currentPage:', currentPage);
+  console.log('totalPages:', totalPages);
+  console.log('searchParams:', searchParams);
+
   const navigateToPage = (pageNum: number) => {
     const params = new URLSearchParams(urlSearchParams.toString());
     
