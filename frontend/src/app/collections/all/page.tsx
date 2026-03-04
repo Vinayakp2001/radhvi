@@ -119,20 +119,35 @@ export default async function CollectionsPage({ searchParams }: CollectionsPageP
                     <>
                       <ProductGrid products={products} />
                       
-                      {totalPages > 1 && (
-                        <>
-                          <div className="mt-4 p-4 bg-yellow-100 border border-yellow-300 rounded">
-                            <p className="text-sm text-yellow-800">
-                              Debug: totalPages={totalPages}, currentPage={currentPage}, totalCount={totalCount}
-                            </p>
-                          </div>
+                      <>
+                        <div className="mt-4 p-4 bg-yellow-100 border border-yellow-300 rounded">
+                          <p className="text-sm text-yellow-800">
+                            Debug: totalPages={totalPages}, currentPage={currentPage}, totalCount={totalCount}, pageSize={pageSize}
+                          </p>
+                          <p className="text-sm text-yellow-800">
+                            API URL: {apiUrl}
+                          </p>
+                          <p className="text-sm text-yellow-800">
+                            Products length: {products.length}
+                          </p>
+                          <p className="text-sm text-yellow-800">
+                            Condition (totalPages > 1): {totalPages > 1 ? 'TRUE' : 'FALSE'}
+                          </p>
+                        </div>
+                        {totalPages > 1 ? (
                           <PaginationControls
                             currentPage={currentPage}
                             totalPages={totalPages}
                             searchParams={resolvedSearchParams}
                           />
-                        </>
-                      )}
+                        ) : (
+                          <div className="mt-4 p-4 bg-red-100 border border-red-300 rounded">
+                            <p className="text-sm text-red-800">
+                              Pagination not showing because totalPages ({totalPages}) is not greater than 1
+                            </p>
+                          </div>
+                        )}
+                      </>
                     </>
                   ) : (
                     <div className="text-center py-12">
