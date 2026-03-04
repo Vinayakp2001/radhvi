@@ -21,6 +21,7 @@ interface SearchParams {
   category?: string;
   sort?: string;
   price_range?: string;
+  page?: string;
 }
 
 interface CollectionsPageProps {
@@ -29,15 +30,26 @@ interface CollectionsPageProps {
 
 export default async function CollectionsPage({ searchParams }: CollectionsPageProps) {
   const resolvedSearchParams = await searchParams;
-  const { search, category, sort = 'name', price_range } = resolvedSearchParams;
+  const { search, category, sort = 'name', price_range, page = '1' } = resolvedSearchParams;
   
-  const products = await apiServices.fetchProducts({
-    search,
-    category,
+  const currentPage = parseInt(page);
+  const limit = 12;
+  const offset = (currentPage - 1) * limit;
+  
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/products/?${new URLSearchParams({
+    ...(search && { search }),
+    ...(category && { category }),
     ordering: sort,
-    limit: 24,
-    price_range,
-  });
+    limit: limit.toString(),
+    offset: offset.toString(),
+    ...(price_range && { price_range }),
+  })}`, {
+    cache: 'no-store', // Disable caching for pagination
+  });  
+  const data = await response.json();
+  const products = data.results || [];
+  const totalCount = data.count || 0;
+  const totalPages = Math.ceil(totalCount / limit);
 
   const categories = await apiServices.fetchCategories();
 
@@ -84,7 +96,7 @@ export default async function CollectionsPage({ searchParams }: CollectionsPageP
               <div className="flex-1">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
                   <p className="text-gray-600 mb-4 sm:mb-0">
-                    Showing {products.length} products
+                    Showing {products.length > 0 ? offset + 1 : 0}-{Math.min(offset + products.length, totalCount)} of {totalCount} products
                   </p>
                   
                   <ProductSort currentSort={sort} options={sortOptions} />
@@ -92,7 +104,65 @@ export default async function CollectionsPage({ searchParams }: CollectionsPageP
 
                 <Suspense fallback={<SkeletonLoader type="product" count={12} />}>
                   {products.length > 0 ? (
-                    <ProductGrid products={products} />
+                    <>
+                      <ProductGrid products={products} />
+                      
+                      {totalPages > 1 && (
+                        <div className="mt-8 flex justify-center items-center gap-2">
+                          {currentPage > 1 && (
+                            <a
+                              href={`/collections/all?${new URLSearchParams({
+                                ...(search && { search }),
+                                ...(category && { category }),
+                                sort,
+                                ...(price_range && { price_range }),
+                                page: (currentPage - 1).toString(),
+                              })}`}
+                              className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                            >
+                              Previous
+                            </a>
+                          )}
+                          
+                          <div className="flex gap-1">
+                            {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                              <a
+                                key={pageNum}
+                                href={`/collections/all?${new URLSearchParams({
+                                  ...(search && { search }),
+                                  ...(category && { category }),
+                                  sort,
+                                  ...(price_range && { price_range }),
+                                  page: pageNum.toString(),
+                                })}`}
+                                className={`px-4 py-2 border rounded-md transition-colors ${
+                                  pageNum === currentPage
+                                    ? 'bg-primary-600 text-white border-primary-600'
+                                    : 'border-gray-300 hover:bg-gray-50'
+                                }`}
+                              >
+                                {pageNum}
+                              </a>
+                            ))}
+                          </div>
+                          
+                          {currentPage < totalPages && (
+                            <a
+                              href={`/collections/all?${new URLSearchParams({
+                                ...(search && { search }),
+                                ...(category && { category }),
+                                sort,
+                                ...(price_range && { price_range }),
+                                page: (currentPage + 1).toString(),
+                              })}`}
+                              className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                            >
+                              Next
+                            </a>
+                          )}
+                        </div>
+                      )}
+                    </>
                   ) : (
                     <div className="text-center py-12">
                       <div className="text-6xl mb-4">🔍</div>
