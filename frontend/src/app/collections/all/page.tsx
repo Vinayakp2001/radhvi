@@ -53,16 +53,6 @@ export default async function CollectionsPage({ searchParams }: CollectionsPageP
   const totalCount = data.count || 0;
   const totalPages = Math.ceil(totalCount / pageSize);
 
-  // Debug logging
-  console.log('=== PAGINATION DEBUG ===');
-  console.log('API URL:', apiUrl);
-  console.log('Response data:', { count: data.count, next: data.next, previous: data.previous });
-  console.log('Products length:', products.length);
-  console.log('Total count:', totalCount);
-  console.log('Total pages:', totalPages);
-  console.log('Current page:', currentPage);
-  console.log('Page size:', pageSize);
-
   const categories = await apiServices.fetchCategories();
 
   const sortOptions = [
@@ -119,47 +109,13 @@ export default async function CollectionsPage({ searchParams }: CollectionsPageP
                     <>
                       <ProductGrid products={products} />
                       
-                      <>
-                        <div className="mt-4 p-4 bg-yellow-100 border border-yellow-300 rounded">
-                          <p className="text-sm text-yellow-800">
-                            Debug: totalPages={totalPages}, currentPage={currentPage}, totalCount={totalCount}, pageSize={pageSize}
-                          </p>
-                          <p className="text-sm text-yellow-800">
-                            API URL: {apiUrl}
-                          </p>
-                          <p className="text-sm text-yellow-800">
-                            Products length: {products.length}
-                          </p>
-                          <p className="text-sm text-yellow-800">
-                            Condition (totalPages &gt; 1): {totalPages > 1 ? 'TRUE' : 'FALSE'}
-                          </p>
-                        </div>
-                        
-                        <div className="mt-4 p-4 bg-blue-100 border border-blue-300 rounded">
-                          <p className="text-sm text-blue-800">
-                            FORCED PAGINATION TEST - This should always show:
-                          </p>
-                        </div>
+                      {totalPages > 1 && (
                         <PaginationControls
                           currentPage={currentPage}
-                          totalPages={Math.max(totalPages, 2)}
+                          totalPages={totalPages}
                           searchParams={resolvedSearchParams}
                         />
-                        
-                        {totalPages > 1 ? (
-                          <div className="mt-4 p-4 bg-green-100 border border-green-300 rounded">
-                            <p className="text-sm text-green-800">
-                              Normal pagination would show here (condition is TRUE)
-                            </p>
-                          </div>
-                        ) : (
-                          <div className="mt-4 p-4 bg-red-100 border border-red-300 rounded">
-                            <p className="text-sm text-red-800">
-                              Pagination not showing because totalPages ({totalPages}) is not greater than 1
-                            </p>
-                          </div>
-                        )}
-                      </>
+                      )}
                     </>
                   ) : (
                     <div className="text-center py-12">
