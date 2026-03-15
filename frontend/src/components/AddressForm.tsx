@@ -68,10 +68,10 @@ export default function AddressForm({ address, onSuccess, onCancel }: AddressFor
     try {
       if (address?.id) {
         // Update existing address
-        await api.put(`/api/addresses/${address.id}/`, formData);
+        await api.put(`/addresses/${address.id}/`, formData);
       } else {
         // Create new address
-        await api.post('/api/addresses/', formData);
+        await api.post('/addresses/', formData);
       }
       onSuccess();
     } catch (error: any) {

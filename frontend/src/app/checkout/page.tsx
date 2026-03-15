@@ -50,7 +50,7 @@ export default function CheckoutPage() {
   
   const fetchSavedAddresses = async () => {
     try {
-      const response = await api.get('/api/addresses/');
+      const response = await api.get('/addresses/');
       setSavedAddresses(response.data);
     } catch (error) {
       console.error('Failed to fetch addresses:', error);
@@ -88,7 +88,7 @@ export default function CheckoutPage() {
     // Fetch shipping rates
     setLoading(true);
     try {
-      const response = await api.post('/api/checkout/shipping-rates/', {
+      const response = await api.post('/checkout/shipping-rates/', {
         delivery_pincode: shippingAddress.pincode,
         cod: false
       });
@@ -129,7 +129,7 @@ export default function CheckoutPage() {
         shipping_charge: selectedShipping.rate
       };
       
-      const response = await api.post('/api/checkout/initiate/', checkoutData);
+      const response = await api.post('/checkout/initiate/', checkoutData);
       const { razorpay_order_id, order_id, amount } = response.data;
       
       const options = {
@@ -176,7 +176,7 @@ export default function CheckoutPage() {
         razorpay_signature: paymentResponse.razorpay_signature
       };
       
-      await api.post('/api/checkout/verify-payment/', verifyData);
+      await api.post('/checkout/verify-payment/', verifyData);
       clearCart();
       router.push(`/orders/${orderId}/confirmation`);
       
@@ -189,7 +189,7 @@ export default function CheckoutPage() {
   
   const handlePaymentFailure = async (orderId: string, reason: string) => {
     try {
-      await api.post('/api/checkout/payment-failed/', {
+      await api.post('/checkout/payment-failed/', {
         order_id: orderId,
         reason: reason
       });

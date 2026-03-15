@@ -41,7 +41,7 @@ export default function AccountPage() {
   
   const loadOrders = async () => {
     try {
-      const response = await api.get('/api/orders/?page=1');
+      const response = await api.get('/orders/?page=1');
       const orders = response.data.results || response.data;
       setRecentOrders(orders.slice(0, 3)); // Get first 3 orders
       
