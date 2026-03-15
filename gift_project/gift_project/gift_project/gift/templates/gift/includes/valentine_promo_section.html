@@ -1,0 +1,100 @@
+{% load static %}
+{% comment %}
+Valentine's Day Promotional Section
+Full-width promotional section for mid-page placement
+{% endcomment %}
+
+{% if valentine_campaign and valentine_campaign.show_promo_section %}
+<section class="valentine-promo-section py-6">
+    <div class="container">
+        <div class="valentine-promo-card">
+            <div class="row align-items-center">
+                <!-- Promo Image (Right on desktop, top on mobile) -->
+                <div class="col-lg-6 order-lg-2 mb-4 mb-lg-0">
+                    <div class="valentine-promo-image text-center">
+                        <img src="{% static 'images/promotions/valentines/radhvi-valentine-black.png' %}" 
+                             alt="Valentine's Sale" 
+                             class="img-fluid"
+                             style="max-width: 400px;"
+                             onerror="this.style.display='none'">
+                    </div>
+                </div>
+                
+                <!-- Promo Content (Left on desktop, bottom on mobile) -->
+                <div class="col-lg-6 order-lg-1">
+                    <div class="valentine-promo-content" style="color: white;">
+                        <!-- Badge -->
+                        <div class="valentine-promo-badge mb-3">
+                            <i class="fas fa-heart me-2"></i>LIMITED TIME OFFER
+                        </div>
+                        
+                        <!-- Title -->
+                        <h2 class="valentine-promo-title mb-4" style="color: white;">
+                            {{ valentine_campaign.promo_title|default:"Make This Valentine's Day Unforgettable" }}
+                        </h2>
+                        
+                        <!-- Description -->
+                        <p class="valentine-promo-text mb-4" style="color: rgba(255, 255, 255, 0.9);">
+                            {{ valentine_campaign.promo_description|default:"Express your love with our handpicked collection of premium gifts. From personalized treasures to luxury hampers, find the perfect way to say 'I love you.'" }}
+                        </p>
+                        
+                        <!-- Features List -->
+                        <div class="valentine-promo-features mb-4">
+                            <div class="feature-item" style="color: white !important; background: rgba(255,0,0,0.1); padding: 15px; margin-bottom: 10px;">
+                                <i class="fas fa-check-circle text-success me-2" style="font-size: 20px;"></i>
+                                <span style="color: white; font-size: 16px; font-weight: 600;">Free Gift Wrapping</span>
+                            </div>
+                            <div class="feature-item" style="color: white !important; background: rgba(255,0,0,0.1); padding: 15px; margin-bottom: 10px;">
+                                <i class="fas fa-check-circle text-success me-2" style="font-size: 20px;"></i>
+                                <span style="color: white; font-size: 16px; font-weight: 600;">Express Delivery Available</span>
+                            </div>
+                            <div class="feature-item" style="color: white !important; background: rgba(255,0,0,0.1); padding: 15px; margin-bottom: 10px;">
+                                <i class="fas fa-check-circle text-success me-2" style="font-size: 20px;"></i>
+                                <span style="color: white; font-size: 16px; font-weight: 600;">Personalization Options</span>
+                            </div>
+                            <div class="feature-item" style="color: white !important; background: rgba(255,0,0,0.1); padding: 15px; margin-bottom: 10px;">
+                                <i class="fas fa-check-circle text-success me-2" style="font-size: 20px;"></i>
+                                <span style="color: white; font-size: 16px; font-weight: 600;">{{ valentine_campaign.discount_percentage }}% OFF with code {{ valentine_campaign.discount_code }}</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Debug Info -->
+                        <script>
+                            console.log('=== VALENTINE PROMO SECTION DEBUG ===');
+                            console.log('Features rendered:', document.querySelectorAll('.valentine-promo-features .feature-item').length);
+                            document.querySelectorAll('.valentine-promo-features .feature-item').forEach((item, index) => {
+                                console.log(`Feature ${index + 1}:`, item.textContent.trim());
+                                console.log(`  - Color:`, window.getComputedStyle(item).color);
+                                console.log(`  - Display:`, window.getComputedStyle(item).display);
+                                console.log(`  - Visibility:`, window.getComputedStyle(item).visibility);
+                                console.log(`  - Background:`, window.getComputedStyle(item).background);
+                            });
+                            console.log('=====================================');
+                        </script>
+                        
+                        <!-- CTA Button -->
+                        <div class="valentine-promo-cta">
+                            <a href="{% url 'product_list' %}?category={{ valentine_campaign.category_slug|default:'valentines' }}" 
+                               class="btn btn-valentine-large">
+                                <i class="fas fa-gift me-2"></i>
+                                Shop Valentine's Collection
+                            </a>
+                            
+                            <!-- Countdown Timer -->
+                            <div class="valentine-countdown mt-3">
+                                <small style="color: white; font-weight: 600;">Offer ends in:</small>
+                                <div class="countdown-timer" 
+                                     id="valentineCountdown" 
+                                     data-end-date="{{ valentine_campaign.end_date }}T23:59:59">
+                                    <!-- Countdown will be populated by JavaScript -->
+                                    <span class="countdown-item">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}

@@ -1,0 +1,253 @@
+{% extends 'gift/base.html' %}
+{% load static %}
+
+{% block title %}Track Order {{ order.order_id }} - Radhvi{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'order_history' %}">My Orders</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'order_detail' order.order_id %}">Order {{ order.order_id }}</a></li>
+            <li class="breadcrumb-item active">Track Order</li>
+        </ol>
+    </nav>
+    
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-5">
+                <h1 class="fw-bold mb-3">Track Your Order</h1>
+                <div class="alert alert-info d-inline-block">
+                    <i class="fas fa-box me-2"></i>
+                    <strong>Order ID:</strong> {{ order.order_id }} | 
+                    <strong>Status:</strong> <span class="badge bg-primary">{{ order.get_status_display|title }}</span>
+                </div>
+            </div>
+            
+            <!-- Tracking Timeline -->
+            <div class="card border-0 shadow">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4">Order Tracking</h5>
+                    
+                    <div class="tracking-timeline">
+                        {% for track in tracking_data %}
+                        <div class="tracking-step {% if track.completed %}completed{% endif %} {% if forloop.last %}last{% endif %}">
+                            <div class="tracking-icon">
+                                {% if track.completed %}
+                                <i class="fas fa-check-circle"></i>
+                                {% else %}
+                                <i class="far fa-circle"></i>
+                                {% endif %}
+                            </div>
+                            <div class="tracking-content">
+                                <h6 class="fw-bold mb-1">{{ track.status }}</h6>
+                                <p class="text-muted small mb-1">{{ track.description }}</p>
+                                {% if track.date %}
+                                <p class="text-muted small mb-0">
+                                    <i class="far fa-calendar me-1"></i>
+                                    {{ track.date|date:"d M Y, h:i A" }}
+                                </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Order Summary -->
+            <div class="card border-0 shadow mt-4">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-4">Order Summary</h5>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <h6 class="fw-semibold mb-2">Shipping Details</h6>
+                            <p class="mb-1">{{ order.customer_name }}</p>
+                            <p class="mb-1">{{ order.shipping_address }}</p>
+                            <p class="mb-1">{{ order.shipping_city }}, {{ order.shipping_state }} - {{ order.shipping_pincode }}</p>
+                            <p class="mb-0"><strong>Phone:</strong> {{ order.customer_phone }}</p>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <h6 class="fw-semibold mb-2">Delivery Information</h6>
+                            {% if order.status == 'delivered' %}
+                            <p class="text-success mb-2">
+                                <i class="fas fa-check-circle me-2"></i>
+                                Delivered on {{ order.updated_at|date:"d M Y" }}
+                            </p>
+                            {% elif order.status == 'shipped' %}
+                            <p class="text-primary mb-2">
+                                <i class="fas fa-truck me-2"></i>
+                                Expected delivery: 2-3 business days
+                            </p>
+                            {% else %}
+                            <p class="text-warning mb-2">
+                                <i class="fas fa-clock me-2"></i>
+                                Preparing for shipment
+                            </p>
+                            {% endif %}
+                            
+                            <div class="mt-3">
+                                <h6 class="fw-semibold mb-2">Order Total</h6>
+                                <h4 class="text-primary">₹{{ order.total_amount }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Order Items -->
+                    <h6 class="fw-semibold mt-4 mb-3">Order Items</h6>
+                    <div class="row">
+                        {% for item in order.items.all %}
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center border rounded p-2">
+                                {% if item.product.images.first %}
+                                <img src="{{ item.product.images.first.image.url }}" 
+                                     alt="{{ item.product.name }}"
+                                     class="me-3 rounded" 
+                                     style="width: 60px; height: 60px; object-fit: cover;">
+                                {% endif %}
+                                <div>
+                                    <h6 class="mb-1">{{ item.product_name }}</h6>
+                                    <p class="text-muted small mb-0">
+                                        ₹{{ item.product_price }} × {{ item.quantity }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Help Section -->
+            <div class="card border-0 shadow mt-4">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Need Help With Your Order?</h5>
+                    
+                    <div class="row text-center">
+                        <div class="col-md-4 mb-3">
+                            <div class="p-3">
+                                <div class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center mb-3" 
+                                     style="width: 70px; height: 70px;">
+                                    <i class="fas fa-headset text-primary fa-2x"></i>
+                                </div>
+                                <h6 class="fw-semibold">Call Us</h6>
+                                <p class="text-muted small mb-0">+91 9876543210</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <div class="p-3">
+                                <div class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center mb-3" 
+                                     style="width: 70px; height: 70px;">
+                                    <i class="fas fa-comments text-primary fa-2x"></i>
+                                </div>
+                                <h6 class="fw-semibold">Live Chat</h6>
+                                <p class="text-muted small mb-0">Available 24/7</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <div class="p-3">
+                                <div class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center mb-3" 
+                                     style="width: 70px; height: 70px;">
+                                    <i class="fas fa-question-circle text-primary fa-2x"></i>
+                                </div>
+                                <h6 class="fw-semibold">FAQs</h6>
+                                <a href="{% url 'faq' %}" class="text-decoration-none">Browse FAQs</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <!-- order_tracking.html में action buttons fix करें: -->
+
+            <!-- Action Buttons -->
+            <div class="text-center mt-4">
+                <!-- ✅ FIXED: Back to Order -->
+                <a href="{% url 'order_detail' order.order_id %}" class="btn btn-outline-primary me-2">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Order
+                </a>
+                
+                <!-- ✅ FIXED: View All Orders -->
+                <a href="{% url 'order_history' %}" class="btn btn-primary me-2">
+                    <i class="fas fa-list me-2"></i>View All Orders
+                </a>
+                
+                <!-- ✅ FIXED: Continue Shopping -->
+                <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-shopping-bag me-2"></i>Continue Shopping
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .tracking-timeline {
+        position: relative;
+        padding-left: 30px;
+    }
+    
+    .tracking-timeline::before {
+        content: '';
+        position: absolute;
+        left: 15px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #e9ecef;
+    }
+    
+    .tracking-step {
+        position: relative;
+        padding-bottom: 30px;
+        margin-bottom: 20px;
+    }
+    
+    .tracking-step.last {
+        padding-bottom: 0;
+        margin-bottom: 0;
+    }
+    
+    .tracking-icon {
+        position: absolute;
+        left: -30px;
+        top: 0;
+        width: 30px;
+        height: 30px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #e9ecef;
+    }
+    
+    .tracking-step.completed .tracking-icon {
+        border-color: #28a745;
+        background: #28a745;
+        color: white;
+    }
+    
+    .tracking-step.completed .tracking-content {
+        color: #28a745;
+    }
+    
+    .tracking-content {
+        padding-left: 20px;
+    }
+    
+    .tracking-step.completed .tracking-content h6 {
+        color: #28a745;
+    }
+</style>
+{% endblock %}

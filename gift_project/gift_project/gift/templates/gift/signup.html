@@ -1,0 +1,496 @@
+{% extends 'gift/base.html' %}
+{% load static %}
+{% load socialaccount %}
+
+{% block title %}Sign Up - Radhvi{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <!-- Signup Card -->
+            <div class="card border-0 shadow-lg">
+                <div class="card-body p-5">
+                    <!-- Logo -->
+                    <div class="text-center mb-4">
+                        <div class="logo-icon bg-primary text-white rounded d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <i class="fas fa-gift fa-2x"></i>
+                        </div>
+                        <h2 class="fw-bold">Create Account</h2>
+                        <p class="text-muted">Join Radhvi for the best gifting experience</p>
+                    </div>
+
+                    <!-- Google Signup Button -->
+                    <div class="mb-4">
+                        <a href="{% provider_login_url 'google' %}" class="btn btn-outline-danger w-100">
+                            <i class="fab fa-google me-2"></i>Sign up with Google
+                        </a>
+                    </div>
+
+                    <!-- Divider -->
+                    <div class="position-relative my-4">
+                        <hr>
+                        <div class="position-absolute top-50 start-50 translate-middle bg-white px-3">
+                            <span class="text-muted">or sign up with email</span>
+                        </div>
+                    </div>
+
+                    <!-- Signup Form -->
+                    <form method="post" action="{% url 'account_signup' %}" id="signupForm">
+                        {% csrf_token %}
+                        
+                        {% if form.errors %}
+                        <div class="alert alert-danger">
+                            {% for field, errors in form.errors.items %}
+                                {% for error in errors %}
+                                    <p class="mb-0">{{ error }}</p>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        {% if messages %}
+                        <div class="alert alert-success">
+                            {% for message in messages %}
+                            <p class="mb-0">{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        <!-- Full Name -->
+                        <div class="mb-3">
+                            <label for="id_username" class="form-label">Full Name</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-user"></i>
+                                </span>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="id_username" 
+                                       name="username" 
+                                       placeholder="Enter your full name"
+                                       required
+                                       autocomplete="name">
+                            </div>
+                            <small class="form-text text-muted">This will be your display name</small>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label for="id_email" class="form-label">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-envelope"></i>
+                                </span>
+                                <input type="email" 
+                                       class="form-control" 
+                                       id="id_email" 
+                                       name="email" 
+                                       placeholder="Enter your email"
+                                       required
+                                       autocomplete="email">
+                            </div>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <label for="id_password1" class="form-label">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input type="password" 
+                                       class="form-control" 
+                                       id="id_password1" 
+                                       name="password1" 
+                                       placeholder="Create a password"
+                                       required
+                                       autocomplete="new-password">
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword1">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <small class="form-text text-muted">
+                                Password must be at least 8 characters with letters and numbers
+                            </small>
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div class="mb-4">
+                            <label for="id_password2" class="form-label">Confirm Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                                <input type="password" 
+                                       class="form-control" 
+                                       id="id_password2" 
+                                       name="password2" 
+                                       placeholder="Confirm your password"
+                                       required
+                                       autocomplete="new-password">
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword2">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Terms and Conditions -->
+                        <div class="mb-4 form-check">
+                            <input type="checkbox" class="form-check-input" id="id_terms" name="terms" required>
+                            <label class="form-check-label" for="id_terms">
+                                I agree to the 
+                                <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#termsModal">
+                                    Terms & Conditions
+                                </a> 
+                                and 
+                                <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#privacyModal">
+                                    Privacy Policy
+                                </a>
+                            </label>
+                        </div>
+
+                        <!-- Hidden redirect field -->
+                        {% if redirect_field_value %}
+                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                        {% endif %}
+
+                        <!-- Submit Button -->
+                        <div class="d-grid mb-4">
+                            <button type="submit" class="btn btn-primary btn-lg" id="signupBtn">
+                                <i class="fas fa-user-plus me-2"></i>Create Account
+                            </button>
+                        </div>
+
+                        <!-- Login Link -->
+                        <div class="text-center">
+                            <p class="mb-0">Already have an account? 
+                                <a href="{% url 'account_login' %}" class="text-decoration-none fw-semibold">Sign in</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Benefits -->
+            <div class="row mt-4">
+                <div class="col-md-4 text-center">
+                    <div class="benefit-item">
+                        <i class="fas fa-shipping-fast text-primary mb-2"></i>
+                        <h6 class="mb-1">Free Shipping</h6>
+                        <p class="text-muted small">On orders over ₹1000</p>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="benefit-item">
+                        <i class="fas fa-gift text-primary mb-2"></i>
+                        <h6 class="mb-1">Exclusive Offers</h6>
+                        <p class="text-muted small">Member-only discounts</p>
+                    </div>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="benefit-item">
+                        <i class="fas fa-history text-primary mb-2"></i>
+                        <h6 class="mb-1">Order Tracking</h6>
+                        <p class="text-muted small">Real-time updates</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Terms & Conditions Modal -->
+<div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="termsModalLabel">Terms & Conditions</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6>1. Account Registration</h6>
+                <p>You must provide accurate information when creating an account. You are responsible for maintaining the confidentiality of your account credentials.</p>
+                
+                <h6>2. Orders and Payments</h6>
+                <p>All orders are subject to acceptance and availability. Prices are subject to change without notice.</p>
+                
+                <h6>3. Shipping and Delivery</h6>
+                <p>Delivery times are estimates and not guaranteed. We are not responsible for delays caused by third-party carriers.</p>
+                
+                <h6>4. Returns and Refunds</h6>
+                <p>Returns are accepted within 7 days of delivery for unused items in original packaging. Refunds will be processed within 10 business days.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Privacy Policy Modal -->
+<div class="modal fade" id="privacyModal" tabindex="-1" aria-labelledby="privacyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="privacyModalLabel">Privacy Policy</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h6>1. Information We Collect</h6>
+                <p>We collect personal information such as name, email address, shipping address, and payment information when you create an account or place an order.</p>
+                
+                <h6>2. How We Use Your Information</h6>
+                <p>Your information is used to process orders, provide customer service, send promotional emails (with your consent), and improve our services.</p>
+                
+                <h6>3. Data Security</h6>
+                <p>We implement security measures to protect your personal information. However, no method of transmission over the Internet is 100% secure.</p>
+                
+                <h6>4. Third-Party Services</h6>
+                <p>We may share information with third-party service providers for payment processing, shipping, and analytics.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .logo-icon {
+        transition: transform 0.3s ease;
+    }
+    
+    .logo-icon:hover {
+        transform: rotate(10deg) scale(1.1);
+    }
+    
+    .benefit-item {
+        padding: 15px;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        border: 1px solid #e9ecef;
+    }
+    
+    .benefit-item:hover {
+        background: rgba(13, 110, 253, 0.1);
+        transform: translateY(-5px);
+        border-color: #0d6efd;
+    }
+    
+    .benefit-item i {
+        font-size: 1.5rem;
+    }
+    
+    .card {
+        border-radius: 15px;
+    }
+    
+    .input-group-text {
+        background: #f8f9fa;
+        border-right: none;
+    }
+    
+    .form-control:focus {
+        box-shadow: none;
+        border-color: #0d6efd;
+    }
+    
+    #togglePassword1, #togglePassword2 {
+        border-left: none;
+    }
+    
+    .btn-outline-danger:hover {
+        background-color: #dc3545;
+        color: white;
+    }
+    
+    /* Password strength indicator */
+    .password-strength {
+        height: 5px;
+        margin-top: 5px;
+        border-radius: 3px;
+        background: #e9ecef;
+        overflow: hidden;
+    }
+    
+    .strength-meter {
+        height: 100%;
+        width: 0;
+        transition: width 0.3s ease, background-color 0.3s ease;
+    }
+    
+    .strength-weak { background-color: #dc3545; }
+    .strength-medium { background-color: #ffc107; }
+    .strength-strong { background-color: #198754; }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Toggle password visibility
+        const togglePassword1 = document.getElementById('togglePassword1');
+        const passwordInput1 = document.getElementById('id_password1');
+        const togglePassword2 = document.getElementById('togglePassword2');
+        const passwordInput2 = document.getElementById('id_password2');
+        
+        function togglePasswordVisibility(button, input) {
+            if (button && input) {
+                button.addEventListener('click', function() {
+                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                    input.setAttribute('type', type);
+                    
+                    const icon = this.querySelector('i');
+                    if (type === 'password') {
+                        icon.classList.remove('fa-eye-slash');
+                        icon.classList.add('fa-eye');
+                    } else {
+                        icon.classList.remove('fa-eye');
+                        icon.classList.add('fa-eye-slash');
+                    }
+                });
+            }
+        }
+        
+        togglePasswordVisibility(togglePassword1, passwordInput1);
+        togglePasswordVisibility(togglePassword2, passwordInput2);
+        
+        // Password strength checker
+        if (passwordInput1) {
+            passwordInput1.addEventListener('input', function() {
+                checkPasswordStrength(this.value);
+            });
+        }
+        
+        // Password match checker
+        if (passwordInput1 && passwordInput2) {
+            passwordInput2.addEventListener('input', function() {
+                checkPasswordMatch();
+            });
+        }
+        
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            
+            // Length check
+            if (password.length >= 8) strength += 1;
+            if (password.length >= 12) strength += 1;
+            
+            // Complexity checks
+            if (/[a-z]/.test(password)) strength += 1;
+            if (/[A-Z]/.test(password)) strength += 1;
+            if (/[0-9]/.test(password)) strength += 1;
+            if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+            
+            // Update UI
+            const strengthBar = document.querySelector('.strength-meter');
+            if (strengthBar) {
+                let width = 0;
+                let colorClass = '';
+                
+                if (strength <= 2) {
+                    width = 33;
+                    colorClass = 'strength-weak';
+                } else if (strength <= 4) {
+                    width = 66;
+                    colorClass = 'strength-medium';
+                } else {
+                    width = 100;
+                    colorClass = 'strength-strong';
+                }
+                
+                strengthBar.style.width = width + '%';
+                strengthBar.className = 'strength-meter ' + colorClass;
+            }
+        }
+        
+        function checkPasswordMatch() {
+            const password1 = passwordInput1.value;
+            const password2 = passwordInput2.value;
+            const signupBtn = document.getElementById('signupBtn');
+            
+            if (password1 && password2) {
+                if (password1 === password2) {
+                    passwordInput2.style.borderColor = '#198754';
+                    signupBtn.disabled = false;
+                } else {
+                    passwordInput2.style.borderColor = '#dc3545';
+                    signupBtn.disabled = true;
+                }
+            }
+        }
+        
+        // Create password strength indicator
+        const password1Container = passwordInput1 ? passwordInput1.parentElement.parentElement : null;
+        if (password1Container) {
+            const strengthDiv = document.createElement('div');
+            strengthDiv.className = 'password-strength';
+            strengthDiv.innerHTML = '<div class="strength-meter"></div>';
+            password1Container.appendChild(strengthDiv);
+        }
+        
+        // Form validation
+        const form = document.getElementById('signupForm');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                const username = document.getElementById('id_username');
+                const email = document.getElementById('id_email');
+                const password1 = document.getElementById('id_password1');
+                const password2 = document.getElementById('id_password2');
+                const terms = document.getElementById('id_terms');
+                
+                let isValid = true;
+                let errorMessage = '';
+                
+                if (!username.value.trim()) {
+                    isValid = false;
+                    errorMessage = 'Please enter your name';
+                } else if (!email.value.trim() || !/\S+@\S+\.\S+/.test(email.value)) {
+                    isValid = false;
+                    errorMessage = 'Please enter a valid email address';
+                } else if (!password1.value.trim() || password1.value.length < 8) {
+                    isValid = false;
+                    errorMessage = 'Password must be at least 8 characters long';
+                } else if (password1.value !== password2.value) {
+                    isValid = false;
+                    errorMessage = 'Passwords do not match';
+                } else if (!terms.checked) {
+                    isValid = false;
+                    errorMessage = 'Please agree to the Terms & Conditions';
+                }
+                
+                if (!isValid) {
+                    e.preventDefault();
+                    alert(errorMessage);
+                }
+            });
+        }
+        
+        // Google button loading state
+        const googleBtn = document.querySelector('.btn-outline-danger');
+        if (googleBtn) {
+            googleBtn.addEventListener('click', function() {
+                const originalText = this.innerHTML;
+                this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Redirecting...';
+                this.disabled = true;
+            });
+        }
+        
+        // Add focus effects
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.style.boxShadow = '0 0 0 0.25rem rgba(13, 110, 253, 0.25)';
+                this.parentElement.style.borderRadius = '6px';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.style.boxShadow = 'none';
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,285 @@
+{% extends 'gift/base.html' %}
+{% load static %}
+
+{% block title %}Order Success - Radhvi{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <!-- Success Card -->
+            <div class="card border-0 shadow text-center">
+                <div class="card-body p-5">
+                    <!-- Success Icon -->
+                    <div class="success-animation mb-4">
+                        <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-success bg-opacity-10" 
+                             style="width: 120px; height: 120px;">
+                            <i class="fas fa-check-circle text-success fa-4x"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Success Message -->
+                    <h1 class="fw-bold text-success mb-3">Order Placed Successfully!</h1>
+                    <p class="text-muted fs-5 mb-4">
+                        Thank you for your purchase. Your order has been confirmed.
+                    </p>
+                    
+                    <!-- Order ID -->
+                    <div class="alert alert-success d-inline-flex align-items-center mb-4" role="alert">
+                        <i class="fas fa-receipt me-3 fa-lg"></i>
+                        <div class="text-start">
+                            <strong>Order ID:</strong> {{ order.order_id }}
+                            <br>
+                            <small>Keep this for future reference</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Order Details Card -->
+                    <div class="card border mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title fw-semibold mb-4">Order Summary</h5>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <h6 class="fw-semibold mb-2">Order Status</h6>
+                                    <span class="badge {% if order.status == 'confirmed' %}bg-success{% elif order.status == 'pending' %}bg-warning{% else %}bg-secondary{% endif %}">
+                                        {{ order.get_status_display|title }}
+                                    </span>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="fw-semibold mb-2">Payment Status</h6>
+                                    <span class="badge {% if order.payment_status == 'paid' %}bg-success{% else %}bg-warning{% endif %}">
+                                        {{ order.get_payment_status_display|title }}
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <h6 class="fw-semibold mb-2">Payment Method</h6>
+                                    <p class="mb-0">{{ order.get_payment_method_display }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="fw-semibold mb-2">Order Date</h6>
+                                    <p class="mb-0">{{ order.created_at|date:"d M Y, h:i A" }}</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Order Items -->
+                            <h6 class="fw-semibold mt-4 mb-3">Order Items</h6>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Price</th>
+                                            <th>Quantity</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in order.items.all %}
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    {% if item.product.images.first %}
+                                                    <img src="{{ item.product.images.first.image.url }}" 
+                                                         alt="{{ item.product.name }}"
+                                                         class="me-3 rounded" 
+                                                         style="width: 50px; height: 50px; object-fit: cover;">
+                                                    {% endif %}
+                                                    <div>
+                                                        <h6 class="mb-0">{{ item.product_name }}</h6>
+                                                        <small class="text-muted">SKU: {{ item.product.sku }}</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>₹{{ item.product_price }}</td>
+                                            <td>{{ item.quantity }}</td>
+                                            <td class="fw-semibold">₹{{ item.total_price }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <!-- Price Summary -->
+                            <div class="row justify-content-end">
+                                <div class="col-md-6">
+                                    <div class="border-top pt-3">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Subtotal:</span>
+                                            <span>₹{{ order.subtotal }}</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Shipping:</span>
+                                            <span>
+                                                {% if order.shipping_charge > 0 %}
+                                                ₹{{ order.shipping_charge }}
+                                                {% else %}
+                                                <span class="text-success">FREE</span>
+                                                {% endif %}
+                                            </span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Tax:</span>
+                                            <span>₹{{ order.tax_amount }}</span>
+                                        </div>
+                                        {% if order.discount_amount > 0 %}
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <span>Discount:</span>
+                                            <span class="text-success">-₹{{ order.discount_amount }}</span>
+                                        </div>
+                                        {% endif %}
+                                        <hr>
+                                        <div class="d-flex justify-content-between fw-bold fs-5">
+                                            <span>Total:</span>
+                                            <span class="text-primary">₹{{ order.total_amount }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Shipping Address -->
+                    <div class="card border mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title fw-semibold mb-3">Shipping Address</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p class="mb-1"><strong>{{ order.customer_name }}</strong></p>
+                                    <p class="mb-1">{{ order.customer_phone }}</p>
+                                    <p class="mb-1">{{ order.customer_email }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="mb-1">{{ order.shipping_address }}</p>
+                                    <p class="mb-1">{{ order.shipping_city }}, {{ order.shipping_state }}</p>
+                                    <p class="mb-0">{{ order.shipping_pincode }}, {{ order.shipping_country }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Next Steps -->
+                    <div class="alert alert-info">
+                        <h6 class="fw-semibold"><i class="fas fa-info-circle me-2"></i>What happens next?</h6>
+                        <ul class="mb-0">
+                            <li>You will receive order confirmation email shortly</li>
+                            {% if order.payment_method == 'cod' %}
+                            <li>Pay ₹{{ order.total_amount }} when you receive your order</li>
+                            {% else %}
+                            <li>Payment of ₹{{ order.total_amount }} has been received</li>
+                            {% endif %}
+                            <li>We will notify you when your order ships</li>
+                            <li>Expected delivery: 3-5 business days</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="d-flex justify-content-center gap-3 mt-4">
+                        <!-- ✅ FIXED: View Order Details -->
+                        <a href="{% url 'order_detail' order.order_id %}" class="btn btn-outline-primary px-4">
+                            <i class="fas fa-eye me-2"></i>View Order Details
+                        </a>
+                        
+                        <!-- ✅ FIXED: View All Orders -->
+                        <a href="{% url 'order_history' %}" class="btn btn-primary px-4">
+                            <i class="fas fa-list me-2"></i>View All Orders
+                        </a>
+                        
+                        <!-- ✅ FIXED: Continue Shopping -->
+                        <a href="{% url 'home' %}" class="btn btn-outline-secondary px-4">
+                            <i class="fas fa-shopping-bag me-2"></i>Continue Shopping
+                        </a>
+                    </div>
+
+                    <!-- Track Order Link -->
+                    <div class="text-center mt-4">
+                        <small class="text-muted">
+                            Want to track your order? 
+                            <!-- ✅ FIXED: Track Order -->
+                            <a href="{% url 'order_tracking' order.order_id %}" class="text-decoration-none">
+                                Track Order <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
+                        </small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Help Section -->
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="card-body">
+                    <h5 class="fw-semibold mb-3">Need Help?</h5>
+                    <div class="row text-center">
+                        <div class="col-md-4 mb-3 mb-md-0">
+                            <div class="p-3">
+                                <i class="fas fa-headset text-primary fa-2x mb-3"></i>
+                                <h6 class="fw-semibold">Customer Support</h6>
+                                <p class="small text-muted mb-2">+91 9876543210</p>
+                                <small class="text-muted">9 AM - 9 PM, 7 days a week</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3 mb-md-0">
+                            <div class="p-3">
+                                <i class="fas fa-envelope text-primary fa-2x mb-3"></i>
+                                <h6 class="fw-semibold">Email Support</h6>
+                                <p class="small text-muted mb-2">support@Radhvi.com</p>
+                                <small class="text-muted">We reply within 24 hours</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-3">
+                                <i class="fas fa-comments text-primary fa-2x mb-3"></i>
+                                <h6 class="fw-semibold">Live Chat</h6>
+                                <p class="small text-muted mb-2">Available 24/7</p>
+                                <small class="text-muted">Instant help from our team</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add some animation
+    document.addEventListener('DOMContentLoaded', function() {
+        // Confetti effect (simple version)
+        function createConfetti() {
+            const colors = ['#FF6B6B', '#4ECDC4', '#FFD166', '#06D6A0', '#118AB2'];
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.position = 'fixed';
+                confetti.style.width = '10px';
+                confetti.style.height = '10px';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.borderRadius = '50%';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-10px';
+                confetti.style.opacity = '0.8';
+                confetti.style.zIndex = '9999';
+                confetti.style.pointerEvents = 'none';
+                document.body.appendChild(confetti);
+                
+                // Animation
+                const animation = confetti.animate([
+                    { transform: 'translateY(0) rotate(0deg)', opacity: 0.8 },
+                    { transform: `translateY(${window.innerHeight}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+                ], {
+                    duration: 2000 + Math.random() * 2000,
+                    easing: 'cubic-bezier(0.215, 0.610, 0.355, 1)'
+                });
+                
+                animation.onfinish = () => confetti.remove();
+            }
+        }
+        
+        // Run confetti on page load
+        createConfetti();
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,576 @@
+/**
+ * Valentine's Day Campaign Styles
+ * Radhvi.in - Emotions, Crafted Perfectly
+ * 
+ * This stylesheet contains all styles for Valentine's Day promotional elements
+ */
+
+/* ============================================================================
+   VALENTINE'S COLOR PALETTE
+   ============================================================================ */
+:root {
+    --valentine-primary: #FF1744;
+    --valentine-accent: #F50057;
+    --valentine-dark: #C51162;
+    --valentine-light: #FFE0E6;
+    --valentine-gradient: linear-gradient(135deg, #FF1744 0%, #F50057 100%);
+    --valentine-shadow: 0 10px 30px rgba(255, 23, 68, 0.2);
+}
+
+/* ============================================================================
+   ANNOUNCEMENT BAR
+   ============================================================================ */
+.valentine-announcement-bar {
+    background: var(--valentine-gradient);
+    color: white;
+    position: relative;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.valentine-logo-small {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+}
+
+.valentine-announcement-text {
+    font-size: 1rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.valentine-emoji {
+    font-size: 1.2rem;
+    animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+.valentine-code {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-family: 'Courier New', monospace;
+    font-weight: 700;
+    letter-spacing: 1px;
+    border: 2px dashed rgba(255, 255, 255, 0.5);
+}
+
+.valentine-close-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.valentine-close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+}
+
+/* ============================================================================
+   HERO BANNER SECTION
+   ============================================================================ */
+.valentine-hero-section {
+    background: linear-gradient(135deg, #FFE0E6 0%, #FFF5F7 50%, #FFFFFF 100%);
+    padding: 80px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.valentine-hero-section::before {
+    content: '💝';
+    position: absolute;
+    font-size: 200px;
+    opacity: 0.05;
+    top: -50px;
+    right: -50px;
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(10deg); }
+}
+
+.valentine-hero-content {
+    padding: 20px;
+}
+
+.valentine-hero-logo {
+    max-width: 400px;
+    width: 100%;
+    height: auto;
+    margin-bottom: 30px;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.valentine-hero-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--valentine-dark);
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.valentine-hero-subtitle {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.valentine-offer-badge {
+    display: inline-flex;
+    flex-direction: column;
+    background: var(--valentine-gradient);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: var(--valentine-shadow);
+}
+
+.offer-percentage {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.offer-code {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-top: 5px;
+}
+
+.valentine-cta-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.btn-valentine-primary {
+    background: var(--valentine-gradient);
+    border: none;
+    color: white;
+    padding: 14px 32px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: var(--valentine-shadow);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-valentine-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(255, 23, 68, 0.3);
+    color: white;
+}
+
+.btn-valentine-outline {
+    background: transparent;
+    border: 2px solid var(--valentine-primary);
+    color: var(--valentine-primary);
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-valentine-outline:hover {
+    background: var(--valentine-gradient);
+    color: white;
+    border-color: transparent;
+    transform: translateY(-3px);
+}
+
+.valentine-hero-image img {
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    transition: transform 0.5s ease;
+}
+
+.valentine-hero-image img:hover {
+    transform: scale(1.02);
+}
+
+/* ============================================================================
+   CATEGORY CARD
+   ============================================================================ */
+.valentine-category-card {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.valentine-card-special {
+    border: 3px solid var(--valentine-primary) !important;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #FFF 0%, #FFE0E6 100%);
+    transition: all 0.3s ease;
+}
+
+.valentine-card-special::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: var(--valentine-gradient);
+}
+
+.valentine-card-special:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(255, 23, 68, 0.2) !important;
+}
+
+.valentine-badge-corner {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--valentine-gradient);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(255, 23, 68, 0.3);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.valentine-icon-wrapper {
+    background: white !important;
+    border: 3px solid var(--valentine-light);
+    border-radius: 20px !important;
+}
+
+.valentine-category-icon {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+}
+
+.valentine-category-title {
+    color: var(--valentine-dark);
+    font-size: 1.2rem;
+}
+
+.valentine-discount-tag {
+    background: var(--valentine-gradient);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: 700;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+/* ============================================================================
+   PROMOTIONAL SECTION
+   ============================================================================ */
+.valentine-promo-section {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.valentine-promo-section::before {
+    content: '❤️';
+    position: absolute;
+    font-size: 300px;
+    opacity: 0.03;
+    bottom: -100px;
+    left: -100px;
+}
+
+.valentine-promo-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    padding: 60px 40px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.valentine-promo-image img {
+    max-width: 100%;
+    height: auto;
+    filter: drop-shadow(0 20px 40px rgba(255, 23, 68, 0.3));
+    animation: floatSlow 8s ease-in-out infinite;
+}
+
+@keyframes floatSlow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+.valentine-promo-content {
+    color: white;
+}
+
+.valentine-promo-badge {
+    display: inline-flex;
+    align-items: center;
+    background: var(--valentine-gradient);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.valentine-promo-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.valentine-promo-text {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.6;
+}
+
+.valentine-promo-features {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.valentine-promo-features .feature-item {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.valentine-promo-features .feature-item i {
+    font-size: 1.2rem;
+}
+
+.btn-valentine-large {
+    background: var(--valentine-gradient);
+    border: none;
+    color: white;
+    padding: 16px 40px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(255, 23, 68, 0.4);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-valentine-large:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 50px rgba(255, 23, 68, 0.5);
+    color: white;
+}
+
+.valentine-countdown {
+    margin-top: 15px;
+}
+
+.countdown-timer {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.countdown-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    color: white;
+    min-width: 50px;
+    text-align: center;
+}
+
+/* ============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================ */
+
+/* Tablets and below */
+@media (max-width: 991px) {
+    .valentine-hero-title {
+        font-size: 2rem;
+    }
+    
+    .valentine-hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .valentine-promo-title {
+        font-size: 2rem;
+    }
+    
+    .valentine-promo-card {
+        padding: 40px 30px;
+    }
+}
+
+/* Mobile devices */
+@media (max-width: 768px) {
+    .valentine-announcement-text {
+        font-size: 0.875rem;
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .valentine-logo-small {
+        height: 30px;
+    }
+    
+    .valentine-hero-section {
+        padding: 50px 0;
+    }
+    
+    .valentine-hero-logo {
+        max-width: 250px;
+    }
+    
+    .valentine-hero-title {
+        font-size: 1.75rem;
+    }
+    
+    .valentine-hero-subtitle {
+        font-size: 0.95rem;
+    }
+    
+    .valentine-cta-buttons {
+        flex-direction: column;
+    }
+    
+    .btn-valentine-primary,
+    .btn-valentine-outline {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .valentine-promo-title {
+        font-size: 1.75rem;
+    }
+    
+    .valentine-promo-text {
+        font-size: 1rem;
+    }
+    
+    .valentine-promo-card {
+        padding: 30px 20px;
+        border-radius: 20px;
+    }
+    
+    .btn-valentine-large {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .valentine-category-icon {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+/* Small mobile devices */
+@media (max-width: 576px) {
+    .valentine-hero-title {
+        font-size: 1.5rem;
+    }
+    
+    .offer-percentage {
+        font-size: 1.5rem;
+    }
+    
+    .valentine-promo-title {
+        font-size: 1.5rem;
+    }
+    
+    .countdown-item {
+        min-width: 40px;
+        padding: 6px 8px;
+        font-size: 0.875rem;
+    }
+}
+
+/* ============================================================================
+   ACCESSIBILITY
+   ============================================================================ */
+
+/* Focus states for keyboard navigation */
+.valentine-close-btn:focus,
+.btn-valentine-primary:focus,
+.btn-valentine-outline:focus,
+.btn-valentine-large:focus {
+    outline: 3px solid var(--valentine-accent);
+    outline-offset: 3px;
+}
+
+/* Reduced motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .valentine-card-special {
+        border-width: 4px !important;
+    }
+    
+    .valentine-code {
+        border-width: 3px;
+    }
+}

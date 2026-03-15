@@ -1,0 +1,433 @@
+{% extends 'gift/base.html' %}
+
+{% block title %}FAQs - Radhvi{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active">FAQs</li>
+        </ol>
+    </nav>
+    
+    <!-- Header -->
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold mb-3">Frequently Asked Questions</h1>
+        <p class="lead text-muted">
+            Find answers to common questions about Radhvi
+        </p>
+    </div>
+    
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Search FAQ -->
+            <div class="card border-0 shadow-sm mb-5">
+                <div class="card-body p-4">
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-text bg-transparent border-end-0">
+                            <i class="fas fa-search text-muted"></i>
+                        </span>
+                        <input type="text" class="form-control border-start-0" 
+                               id="faqSearch" placeholder="Search for questions...">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- FAQ Categories -->
+            <div class="mb-5">
+                <h3 class="fw-bold mb-4">Browse by Category</h3>
+                <div class="row g-3">
+                    <div class="col-md-3 col-6">
+                        <a href="#ordering" class="btn btn-outline-primary w-100 py-3">
+                            <i class="fas fa-shopping-cart fa-2x mb-2 d-block"></i>
+                            <span>Ordering</span>
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <a href="#shipping" class="btn btn-outline-primary w-100 py-3">
+                            <i class="fas fa-truck fa-2x mb-2 d-block"></i>
+                            <span>Shipping</span>
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <a href="#payments" class="btn btn-outline-primary w-100 py-3">
+                            <i class="fas fa-credit-card fa-2x mb-2 d-block"></i>
+                            <span>Payments</span>
+                        </a>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <a href="#returns" class="btn btn-outline-primary w-100 py-3">
+                            <i class="fas fa-undo fa-2x mb-2 d-block"></i>
+                            <span>Returns</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- FAQ Accordion -->
+            <div class="accordion" id="faqAccordion">
+                
+                <!-- Ordering Section -->
+                <div class="faq-category mb-4" id="ordering">
+                    <h3 class="fw-bold mb-3">Ordering</h3>
+                    
+                    <div class="accordion-item mb-2">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq1">
+                                How do I place an order?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                To place an order:<br>
+                                1. Browse products and add items to your cart<br>
+                                2. Click on the cart icon and proceed to checkout<br>
+                                3. Enter your shipping details<br>
+                                4. Select payment method and complete payment<br>
+                                5. You'll receive an order confirmation email
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item mb-2">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq2">
+                                Can I modify or cancel my order?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Orders can be modified or cancelled within 1 hour of placement. 
+                                After that, the order enters processing and cannot be changed. 
+                                Contact customer support immediately if you need to make changes.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item mb-2">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq3">
+                                Do you offer gift wrapping?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes! We offer free gift wrapping for all orders. You can add a 
+                                personalized message during checkout. The gift will be beautifully 
+                                packaged with our signature gift wrap and a message card.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Shipping Section -->
+                <div class="faq-category mb-4" id="shipping">
+                    <h3 class="fw-bold mb-3">Shipping & Delivery</h3>
+                    
+                    <div class="accordion-item mb-2">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq4">
+                                What are your shipping charges?
+                            </button>
+                        </h2>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                • Free shipping on orders above ₹999<br>
+                                • Flat ₹50 shipping charge for orders below ₹999<br>
+                                • Express delivery available at additional cost
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item mb-2">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq5">
+                                How long does delivery take?
+                            </button>
+                        </h2>
+                        <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Delivery times vary by location:<br>
+                                • Metro cities: 2-4 business days<br>
+                                • Tier 2 cities: 3-6 business days<br>
+                                • Other locations: 4-7 business days<br>
+                                • Express delivery: 1-2 business days (additional charges apply)
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item mb-2">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq6">
+                                Can I track my order?
+                            </button>
+                        </h2>
+                        <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes! Once your order is shipped, you'll receive a tracking number 
+                                via email and SMS. You can track your order status in your account 
+                                or using the tracking link provided.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Payments Section -->
+                <div class="faq-category mb-4" id="payments">
+                    <h3 class="fw-bold mb-3">Payments</h3>
+                    
+                    <div class="accordion-item mb-2">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq7">
+                                What payment methods do you accept?
+                            </button>
+                        </h2>
+                        <div id="faq7" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                We accept:<br>
+                                • Credit/Debit Cards (Visa, MasterCard, American Express)<br>
+                                • UPI (Google Pay, PhonePe, Paytm)<br>
+                                • Net Banking<br>
+                                • Cash on Delivery (for eligible orders)<br>
+                                • Wallet payments (PhonePe, Paytm, Amazon Pay)
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item mb-2">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq8">
+                                Is it safe to pay online?
+                            </button>
+                        </h2>
+                        <div id="faq8" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Absolutely! We use secure SSL encryption and PCI-compliant 
+                                payment gateways. We never store your credit card information 
+                                on our servers. All transactions are processed through 
+                                certified payment partners.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item mb-2">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq9">
+                                Can I pay Cash on Delivery?
+                            </button>
+                        </h2>
+                        <div id="faq9" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes, Cash on Delivery (COD) is available for orders up to ₹5000. 
+                                For COD orders, we may require a phone verification call to 
+                                confirm the order.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Returns Section -->
+                <div class="faq-category mb-4" id="returns">
+                    <h3 class="fw-bold mb-3">Returns & Refunds</h3>
+                    
+                    <div class="accordion-item mb-2">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq10">
+                                What is your return policy?
+                            </button>
+                        </h2>
+                        <div id="faq10" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                We offer a 7-day return policy from the date of delivery. 
+                                Products must be:<br>
+                                • In original condition<br>
+                                • Unused and undamaged<br>
+                                • With all tags and packaging intact<br>
+                                • Accompanied by the original invoice
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item mb-2">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq11">
+                                How do I initiate a return?
+                            </button>
+                        </h2>
+                        <div id="faq11" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                To initiate a return:<br>
+                                1. Log in to your account<br>
+                                2. Go to "My Orders"<br>
+                                3. Select the order you want to return<br>
+                                4. Click "Return Item" and follow instructions<br>
+                                5. Or contact our customer support for assistance
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item mb-2">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq12">
+                                How long do refunds take?
+                            </button>
+                        </h2>
+                        <div id="faq12" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Refunds are processed within 7-10 business days after we 
+                                receive the returned product. The refund will be issued to 
+                                the original payment method used for the purchase.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- General Questions -->
+                <div class="faq-category mb-4">
+                    <h3 class="fw-bold mb-3">General Questions</h3>
+                    
+                    <div class="accordion-item mb-2">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq13">
+                                Do you ship internationally?
+                            </button>
+                        </h2>
+                        <div id="faq13" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Currently, we only ship within India. We plan to offer 
+                                international shipping in the future. Please check back 
+                                for updates.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item mb-2">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq14">
+                                Can I buy gift cards?
+                            </button>
+                        </h2>
+                        <div id="faq14" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes! We offer digital gift cards in various denominations. 
+                                Gift cards can be purchased and sent via email. They are 
+                                valid for 1 year from the date of purchase.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item mb-2">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq15">
+                                How do I contact customer support?
+                            </button>
+                        </h2>
+                        <div id="faq15" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                You can contact us through:<br>
+                                • Phone: +91 9876543210 (10AM - 8PM)<br>
+                                • Email: support@Radhvi.com<br>
+                                • Live Chat: Available on our website<br>
+                                • Contact Form: <a href="{% url 'contact' %}">Click here</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Still Have Questions -->
+            <div class="card border-0 shadow-sm mt-5">
+                <div class="card-body text-center p-5">
+                    <div class="display-1 text-primary mb-3">❓</div>
+                    <h3 class="fw-bold mb-3">Still Have Questions?</h3>
+                    <p class="text-muted mb-4">
+                        Can't find the answer you're looking for? Our customer support 
+                        team is here to help!
+                    </p>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="{% url 'contact' %}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-envelope me-2"></i> Contact Us
+                        </a>
+                        <a href="tel:+919876543210" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-phone me-2"></i> Call Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .accordion-button:not(.collapsed) {
+        background-color: rgba(255, 107, 139, 0.1);
+        color: var(--primary);
+        box-shadow: none;
+    }
+    
+    .accordion-button:focus {
+        box-shadow: none;
+        border-color: var(--primary);
+    }
+    
+    .faq-category {
+        scroll-margin-top: 20px;
+    }
+</style>
+
+<script>
+    // FAQ Search Functionality
+    document.getElementById('faqSearch').addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const accordionItems = document.querySelectorAll('.accordion-item');
+        
+        accordionItems.forEach(item => {
+            const question = item.querySelector('.accordion-button').textContent.toLowerCase();
+            const answer = item.querySelector('.accordion-body').textContent.toLowerCase();
+            
+            if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                item.style.display = 'block';
+                // Open matching items
+                const button = item.querySelector('.accordion-button');
+                if (!button.classList.contains('collapsed')) {
+                    button.click();
+                }
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    });
+    
+    // Smooth scroll to category
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}

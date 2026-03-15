@@ -1,0 +1,395 @@
+{% load static %}
+{% comment %}
+Custom Gift Service Section
+Highlights Radhvi's personalized gift customization service
+{% endcomment %}
+
+<section class="custom-gift-service py-6 bg-gradient-light">
+    <div class="container">
+        <div class="row align-items-center">
+            <!-- Left: Service Description -->
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <div class="service-content pe-lg-5">
+                    <!-- Badge -->
+                    <div class="service-badge mb-4">
+                        <span class="badge bg-primary-gradient px-4 py-2 fs-6">
+                            <i class="fas fa-magic me-2"></i> Exclusive Service
+                        </span>
+                    </div>
+
+                    <!-- Heading -->
+                    <h2 class="display-5 fw-bold mb-4">
+                        <span class="text-dark">Create Your</span>
+                        <span class="text-primary d-block">Dream Gift</span>
+                    </h2>
+
+                    <!-- Description -->
+                    <p class="lead text-muted mb-4">
+                        Have a unique gift idea in mind? At Radhvi, we bring your vision to life! 
+                        Our expert team specializes in creating personalized, custom gifts tailored 
+                        exactly to your specifications.
+                    </p>
+
+                    <!-- Features List -->
+                    <div class="custom-features mb-5">
+                        <div class="feature-row d-flex align-items-start mb-3">
+                            <div class="feature-check me-3">
+                                <i class="fas fa-check-circle text-success fs-5"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-semibold mb-1">Personalized Design</h6>
+                                <p class="text-muted small mb-0">Share your idea, we'll design it perfectly</p>
+                            </div>
+                        </div>
+
+                        <div class="feature-row d-flex align-items-start mb-3">
+                            <div class="feature-check me-3">
+                                <i class="fas fa-check-circle text-success fs-5"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-semibold mb-1">Custom Packaging</h6>
+                                <p class="text-muted small mb-0">Unique wrapping and presentation as per your choice</p>
+                            </div>
+                        </div>
+
+                        <div class="feature-row d-flex align-items-start mb-3">
+                            <div class="feature-check me-3">
+                                <i class="fas fa-check-circle text-success fs-5"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-semibold mb-1">Special Messages</h6>
+                                <p class="text-muted small mb-0">Add personalized notes, names, or special dedications</p>
+                            </div>
+                        </div>
+
+                        <div class="feature-row d-flex align-items-start mb-3">
+                            <div class="feature-check me-3">
+                                <i class="fas fa-check-circle text-success fs-5"></i>
+                            </div>
+                            <div>
+                                <h6 class="fw-semibold mb-1">Theme-Based Customization</h6>
+                                <p class="text-muted small mb-0">Match any occasion, color scheme, or theme</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CTA Buttons -->
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="{% url 'contact' %}" class="btn btn-primary btn-lg px-5">
+                            <i class="fas fa-comments me-2"></i> Request Custom Gift
+                        </a>
+                        <a href="tel:+919876543210" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-phone me-2"></i> Call Us Now
+                        </a>
+                    </div>
+
+                    <!-- Trust Indicator -->
+                    <div class="trust-note mt-4">
+                        <small class="text-muted">
+                            <i class="fas fa-shield-alt text-success me-1"></i>
+                            <strong>100% Satisfaction Guaranteed</strong> - We work with you until it's perfect
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Visual Showcase -->
+            <div class="col-lg-6">
+                <div class="service-showcase position-relative">
+                    <!-- Main Image -->
+                    <div class="main-showcase-image">
+                        <img src="https://images.unsplash.com/photo-1513885535751-8b9238bd345a?w=800&q=80" 
+                             alt="Custom Gift Creation" 
+                             class="img-fluid rounded-4 shadow-lg">
+                    </div>
+
+                    <!-- Floating Process Cards -->
+                    <div class="process-card card-1">
+                        <div class="process-step">
+                            <div class="step-number bg-primary text-white">1</div>
+                            <div class="step-content">
+                                <h6 class="mb-1">Share Your Idea</h6>
+                                <small class="text-muted">Tell us what you envision</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="process-card card-2">
+                        <div class="process-step">
+                            <div class="step-number bg-success text-white">2</div>
+                            <div class="step-content">
+                                <h6 class="mb-1">We Design</h6>
+                                <small class="text-muted">Our experts create it</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="process-card card-3">
+                        <div class="process-step">
+                            <div class="step-number bg-warning text-white">3</div>
+                            <div class="step-content">
+                                <h6 class="mb-1">You Approve</h6>
+                                <small class="text-muted">Review before we craft</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="process-card card-4">
+                        <div class="process-step">
+                            <div class="step-number bg-info text-white">4</div>
+                            <div class="step-content">
+                                <h6 class="mb-1">Delivered</h6>
+                                <small class="text-muted">Perfect gift at your door</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Decorative Elements -->
+                    <div class="decorative-circle circle-1"></div>
+                    <div class="decorative-circle circle-2"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Stats Bar -->
+        <div class="stats-bar mt-6">
+            <div class="row text-center g-4">
+                <div class="col-md-3 col-6">
+                    <div class="stat-item">
+                        <h3 class="fw-bold text-primary mb-2">500+</h3>
+                        <p class="text-muted mb-0">Custom Gifts Created</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-item">
+                        <h3 class="fw-bold text-success mb-2">100%</h3>
+                        <p class="text-muted mb-0">Customer Satisfaction</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-item">
+                        <h3 class="fw-bold text-warning mb-2">24-48h</h3>
+                        <p class="text-muted mb-0">Design Turnaround</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="stat-item">
+                        <h3 class="fw-bold text-info mb-2">Expert</h3>
+                        <p class="text-muted mb-0">Craftsmanship</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+/* Custom Gift Service Section */
+.custom-gift-service {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.bg-gradient-light {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #f8f9fa 100%);
+}
+
+.bg-primary-gradient {
+    background: linear-gradient(135deg, #FF6B8B 0%, #FF8E53 100%);
+    border: none;
+}
+
+.service-badge {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Feature Rows */
+.custom-features .feature-row {
+    padding: 15px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+.custom-features .feature-row:hover {
+    transform: translateX(10px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+.feature-check {
+    flex-shrink: 0;
+}
+
+/* Service Showcase */
+.service-showcase {
+    position: relative;
+    padding: 40px;
+}
+
+.main-showcase-image {
+    position: relative;
+    z-index: 2;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+}
+
+.main-showcase-image img {
+    transition: transform 0.5s ease;
+}
+
+.main-showcase-image:hover img {
+    transform: scale(1.05);
+}
+
+/* Process Cards */
+.process-card {
+    position: absolute;
+    background: white;
+    border-radius: 16px;
+    padding: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    z-index: 3;
+    animation: float 6s ease-in-out infinite;
+}
+
+.process-card.card-1 {
+    top: 10%;
+    left: -30px;
+    animation-delay: 0s;
+}
+
+.process-card.card-2 {
+    top: 35%;
+    right: -30px;
+    animation-delay: 1.5s;
+}
+
+.process-card.card-3 {
+    bottom: 35%;
+    left: -30px;
+    animation-delay: 3s;
+}
+
+.process-card.card-4 {
+    bottom: 10%;
+    right: -30px;
+    animation-delay: 4.5s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+.process-step {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.step-content h6 {
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.step-content small {
+    font-size: 0.75rem;
+}
+
+/* Decorative Circles */
+.decorative-circle {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255, 107, 139, 0.1), rgba(255, 142, 83, 0.1));
+    z-index: 1;
+}
+
+.circle-1 {
+    width: 200px;
+    height: 200px;
+    top: -50px;
+    right: -50px;
+}
+
+.circle-2 {
+    width: 150px;
+    height: 150px;
+    bottom: -30px;
+    left: -30px;
+}
+
+/* Stats Bar */
+.stats-bar {
+    background: white;
+    border-radius: 20px;
+    padding: 40px 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+}
+
+.stat-item h3 {
+    font-size: 2.5rem;
+}
+
+.stat-item p {
+    font-size: 0.9rem;
+}
+
+/* Trust Note */
+.trust-note {
+    padding: 12px 20px;
+    background: rgba(25, 135, 84, 0.05);
+    border-left: 4px solid #198754;
+    border-radius: 8px;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .service-showcase {
+        padding: 20px;
+    }
+
+    .process-card {
+        position: static;
+        margin-bottom: 15px;
+        animation: none;
+    }
+
+    .decorative-circle {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .stat-item h3 {
+        font-size: 2rem;
+    }
+
+    .stat-item p {
+        font-size: 0.8rem;
+    }
+
+    .custom-features .feature-row:hover {
+        transform: none;
+    }
+}
+</style>

@@ -1,0 +1,307 @@
+/* Iconify Icon Picker Styles for Django Admin */
+
+/* Modal Overlay */
+.iconify-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 999999;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Modal Content */
+.iconify-modal-content {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Modal Header */
+.iconify-modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.iconify-modal-header h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #333;
+}
+
+.iconify-close-btn {
+    background: none;
+    border: none;
+    font-size: 32px;
+    color: #999;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.iconify-close-btn:hover {
+    background: #f5f5f5;
+    color: #333;
+}
+
+/* Modal Body */
+.iconify-modal-body {
+    padding: 24px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+/* Search Bar */
+.iconify-search-bar {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.iconify-search-bar input {
+    width: 100%;
+    padding: 12px 45px 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.iconify-search-bar input:focus {
+    outline: none;
+    border-color: #417690;
+    box-shadow: 0 0 0 3px rgba(65, 118, 144, 0.1);
+}
+
+.iconify-search-bar .iconify {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #999;
+    pointer-events: none;
+}
+
+/* Collection Tabs */
+.iconify-collections {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.collection-tab {
+    padding: 8px 16px;
+    background: #f5f5f5;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #666;
+    transition: all 0.2s ease;
+}
+
+.collection-tab:hover {
+    background: #e8e8e8;
+    color: #333;
+}
+
+.collection-tab.active {
+    background: #417690;
+    color: white;
+    border-color: #417690;
+}
+
+/* Icons Grid */
+.iconify-icons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 12px;
+    min-height: 300px;
+}
+
+.iconify-icon-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: white;
+}
+
+.iconify-icon-card:hover {
+    border-color: #417690;
+    background: #f0f7fa;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.iconify-icon-card .iconify {
+    color: #417690;
+    margin-bottom: 8px;
+}
+
+.iconify-icon-card .icon-name {
+    font-size: 11px;
+    color: #666;
+    text-align: center;
+    word-break: break-word;
+}
+
+/* Loading State */
+.iconify-loading {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+    font-size: 16px;
+}
+
+/* No Results */
+.iconify-no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+}
+
+.iconify-no-results p {
+    margin: 10px 0;
+}
+
+.iconify-no-results .small {
+    font-size: 14px;
+    color: #bbb;
+}
+
+/* Modal Footer */
+.iconify-modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid #e0e0e0;
+    background: #f9f9f9;
+}
+
+.iconify-help-text {
+    margin: 0;
+    font-size: 13px;
+    color: #666;
+    text-align: center;
+}
+
+/* Success Toast */
+.iconify-toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #4caf50;
+    color: white;
+    padding: 16px 24px;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    z-index: 9999999;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+}
+
+.iconify-toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .iconify-modal-content {
+        width: 95%;
+        max-height: 95vh;
+    }
+    
+    .iconify-icons-grid {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: 8px;
+    }
+    
+    .iconify-icon-card {
+        padding: 12px;
+    }
+    
+    .iconify-collections {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+    }
+}
+
+/* Loading Indicator */
+.iconify-loading-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.iconify-loading-indicator .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #417690;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.iconify-loading-indicator p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+}

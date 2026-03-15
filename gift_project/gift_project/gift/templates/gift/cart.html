@@ -1,0 +1,415 @@
+{% extends 'gift/base.html' %}
+{% load static %}
+{% load gift_filters %}
+
+{% block title %}Shopping Cart - Radhvi{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active">Shopping Cart</li>
+        </ol>
+    </nav>
+    
+    <h1 class="h2 fw-bold mb-4">Shopping Cart</h1>
+    
+    {% if cart_items %}
+    <div class="row">
+        <!-- Cart Items -->
+        <div class="col-lg-8">
+            <!-- Cart Header -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="fw-semibold mb-0">Product</h6>
+                        </div>
+                        <div class="col-md-2 text-center">
+                            <h6 class="fw-semibold mb-0">Price</h6>
+                        </div>
+                        <div class="col-md-2 text-center">
+                            <h6 class="fw-semibold mb-0">Quantity</h6>
+                        </div>
+                        <div class="col-md-2 text-center">
+                            <h6 class="fw-semibold mb-0">Total</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Cart Items List -->
+            {% for item in cart_items %}
+            <div class="card border-0 shadow-sm mb-3 cart-item" data-item-id="{{ item.id }}">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <!-- Product Image & Name -->
+                        <div class="col-md-6">
+                            <div class="d-flex">
+                                <div class="me-3" style="width: 100px;">
+                                    {% if item.product.images.first %}
+                                    <img src="{{ item.product.images.first.image.url }}" 
+                                         alt="{{ item.product.name }}"
+                                         class="img-fluid rounded">
+                                    {% else %}
+                                    <div class="bg-light rounded d-flex align-items-center justify-content-center" 
+                                         style="width: 100px; height: 100px;">
+                                        <i class="fas fa-gift fa-2x text-secondary"></i>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <h6 class="fw-semibold mb-1">
+                                        <a href="{% url 'product_detail' item.product.slug %}" 
+                                           class="text-dark text-decoration-none">
+                                            {{ item.product.name }}
+                                        </a>
+                                    </h6>
+                                    <p class="text-muted small mb-2">{{ item.product.short_description|truncatechars:60 }}</p>
+                                    <div class="d-flex gap-2">
+                                        <span class="badge bg-info">{{ item.product.category.name }}</span>
+                                        {% if item.product.brand %}
+                                        <span class="badge bg-secondary">{{ item.product.brand.name }}</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Price -->
+                        <div class="col-md-2 text-center">
+                            <h6 class="fw-semibold mb-0">
+                                ₹{{ item.product.final_price }}
+                            </h6>
+                            {% if item.product.discounted_price %}
+                            <small class="text-muted">
+                                <del>₹{{ item.product.price }}</del>
+                            </small>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Quantity -->
+                        <div class="col-md-2 text-center">
+                            <div class="input-group input-group-sm mx-auto" style="width: 120px;">
+                                <button class="btn btn-outline-secondary" type="button" 
+                                        onclick="updateCartQuantity({{ item.id }}, -1)">-</button>
+                                <input type="number" class="form-control text-center quantity-input" 
+                                       value="{{ item.quantity }}" min="1" max="{{ item.product.stock }}"
+                                       onchange="updateCartQuantity({{ item.id }}, 0, this.value)">
+                                <button class="btn btn-outline-secondary" type="button" 
+                                        onclick="updateCartQuantity({{ item.id }}, 1)">+</button>
+                            </div>
+                            {% if item.quantity > item.product.stock %}
+                            <small class="text-danger">Only {{ item.product.stock }} available</small>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Total -->
+                        <div class="col-md-2 text-center">
+                            <h6 class="fw-semibold mb-0 item-total">
+                                ₹{{ item.total_price }}
+                            </h6>
+                            <button class="btn btn-link btn-sm text-danger p-0" 
+                                    onclick="removeCartItem({{ item.id }})">
+                                <i class="fas fa-trash"></i> Remove
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            
+            <!-- Continue Shopping -->
+            <div class="mt-4">
+                <a href="{% url 'product_list' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left me-2"></i> Continue Shopping
+                </a>
+                <button class="btn btn-danger" onclick="clearCart()">
+                    <i class="fas fa-trash me-2"></i> Clear Cart
+                </button>
+            </div>
+        </div>
+        
+        <!-- Order Summary -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm sticky-top" style="top: 100px;">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-4">Order Summary</h5>
+                    
+                    <!-- Price Details -->
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Subtotal</span>
+                            <span class="fw-semibold">₹{{ subtotal }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Shipping</span>
+                            <span class="fw-semibold">
+                                {% if subtotal > 1000 %}
+                                <span class="text-success">FREE</span>
+                                {% else %}
+                                ₹50
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Tax (GST 18%)</span>
+                            <span class="fw-semibold">₹{{ subtotal|multiply:0.18|floatformat:2 }}</span>
+                        </div>
+                        
+                        <!-- Coupon Code -->
+                        <div class="input-group mt-4 mb-3">
+                            <input type="text" class="form-control" placeholder="Coupon code" id="couponCode">
+                            <button class="btn btn-outline-primary" type="button" onclick="applyCoupon()">
+                                Apply
+                            </button>
+                        </div>
+                        
+                        <!-- Discount -->
+                        <div class="d-flex justify-content-between mb-2 text-success" id="discountSection" style="display: none;">
+                            <span>Discount</span>
+                            <span class="fw-semibold" id="discountAmount">-₹0</span>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="d-flex justify-content-between mb-3">
+                            <h6 class="fw-bold">Total</h6>
+                            <h5 class="fw-bold text-primary" id="cartTotal">
+                                ₹{% widthratio subtotal 1 1.18|add:50 %}
+                            </h5>
+                        </div>
+                    </div>
+                    
+                    <!-- Checkout Button -->
+                    <a href="{% url 'checkout' %}" class="btn btn-primary btn-lg w-100 mb-3">
+                        <i class="fas fa-lock me-2"></i> Proceed to Checkout
+                    </a>
+                    
+                    <!-- Payment Methods -->
+                    <div class="text-center mb-3">
+                        <small class="text-muted">We accept</small>
+                        <div class="d-flex justify-content-center gap-2 mt-2">
+                            <i class="fab fa-cc-visa text-muted"></i>
+                            <i class="fab fa-cc-mastercard text-muted"></i>
+                            <i class="fab fa-cc-amex text-muted"></i>
+                            <i class="fab fa-cc-paypal text-muted"></i>
+                            <i class="fab fa-google-pay text-muted"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Security Info -->
+                    <div class="border-top pt-3">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-shield-alt text-success me-3"></i>
+                            <div>
+                                <small class="fw-semibold">Secure Payment</small>
+                                <p class="text-muted small mb-0">Your payment information is protected</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Help Section -->
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="card-body">
+                    <h6 class="fw-semibold mb-3">Need Help?</h6>
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="fas fa-phone text-primary me-3"></i>
+                        <div>
+                            <small class="fw-semibold">Call us</small>
+                            <p class="text-muted small mb-0">+91 9876543210</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-comment text-primary me-3"></i>
+                        <div>
+                            <small class="fw-semibold">Chat with us</small>
+                            <p class="text-muted small mb-0">Available 24/7</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <!-- Empty Cart -->
+    <div class="text-center py-5">
+        <div class="mb-4">
+            <i class="fas fa-shopping-cart fa-4x text-muted"></i>
+        </div>
+        <h3 class="mb-3">Your cart is empty</h3>
+        <p class="text-muted mb-4">Looks like you haven't added any items to your cart yet.</p>
+        <a href="{% url 'product_list' %}" class="btn btn-primary btn-lg">
+            <i class="fas fa-shopping-bag me-2"></i> Start Shopping
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Update cart quantity
+    function updateCartQuantity(itemId, change, newValue = null) {
+        let quantity;
+        
+        if (newValue !== null) {
+            quantity = parseInt(newValue);
+        } else {
+            const $input = $(`.cart-item[data-item-id="${itemId}"] .quantity-input`);
+            quantity = parseInt($input.val()) + change;
+        }
+        
+        // Validate quantity
+        if (quantity < 1) {
+            removeCartItem(itemId);
+            return;
+        }
+        
+        // AJAX request to update cart
+        $.ajax({
+            url: '{% url "update_cart_item" %}',
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            data: JSON.stringify({
+                item_id: itemId,
+                quantity: quantity
+            }),
+            contentType: 'application/json',
+            success: function(response) {
+                if (response.success) {
+                    // Update quantity input
+                    $(`.cart-item[data-item-id="${itemId}"] .quantity-input`).val(quantity);
+                    
+                    // Update item total
+                    $(`.cart-item[data-item-id="${itemId}"] .item-total`).text('₹' + response.item_total.toFixed(2));
+                    
+                    // Update subtotal and total
+                    updateCartTotals(response.subtotal);
+                    
+                    // Update cart count
+                    $('.cart-count').text(response.cart_count);
+                    
+                    showToast('Cart updated successfully', 'success');
+                } else {
+                    showToast(response.message, 'error');
+                }
+            },
+            error: function() {
+                showToast('Error updating cart', 'error');
+            }
+        });
+    }
+    
+    // Remove item from cart
+    function removeCartItem(itemId) {
+        if (!confirm('Are you sure you want to remove this item from cart?')) return;
+        
+        $.ajax({
+            url: '{% url "remove_from_cart" %}',
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            data: JSON.stringify({
+                item_id: itemId
+            }),
+            contentType: 'application/json',
+            success: function(response) {
+                if (response.success) {
+                    // Remove item from DOM
+                    $(`.cart-item[data-item-id="${itemId}"]`).remove();
+                    
+                    // Update cart totals
+                    updateCartTotals(response.subtotal);
+                    
+                    // Update cart count
+                    $('.cart-count').text(response.cart_count);
+                    
+                    // If cart is empty, reload page
+                    if (response.cart_count === 0) {
+                        location.reload();
+                    }
+                    
+                    showToast('Item removed from cart', 'success');
+                }
+            },
+            error: function() {
+                showToast('Error removing item', 'error');
+            }
+        });
+    }
+    
+    // Clear entire cart
+    function clearCart() {
+        if (!confirm('Are you sure you want to clear your entire cart?')) return;
+        
+        // This would typically be an API call
+        // For now, we'll remove all items one by one
+        $('.cart-item').each(function() {
+            const itemId = $(this).data('item-id');
+            removeCartItem(itemId);
+        });
+        
+        showToast('Cart cleared', 'info');
+    }
+    
+    // Apply coupon code
+    function applyCoupon() {
+        const couponCode = $('#couponCode').val();
+        const subtotal = parseFloat('{{ subtotal }}');
+        
+        if (!couponCode.trim()) {
+            showToast('Please enter a coupon code', 'warning');
+            return;
+        }
+        
+        // AJAX request to validate coupon
+        $.ajax({
+            url: '{% url "validate_coupon" %}',
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            data: JSON.stringify({
+                coupon_code: couponCode,
+                order_amount: subtotal
+            }),
+            contentType: 'application/json',
+            success: function(response) {
+                if (response.success) {
+                    // Show discount section
+                    $('#discountSection').show();
+                    $('#discountAmount').text('-₹' + response.discount.toFixed(2));
+                    
+                    // Update total
+                    updateCartTotals(subtotal, response.discount);
+                    
+                    showToast(response.message, 'success');
+                } else {
+                    showToast(response.message, 'error');
+                }
+            },
+            error: function() {
+                showToast('Error applying coupon', 'error');
+            }
+        });
+    }
+    
+    // Update cart totals
+    function updateCartTotals(subtotal, discount = 0) {
+        const shipping = subtotal > 1000 ? 0 : 50;
+        const tax = subtotal * 0.18;
+        const total = subtotal + shipping + tax - discount;
+        
+        // Update totals display
+        $('.cart-total').text('₹' + total.toFixed(2));
+    }
+</script>
+{% endblock %}

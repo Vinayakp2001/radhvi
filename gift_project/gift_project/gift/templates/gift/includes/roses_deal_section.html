@@ -1,0 +1,139 @@
+{% load static %}
+
+<!-- 80 Roses Bouquet Deal Section -->
+<link rel="stylesheet" href="{% static 'css/deals.css' %}">
+
+{% if roses_deal %}
+<section class="deal-section roses-deal-section">
+    <div class="container">
+        <!-- Deal Badge -->
+        <div class="text-center mb-5">
+            <span class="deal-badge">
+                <i class="fas fa-heart"></i> ROMANTIC SPECIAL
+            </span>
+        </div>
+        
+        <div class="row align-items-center g-5">
+            <!-- Product Details -->
+            <div class="col-lg-6 order-lg-2">
+                <div class="deal-content text-white">
+                    <h2 class="deal-title">{{ roses_deal.name }}</h2>
+                    <p class="deal-description">
+                        {{ roses_deal.short_description }}
+                    </p>
+                    
+                    <!-- Features -->
+                    <ul class="deal-features">
+                        <li><i class="fas fa-rose"></i> 80 Premium Red Roses</li>
+                        <li><i class="fas fa-award"></i> Elegant Black & Gold Wrapping</li>
+                        <li><i class="fas fa-spa"></i> Fresh Baby's Breath Accent</li>
+                        <li><i class="fas fa-ruler-combined"></i> 30" x 28" Grand Size</li>
+                        <li><i class="fas fa-truck-fast"></i> Same Day Delivery Available</li>
+                    </ul>
+                    
+                    <!-- Pricing -->
+                    <div class="deal-pricing">
+                        <div class="price-row">
+                            {% if roses_deal.discounted_price %}
+                            <span class="original-price">₹{{ roses_deal.price }}</span>
+                            <span class="sale-price">₹{{ roses_deal.discounted_price }}</span>
+                            {% else %}
+                            <span class="sale-price">₹{{ roses_deal.price }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="savings-text">
+                            <i class="fas fa-heart-circle"></i> Express Your Love in Grand Style
+                        </div>
+                    </div>
+                    
+                    <!-- CTA Buttons -->
+                    <div class="deal-actions">
+                        <form method="POST" action="{% url 'add_to_cart' %}" class="d-inline">
+                            {% csrf_token %}
+                            <input type="hidden" name="product_id" value="{{ roses_deal.id }}">
+                            <button type="submit" class="btn btn-light btn-lg">
+                                <i class="fas fa-shopping-cart me-2"></i> Add to Cart
+                            </button>
+                        </form>
+                        <a href="tel:+919799388840" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-phone me-2"></i> Call to Order
+                        </a>
+                    </div>
+                    
+                    <!-- Trust Indicators -->
+                    <div class="deal-trust">
+                        <span class="trust-item"><i class="fas fa-shipping-fast"></i> Same Day Delivery</span>
+                        <span class="trust-item"><i class="fas fa-leaf"></i> Fresh Flowers</span>
+                        <span class="trust-item"><i class="fas fa-award"></i> Premium Quality</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product Image Gallery -->
+            <div class="col-lg-6 order-lg-1">
+                <div class="deal-image-wrapper">
+                    <!-- Image Carousel -->
+                    <div id="rosesCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            {% if roses_deal.images.all %}
+                                {% for image in roses_deal.images.all %}
+                                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                    <img src="{{ image.image.url }}" alt="{{ roses_deal.name }} - View {{ forloop.counter }}" class="d-block w-100">
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="carousel-item active">
+                                    <img src="{% static 'images/deals/roses-1.jpg' %}" alt="80 Roses Bouquet - View 1" class="d-block w-100">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="{% static 'images/deals/roses-2.jpg' %}" alt="80 Roses Bouquet - View 2" class="d-block w-100">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="{% static 'images/deals/roses-3.jpg' %}" alt="80 Roses Bouquet - View 3" class="d-block w-100">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="{% static 'images/deals/roses-4.jpg' %}" alt="80 Roses Bouquet - View 4" class="d-block w-100">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="{% static 'images/deals/roses-5.jpg' %}" alt="80 Roses Bouquet - View 5" class="d-block w-100">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="{% static 'images/deals/roses-6.jpg' %}" alt="80 Roses Bouquet - View 6" class="d-block w-100">
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Carousel Controls -->
+                        <button class="carousel-control-prev" type="button" data-bs-target="#rosesCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-icon">
+                                <i class="fas fa-chevron-left"></i>
+                            </span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#rosesCarousel" data-bs-slide="next">
+                            <span class="carousel-control-icon">
+                                <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </button>
+                        
+                        <!-- Indicators -->
+                        <div class="carousel-indicators">
+                            {% if roses_deal.images.all %}
+                                {% for image in roses_deal.images.all %}
+                                <button type="button" data-bs-target="#rosesCarousel" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></button>
+                                {% endfor %}
+                            {% else %}
+                                <button type="button" data-bs-target="#rosesCarousel" data-bs-slide-to="0" class="active"></button>
+                                <button type="button" data-bs-target="#rosesCarousel" data-bs-slide-to="1"></button>
+                                <button type="button" data-bs-target="#rosesCarousel" data-bs-slide-to="2"></button>
+                                <button type="button" data-bs-target="#rosesCarousel" data-bs-slide-to="3"></button>
+                                <button type="button" data-bs-target="#rosesCarousel" data-bs-slide-to="4"></button>
+                                <button type="button" data-bs-target="#rosesCarousel" data-bs-slide-to="5"></button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}

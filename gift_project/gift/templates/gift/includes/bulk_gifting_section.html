@@ -1,0 +1,277 @@
+{% load static %}
+{% comment %}
+Corporate & Bulk Gifting Section
+Highlights B2B services for businesses
+{% endcomment %}
+
+<section class="bulk-gifting-section py-6 bg-dark text-white position-relative overflow-hidden">
+    <!-- Background Pattern -->
+    <div class="pattern-overlay"></div>
+    
+    <div class="container position-relative">
+        <div class="row align-items-center">
+            <!-- Left: Content -->
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <div class="bulk-content pe-lg-5">
+                    <!-- Badge -->
+                    <div class="mb-4">
+                        <span class="badge bg-warning text-dark px-4 py-2 fs-6">
+                            <i class="fas fa-briefcase me-2"></i> B2B Solutions
+                        </span>
+                    </div>
+
+                    <!-- Heading -->
+                    <h2 class="display-5 fw-bold mb-4">
+                        Corporate & Bulk Gifting
+                    </h2>
+
+                    <!-- Description -->
+                    <p class="lead mb-4 opacity-90">
+                        Trusted by 100+ companies for employee appreciation, client gifting, 
+                        and corporate events. Get special bulk pricing and dedicated support.
+                    </p>
+
+                    <!-- Benefits Grid -->
+                    <div class="row g-3 mb-5">
+                        <div class="col-md-6">
+                            <div class="benefit-card">
+                                <div class="benefit-icon">
+                                    <i class="fas fa-percentage"></i>
+                                </div>
+                                <h6 class="mb-1">Volume Discounts</h6>
+                                <small class="opacity-75">Save up to 30% on bulk orders</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="benefit-card">
+                                <div class="benefit-icon">
+                                    <i class="fas fa-boxes"></i>
+                                </div>
+                                <h6 class="mb-1">Minimum 50 Pieces</h6>
+                                <small class="opacity-75">Flexible quantity options</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="benefit-card">
+                                <div class="benefit-icon">
+                                    <i class="fas fa-user-tie"></i>
+                                </div>
+                                <h6 class="mb-1">Dedicated Manager</h6>
+                                <small class="opacity-75">Personal account support</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="benefit-card">
+                                <div class="benefit-icon">
+                                    <i class="fas fa-truck-fast"></i>
+                                </div>
+                                <h6 class="mb-1">Priority Delivery</h6>
+                                <small class="opacity-75">Fast bulk order processing</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CTA Buttons -->
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="{% url 'bulk_orders' %}" class="btn btn-warning btn-lg px-5">
+                            <i class="fas fa-file-invoice me-2"></i> Request Quote
+                        </a>
+                        <a href="tel:+919876543210" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-phone me-2"></i> Call B2B Team
+                        </a>
+                    </div>
+
+                    <!-- Trust Line -->
+                    <div class="trust-line mt-4">
+                        <small class="opacity-75">
+                            <i class="fas fa-check-circle text-warning me-2"></i>
+                            Trusted by Fortune 500 companies • GST Invoice • Credit Terms Available
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Use Cases -->
+            <div class="col-lg-6">
+                <div class="use-cases-grid">
+                    <div class="use-case-card">
+                        <div class="use-case-icon bg-primary">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h5 class="mb-2">Employee Gifting</h5>
+                        <p class="small mb-0 opacity-75">
+                            Appreciation gifts, welcome kits, milestone celebrations
+                        </p>
+                    </div>
+
+                    <div class="use-case-card">
+                        <div class="use-case-icon bg-success">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <h5 class="mb-2">Client Gifting</h5>
+                        <p class="small mb-0 opacity-75">
+                            Festival gifts, thank you hampers, relationship building
+                        </p>
+                    </div>
+
+                    <div class="use-case-card">
+                        <div class="use-case-icon bg-info">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <h5 class="mb-2">Corporate Events</h5>
+                        <p class="small mb-0 opacity-75">
+                            Conferences, seminars, product launches, giveaways
+                        </p>
+                    </div>
+
+                    <div class="use-case-card">
+                        <div class="use-case-icon bg-danger">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h5 class="mb-2">Wedding Bulk Orders</h5>
+                        <p class="small mb-0 opacity-75">
+                            Return gifts, welcome baskets, guest favors
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Stats -->
+        <div class="stats-row mt-6 pt-5 border-top border-secondary">
+            <div class="row text-center">
+                <div class="col-md-3 col-6 mb-3 mb-md-0">
+                    <h3 class="fw-bold text-warning mb-1">100+</h3>
+                    <small class="opacity-75">Corporate Clients</small>
+                </div>
+                <div class="col-md-3 col-6 mb-3 mb-md-0">
+                    <h3 class="fw-bold text-warning mb-1">50K+</h3>
+                    <small class="opacity-75">Gifts Delivered</small>
+                </div>
+                <div class="col-md-3 col-6">
+                    <h3 class="fw-bold text-warning mb-1">30%</h3>
+                    <small class="opacity-75">Bulk Discount</small>
+                </div>
+                <div class="col-md-3 col-6">
+                    <h3 class="fw-bold text-warning mb-1">24/7</h3>
+                    <small class="opacity-75">B2B Support</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+/* Bulk Gifting Section */
+.bulk-gifting-section {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    position: relative;
+}
+
+.pattern-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.03) 35px, rgba(255,255,255,.03) 70px);
+    pointer-events: none;
+}
+
+/* Benefit Cards */
+.benefit-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.benefit-card:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-5px);
+}
+
+.benefit-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 193, 7, 0.2);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffc107;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+/* Use Cases Grid */
+.use-cases-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.use-case-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    padding: 25px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.use-case-card:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.use-case-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+/* Buttons */
+.btn-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+    border: none;
+    color: #000;
+    font-weight: 600;
+}
+
+.btn-warning:hover {
+    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(255, 193, 7, 0.3);
+}
+
+.btn-outline-light:hover {
+    background: white;
+    color: #1a1a2e;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .use-cases-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .benefit-card {
+        padding: 15px;
+    }
+    
+    .use-case-card {
+        padding: 20px;
+    }
+}
+</style>

@@ -1,0 +1,301 @@
+{% extends 'gift/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load gift_filters %}
+
+{% block title %}Checkout - Radhvi{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'cart' %}">Cart</a></li>
+            <li class="breadcrumb-item active">Checkout</li>
+        </ol>
+    </nav>
+    
+    <h1 class="h2 fw-bold mb-4">Checkout</h1>
+    
+    <div class="row g-5">
+        <!-- Left Column - Forms -->
+        <div class="col-lg-8">
+            <!-- Customer Information -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-4">
+                        <i class="fas fa-user-circle me-2"></i> Customer Information
+                    </h5>
+                    
+                    <form method="post" id="checkoutForm">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Full Name *</label>
+                                <input type="text" name="name" class="form-control" 
+                                       value="{{ form.name.value|default:user.get_full_name }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Email Address *</label>
+                                <input type="email" name="email" class="form-control" 
+                                       value="{{ form.email.value|default:user.email }}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Phone Number *</label>
+                                <input type="tel" name="phone" class="form-control" 
+                                       placeholder="+91 9876543210" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Pincode *</label>
+                                <input type="text" name="pincode" class="form-control" 
+                                       placeholder="400001" required>
+                            </div>
+                        </div>
+                        
+                        <!-- Shipping Address -->
+                        <h5 class="fw-bold mt-4 mb-3">
+                            <i class="fas fa-map-marker-alt me-2"></i> Shipping Address
+                        </h5>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Full Address *</label>
+                            <textarea name="address" class="form-control" rows="3" 
+                                      placeholder="House No., Street, Area" required></textarea>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">City *</label>
+                                <input type="text" name="city" class="form-control" 
+                                       placeholder="Mumbai" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">State *</label>
+                                <input type="text" name="state" class="form-control" 
+                                       placeholder="Maharashtra" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="saveAddress">
+                            <label class="form-check-label" for="saveAddress">
+                                Save this address for future orders
+                            </label>
+                        </div>
+                        
+                        <!-- Payment Method (Simplified) -->
+                        <h5 class="fw-bold mt-4 mb-3">
+                            <i class="fas fa-credit-card me-2"></i> Payment Method
+                        </h5>
+                        
+                        <div class="payment-methods">
+                            <!-- Cash on Delivery -->
+                            <div class="form-check border rounded p-3 mb-3">
+                                <input class="form-check-input" type="radio" name="payment_method" 
+                                       id="cod" value="cod" checked>
+                                <label class="form-check-label w-100" for="cod">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="fw-semibold mb-1">Cash on Delivery</h6>
+                                            <p class="text-muted small mb-0">Pay when you receive your order</p>
+                                        </div>
+                                        <i class="fas fa-money-bill-wave text-success fa-2x"></i>
+                                    </div>
+                                </label>
+                            </div>
+                            
+                            <!-- UPI/QR Code -->
+                            <div class="form-check border rounded p-3">
+                                <input class="form-check-input" type="radio" name="payment_method" 
+                                       id="upi" value="upi">
+                                <label class="form-check-label w-100" for="upi">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="fw-semibold mb-1">UPI / QR Code</h6>
+                                            <p class="text-muted small mb-0">Pay instantly via UPI or scan QR code</p>
+                                            <div class="small mt-2">
+                                                <span class="badge bg-light text-dark me-2">Google Pay</span>
+                                                <span class="badge bg-light text-dark me-2">PhonePe</span>
+                                                <span class="badge bg-light text-dark">Paytm</span>
+                                            </div>
+                                        </div>
+                                        <i class="fas fa-qrcode fa-2x text-primary"></i>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Terms & Conditions -->
+                        <div class="form-check mt-4">
+                            <input class="form-check-input" type="checkbox" id="terms" required>
+                            <label class="form-check-label small" for="terms">
+                                I agree to the <a href="{% url 'terms' %}" target="_blank">Terms & Conditions</a> 
+                                and <a href="{% url 'privacy' %}" target="_blank">Privacy Policy</a>
+                            </label>
+                        </div>
+                        
+                        <!-- Place Order Button -->
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                <i class="fas fa-lock me-2"></i> Place Order
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Column - Order Summary -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm sticky-top" style="top: 100px;">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-4">Order Summary</h5>
+                    
+                    <!-- Cart Items Preview -->
+                    <div class="mb-4">
+                        <h6 class="fw-semibold mb-3">Items ({{ cart_items|length }})</h6>
+                        {% for item in cart_items %}
+                        <div class="d-flex align-items-center mb-3">
+                            {% if item.product.images.first %}
+                            <img src="{{ item.product.images.first.image.url }}" 
+                                 alt="{{ item.product.name }}"
+                                 class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                            {% else %}
+                            <div class="bg-light rounded d-flex align-items-center justify-content-center" 
+                                 style="width: 60px; height: 60px;">
+                                <i class="fas fa-gift text-secondary"></i>
+                            </div>
+                            {% endif %}
+                            <div class="ms-3 flex-grow-1">
+                                <h6 class="fw-semibold mb-0">{{ item.product.name|truncatechars:30 }}</h6>
+                                <p class="text-muted small mb-0">
+                                    ₹{{ item.product.final_price }} × {{ item.quantity }}
+                                </p>
+                            </div>
+                            <div class="fw-semibold">
+                                ₹{{ item.total_price }}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Price Breakdown -->
+                    <div class="border-top pt-3">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Subtotal</span>
+                            <span>₹{{ subtotal|floatformat:2 }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Shipping</span>
+                            <span>
+                                {% if subtotal > 1000 %}
+                                <span class="text-success">FREE</span>
+                                {% else %}
+                                ₹{{ shipping|floatformat:2 }}
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Tax (18%)</span>
+                            <span>₹{{ tax|floatformat:2 }}</span>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="d-flex justify-content-between mb-3">
+                            <h6 class="fw-bold">Total Amount</h6>
+                            <h5 class="fw-bold text-primary">
+                                ₹{{ total|floatformat:2 }}
+                            </h5>
+                        </div>
+                    </div>
+                    
+                    <!-- Security Assurance -->
+                    <div class="text-center mt-4 pt-3 border-top">
+                        <small class="text-muted">
+                            <i class="fas fa-shield-alt text-success me-1"></i>
+                            Secure payment · 100% Safe · SSL Encrypted
+                        </small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Help Card -->
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="card-body">
+                    <h6 class="fw-semibold mb-3">
+                        <i class="fas fa-question-circle me-2"></i> Need Help?
+                    </h6>
+                    <p class="small text-muted mb-3">
+                        Have questions about your order? Our customer support team is here to help.
+                    </p>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-phone text-primary me-3"></i>
+                        <div>
+                            <small class="fw-semibold">Call us at</small>
+                            <p class="mb-0">+91 9876543210</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Form validation
+    $('#checkoutForm').submit(function(e) {
+        if (!$('#terms').is(':checked')) {
+            e.preventDefault();
+            showToast('Please accept the Terms & Conditions', 'warning');
+            return false;
+        }
+        
+        // Validate all required fields
+        let valid = true;
+        $(this).find('[required]').each(function() {
+            if (!$(this).val().trim()) {
+                valid = false;
+                $(this).addClass('is-invalid');
+            } else {
+                $(this).removeClass('is-invalid');
+            }
+        });
+        
+        if (!valid) {
+            e.preventDefault();
+            showToast('Please fill all required fields', 'warning');
+        }
+        
+        return valid;
+    });
+    
+    // Auto-fill address using pincode (mock function)
+    $('input[name="pincode"]').on('blur', function() {
+        const pincode = $(this).val();
+        if (pincode.length === 6) {
+            // Mock API call to get address details
+            const mockAddresses = {
+                '400001': { city: 'Mumbai', state: 'Maharashtra' },
+                '110001': { city: 'Delhi', state: 'Delhi' },
+                '560001': { city: 'Bangalore', state: 'Karnataka' },
+                '600001': { city: 'Chennai', state: 'Tamil Nadu' },
+                '700001': { city: 'Kolkata', state: 'West Bengal' }
+            };
+            
+            if (mockAddresses[pincode]) {
+                $('input[name="city"]').val(mockAddresses[pincode].city);
+                $('input[name="state"]').val(mockAddresses[pincode].state);
+                showToast('Address auto-filled based on pincode', 'success');
+            }
+        }
+    });
+</script>
+{% endblock %}

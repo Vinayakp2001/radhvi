@@ -1,0 +1,183 @@
+{% extends 'gift/base.html' %}
+
+{% block title %}About Us - Radhvi{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active">About Us</li>
+        </ol>
+    </nav>
+    
+    <!-- Hero Section -->
+    <div class="row align-items-center mb-5">
+        <div class="col-lg-6">
+            <h1 class="display-4 fw-bold mb-4">About Radhvi</h1>
+            <p class="lead mb-4">
+                Welcome to Radhvi - Your one-stop destination for perfect gifts for every occasion. 
+                We believe that every moment deserves to be celebrated with the perfect gift.
+            </p>
+            <div class="d-flex gap-3">
+                <a href="{% url 'product_list' %}" class="btn btn-primary btn-lg">
+                    Shop Now
+                </a>
+                <a href="{% url 'contact' %}" class="btn btn-outline-primary btn-lg">
+                    Contact Us
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+                 alt="About Radhvi" class="img-fluid rounded-3 shadow">
+        </div>
+    </div>
+    
+    <!-- Our Story -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="fw-bold mb-4">Our Story</h2>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <p>
+                        Founded in 2024, Radhvi started with a simple idea: to make gift-giving easy, 
+                        meaningful, and memorable. We understand that finding the perfect gift can be 
+                        challenging, so we've curated a collection of unique and thoughtful gifts for 
+                        every occasion.
+                    </p>
+                    <p>
+                        From birthdays and anniversaries to weddings and festivals, we have something 
+                        special for everyone. Our team handpicks each product, ensuring quality, 
+                        uniqueness, and that special touch that makes your gift stand out.
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <p>
+                        We work directly with artisans, designers, and creators to bring you exclusive 
+                        gifts that you won't find anywhere else. Each product tells a story and carries 
+                        the love and care with which it was created.
+                    </p>
+                    <p>
+                        Our mission is to spread joy through thoughtful gifting and create memorable 
+                        experiences for both the giver and the receiver.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Our Values -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="fw-bold mb-4">Our Values</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="display-3 text-primary mb-3">🎁</div>
+                            <h4 class="fw-bold mb-3">Quality</h4>
+                            <p class="text-muted">
+                                We ensure every product meets our high standards of quality and craftsmanship.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="display-3 text-primary mb-3">❤️</div>
+                            <h4 class="fw-bold mb-3">Thoughtfulness</h4>
+                            <p class="text-muted">
+                                Every gift is carefully selected to convey your feelings perfectly.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <div class="card-body text-center p-4">
+                            <div class="display-3 text-primary mb-3">🚚</div>
+                            <h4 class="fw-bold mb-3">Reliability</h4>
+                            <p class="text-muted">
+                                Timely delivery and excellent customer service are our top priorities.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Why Choose Us -->
+    <div class="row">
+        <div class="col-12">
+            <h2 class="fw-bold mb-4">Why Choose Radhvi?</h2>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="d-flex">
+                        <div class="me-3">
+                            <i class="fas fa-check-circle text-primary fa-2x"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold">Wide Selection</h5>
+                            <p class="text-muted">
+                                Choose from hundreds of unique gifts across various categories and price ranges.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex">
+                        <div class="me-3">
+                            <i class="fas fa-check-circle text-primary fa-2x"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold">Easy Shopping</h5>
+                            <p class="text-muted">
+                                User-friendly website with secure payment options and easy navigation.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex">
+                        <div class="me-3">
+                            <i class="fas fa-check-circle text-primary fa-2x"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold">Fast Delivery</h5>
+                            <p class="text-muted">
+                                Quick shipping with real-time tracking across India.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex">
+                        <div class="me-3">
+                            <i class="fas fa-check-circle text-primary fa-2x"></i>
+                        </div>
+                        <div>
+                            <h5 class="fw-bold">Gift Wrapping</h5>
+                            <p class="text-muted">
+                                Free beautiful gift wrapping with personalized message cards.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- CTA Section -->
+    <div class="text-center mt-5 pt-5">
+        <h3 class="fw-bold mb-3">Ready to Find the Perfect Gift?</h3>
+        <p class="lead mb-4">Browse our collection and make someone's day special!</p>
+        <a href="{% url 'product_list' %}" class="btn btn-primary btn-lg px-5">
+            Start Shopping
+        </a>
+    </div>
+</div>
+{% endblock %}

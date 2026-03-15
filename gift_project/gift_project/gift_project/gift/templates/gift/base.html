@@ -1,0 +1,849 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Radhvi - Perfect gifts for every occasion. Birthday, Anniversary, Wedding, Festival gifts online.">
+    <meta name="keywords" content="gifts, presents, birthday gifts, anniversary gifts, online gifts, gift shop">
+    
+    <!-- Cache Control - Prevent blank page on back button -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
+    <title>{% block title %}Radhvi - Emotions, Crafted Perfectly{% endblock %}</title>
+    
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="#">
+    <link rel="icon" type="image/png" sizes="32x32" href="#">
+    <link rel="icon" type="image/png" sizes="16x16" href="#">
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Animate CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    
+    <!-- AOS (Animate On Scroll) -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Glightbox (Lightbox) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/glightbox/3.2.0/css/glightbox.min.css">
+    
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    
+    <!-- Iconify Icons -->
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+    
+    <!-- Valentine's Campaign CSS (Conditional) -->
+    {% if campaign_active %}
+    <link rel="stylesheet" href="{% static 'css/promotions/valentine.css' %}">
+    {% endif %}
+    
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary: #FF6B8B;
+            --primary-dark: #FF3D6B;
+            --secondary: #4ECDC4;
+            --accent: #FFD166;
+            --dark: #1A1A2E;
+            --light: #F8F9FA;
+            --gray: #6C757D;
+            --light-gray: #E9ECEF;
+            --gradient-primary: linear-gradient(135deg, #FF6B8B 0%, #FF8E53 100%);
+            --gradient-secondary: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+            --shadow-sm: 0 5px 15px rgba(0, 0, 0, 0.05);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.15);
+            --radius: 15px;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .display-font {
+            font-family: 'Playfair Display', serif;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-primary);
+            border-radius: 10px;
+            border: 3px solid #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+        
+        /* Glass Morphism Effect */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .glass-dark {
+            background: rgba(26, 26, 46, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Gradient Text */
+        .gradient-text {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        
+        /* Floating Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .float-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        /* Pulse Animation */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        /* Shine Effect */
+        .shine-effect {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .shine-effect::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.3) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: rotate(30deg);
+            transition: transform 0.6s;
+        }
+        
+        .shine-effect:hover::before {
+            transform: translateX(100%) rotate(30deg);
+        }
+        
+        /* Button Styles */
+        .btn-primary {
+            background: var(--gradient-primary);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-dark);
+            transition: left 0.4s;
+            z-index: -1;
+        }
+        
+        .btn-primary:hover::before {
+            left: 0;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+        
+        .btn-outline-primary {
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            background: transparent;
+            padding: 10px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .btn-outline-primary:hover {
+            background: var(--gradient-primary);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+        
+        /* Card Styles */
+        .card {
+            border: none;
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: var(--transition);
+            background: white;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .card:hover {
+            transform: translateY(-15px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .card-img-top {
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.6s;
+        }
+        
+        .card:hover .card-img-top {
+            transform: scale(1.1);
+        }
+        
+        /* Navbar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 15px 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+        
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            color: var(--dark) !important;
+            margin: 0 8px;
+            position: relative;
+            padding: 8px 16px !important;
+            border-radius: 20px;
+            transition: var(--transition);
+        }
+        
+        .nav-link:hover {
+            background: rgba(255, 107, 139, 0.1);
+            color: var(--primary) !important;
+        }
+        
+        .nav-link.active {
+            background: var(--gradient-primary);
+            color: white !important;
+        }
+        
+        .nav-link.active::after {
+            display: none;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            position: relative;
+            overflow: hidden;
+            padding: 120px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.15;
+        }
+        
+        /* Floating Elements */
+        .floating-element {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Product Card */
+        .product-card {
+            border-radius: var(--radius);
+            overflow: hidden;
+            background: white;
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s;
+        }
+        
+        .product-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .product-img {
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s;
+        }
+        
+        .product-card:hover .product-img img {
+            transform: scale(1.1) rotate(2deg);
+        }
+        
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            z-index: 2;
+        }
+        
+        .product-actions {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            opacity: 0;
+            transform: translateX(30px);
+            transition: var(--transition);
+        }
+        
+        .product-card:hover .product-actions {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+        
+        .action-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: rotate(15deg) scale(1.1);
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--dark);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--gradient-primary);
+        }
+        
+        /* Loader */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 80px 0;
+            }
+            
+            .navbar-brand {
+                font-size: 24px;
+            }
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Preloader -->
+    <div id="preloader" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; display: flex; align-items: center; justify-content: center;">
+        <div class="loader"></div>
+    </div>
+    
+    <!-- Floating Elements Background - DISABLED -->
+    <div class="floating-elements" style="display: none;">
+        <div class="floating-element" style="top: 10%; left: 5%; width: 100px; height: 100px; animation: float 8s ease-in-out infinite;"></div>
+        <div class="floating-element" style="top: 20%; right: 10%; width: 150px; height: 150px; animation: float 12s ease-in-out infinite 2s;"></div>
+        <div class="floating-element" style="bottom: 30%; left: 15%; width: 80px; height: 80px; animation: float 10s ease-in-out infinite 1s;"></div>
+    </div>
+    
+    <!-- Valentine's Announcement Bar -->
+    {% include 'gift/includes/valentine_announcement.html' %}
+    
+    <!-- Header -->
+    {% include 'gift/includes/header.html' %}
+    
+    <!-- Messages -->
+    {% if messages %}
+    <div class="container mt-4">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show animate__animated animate__fadeInDown" role="alert">
+            <div class="d-flex align-items-center">
+                {% if message.tags == 'success' %}
+                <i class="fas fa-check-circle me-2"></i>
+                {% elif message.tags == 'error' %}
+                <i class="fas fa-times-circle me-2"></i>
+                {% elif message.tags == 'warning' %}
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                {% else %}
+                <i class="fas fa-info-circle me-2"></i>
+                {% endif %}
+                <span>{{ message }}</span>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    {% include 'gift/includes/footer.html' %}
+    
+    <!-- Back to Top -->
+    <button id="backToTop" class="btn btn-primary position-fixed bottom-0 end-0 m-4 rounded-circle" style="width: 60px; height: 60px; display: none; z-index: 999;">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+    
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/glightbox/3.2.0/js/glightbox.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.countdown/2.2.0/jquery.countdown.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="{% static 'js/main.js' %}?v=fixed123"></script>
+    
+    <!-- Valentine's Campaign JavaScript (Conditional) -->
+    {% if campaign_active %}
+    <script src="{% static 'js/promotions/valentine.js' %}"></script>
+    {% endif %}
+    
+    <script>
+        // Preloader
+        $(window).on('load', function() {
+            $('#preloader').fadeOut('slow', function() {
+                $(this).remove();
+            });
+        });
+        
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+        
+        // Initialize GLightbox
+        const lightbox = GLightbox({
+            touchNavigation: true,
+            loop: true,
+            autoplayVideos: true
+        });
+        
+        // Back to Top Button
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 300) {
+                $('#backToTop').fadeIn(400);
+            } else {
+                $('#backToTop').fadeOut(400);
+            }
+        });
+        
+        $('#backToTop').click(function() {
+            $('html, body').animate({scrollTop: 0}, 800);
+            return false;
+        });
+        
+        // Wishlist Toggle Animation
+        $('.wishlist-toggle').click(function(e) {
+            e.preventDefault();
+            const $btn = $(this);
+            const $icon = $btn.find('i');
+            
+            if ($icon.hasClass('far')) {
+                // Add to wishlist
+                $icon.removeClass('far').addClass('fas');
+                $btn.addClass('pulse-animation');
+                
+                // Heart beat animation
+                gsap.to($icon, {
+                    scale: 1.5,
+                    duration: 0.3,
+                    yoyo: true,
+                    repeat: 1,
+                    onComplete: function() {
+                        $btn.removeClass('pulse-animation');
+                        showToast('Added to wishlist!', 'success');
+                    }
+                });
+            } else {
+                // Remove from wishlist
+                $icon.removeClass('fas').addClass('far');
+                showToast('Removed from wishlist', 'info');
+            }
+        });
+        
+        // Parallax Effect
+        $(window).scroll(function() {
+            const scrolled = $(window).scrollTop();
+            $('.parallax').css('transform', `translateY(${scrolled * 0.5}px)`);
+        });
+        
+        // Toast Notification Function
+        function showToast(message, type = 'info') {
+            // Simple alert for now (can be enhanced later)
+            const icons = {
+                success: '✓',
+                error: '✗',
+                warning: '⚠',
+                info: 'ℹ'
+            };
+            
+            console.log(`${icons[type]} ${message}`);
+            
+            // Create simple toast without Bootstrap dependency
+            const toastHtml = `
+                <div class="simple-toast ${type}" style="
+                    position: fixed;
+                    bottom: 20px;
+                    right: 20px;
+                    background: ${type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : type === 'warning' ? '#ffc107' : '#17a2b8'};
+                    color: white;
+                    padding: 15px 25px;
+                    border-radius: 10px;
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                    z-index: 9999;
+                    animation: slideIn 0.3s ease-out;
+                ">
+                    <strong>${icons[type]} ${message}</strong>
+                </div>
+            `;
+            
+            const $toast = $(toastHtml);
+            $('body').append($toast);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                $toast.fadeOut(300, function() {
+                    $(this).remove();
+                });
+            }, 3000);
+        }
+        
+        // Initialize Tooltips
+        $(function () {
+            $('[data-bs-toggle="tooltip"]').tooltip();
+        });
+        
+        // Initialize Popovers
+        $(function () {
+            $('[data-bs-toggle="popover"]').popover();
+        });
+        
+        // Mouse Follow Effect
+        document.addEventListener('mousemove', function(e) {
+            const cursor = document.querySelector('.cursor-follower');
+            if (cursor) {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            }
+        });
+        
+        // Add floating cursor follower
+        if ($(window).width() > 768) {
+            $('body').append('<div class="cursor-follower"></div>');
+            
+            $('.cursor-follower').css({
+                position: 'fixed',
+                width: '20px',
+                height: '20px',
+                background: 'rgba(255, 107, 139, 0.2)',
+                borderRadius: '50%',
+                pointerEvents: 'none',
+                zIndex: 9998,
+                transform: 'translate(-50%, -50%)',
+                transition: 'transform 0.1s'
+            });
+        }
+        
+        // Page transition effect
+        $(document).on('click', 'a', function(e) {
+            const href = $(this).attr('href');
+            if (href && href.startsWith('/') && !href.startsWith('#')) {
+                e.preventDefault();
+                $('body').fadeOut(300, function() {
+                    window.location.href = href;
+                });
+            }
+        });
+    </script>
+
+    <script>
+        // base.html के अंदर JavaScript section में
+
+<script>
+$(document).ready(function() {
+    console.log("Page loaded - Cart system initialized");
+    
+    // Simple add to cart function
+    $(document).on('click', '.add-to-cart', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        var $btn = $(this);
+        var productId = $btn.data('product-id');
+        var productName = $btn.data('product-name') || 'Product';
+        
+        console.log('Add to cart clicked:', productId, productName);
+        
+        // Show loading
+        $btn.prop('disabled', true);
+        var originalHtml = $btn.html();
+        $btn.html('<i class="fas fa-spinner fa-spin"></i> Adding...');
+        
+        // Send request
+        $.ajax({
+            url: '/api/add-to-cart/',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                'product_id': productId,
+                'quantity': 1
+            }),
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            success: function(response) {
+                console.log('Add to cart response:', response);
+                
+                if (response.success) {
+                    // Update cart count
+                    $('.cart-count').text(response.cart_count || 0);
+                    
+                    // Show success message
+                    alert('✓ ' + productName + ' added to cart!');
+                    
+                    // Animate cart icon
+                    $('.cart-count').addClass('pulse');
+                    setTimeout(function() {
+                        $('.cart-count').removeClass('pulse');
+                    }, 1000);
+                    
+                    // Update button
+                    $btn.html('<i class="fas fa-check"></i> Added!');
+                    $btn.removeClass('btn-primary').addClass('btn-success');
+                    
+                    setTimeout(function() {
+                        $btn.html(originalHtml);
+                        $btn.removeClass('btn-success').addClass('btn-primary');
+                        $btn.prop('disabled', false);
+                    }, 2000);
+                    
+                } else {
+                    alert('✗ ' + (response.message || 'Failed to add to cart'));
+                    $btn.html(originalHtml);
+                    $btn.prop('disabled', false);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Add to cart error:', error);
+                alert('✗ Network error. Please try again.');
+                $btn.html(originalHtml);
+                $btn.prop('disabled', false);
+            }
+        });
+    });
+    
+    // Load cart count on page load
+    $.ajax({
+        url: '/api/get-cart-count/',
+        method: 'GET',
+        success: function(response) {
+            if (response.success) {
+                $('.cart-count').text(response.cart_count || 0);
+                console.log('Cart count loaded:', response.cart_count);
+            }
+        },
+        error: function() {
+            console.log('Could not load cart count');
+        }
+    });
+});
+
+// Simple getCookie function
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+
+
+    {% block extra_js %}{% endblock %}
+
+    <style>
+.pulse {
+    animation: pulse 0.5s ease-in-out;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+.fa-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+</style>
+    
+</body>
+</html>

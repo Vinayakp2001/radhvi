@@ -1,0 +1,233 @@
+{% load static %}
+{% comment %}
+Valentine's Day Hero Slider
+Full-width image slider for promotional banners (1920x600)
+{% endcomment %}
+
+{% if valentine_campaign and valentine_campaign.show_hero_banner %}
+<section class="valentine-hero-slider">
+    <div class="swiper valentine-swiper">
+        <div class="swiper-wrapper">
+            <!-- Slide 1 -->
+            <div class="swiper-slide">
+                <a href="{% url 'product_list' %}?category={{ valentine_campaign.category_slug|default:'valentines' }}" class="valentine-slide-link">
+                    <img src="{% static 'images/promotions/valentines/slider-1.png' %}" 
+                         alt="Valentine's Day Sale" 
+                         class="valentine-slider-image"
+                         onerror="this.src='https://via.placeholder.com/1920x600/FF6B8B/FFFFFF?text=Valentine+Sale+Banner+1'">
+                </a>
+            </div>
+            
+            <!-- Slide 2 -->
+            <div class="swiper-slide">
+                <a href="{% url 'product_list' %}?category={{ valentine_campaign.category_slug|default:'valentines' }}" class="valentine-slide-link">
+                    <img src="{% static 'images/promotions/valentines/slider-2.png' %}" 
+                         alt="Valentine's Day Offers" 
+                         class="valentine-slider-image"
+                         onerror="this.src='https://via.placeholder.com/1920x600/FF8E53/FFFFFF?text=Valentine+Sale+Banner+2'">
+                </a>
+            </div>
+            
+            <!-- Slide 3 -->
+            <div class="swiper-slide">
+                <a href="{% url 'product_list' %}?category={{ valentine_campaign.category_slug|default:'valentines' }}" class="valentine-slide-link">
+                    <img src="{% static 'images/promotions/valentines/slider-3.png' %}" 
+                         alt="Valentine's Day Collection" 
+                         class="valentine-slider-image"
+                         onerror="this.src='https://via.placeholder.com/1920x600/FF3D6B/FFFFFF?text=Valentine+Sale+Banner+3'">
+                </a>
+            </div>
+        </div>
+        
+        <!-- Navigation Arrows -->
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+        
+        <!-- Pagination -->
+        <div class="swiper-pagination"></div>
+    </div>
+</section>
+
+<style>
+.valentine-hero-slider {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.valentine-swiper {
+    width: 100%;
+    height: 600px;
+}
+
+.valentine-swiper .swiper-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f5f5;
+    position: relative;
+}
+
+.valentine-slide-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hover effect - subtle zoom and brightness */
+.valentine-slide-link:hover .valentine-slider-image {
+    transform: scale(1.02);
+    filter: brightness(1.05);
+}
+
+/* Add a subtle overlay on hover to indicate clickability */
+.valentine-slide-link::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 107, 139, 0.05);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.valentine-slide-link:hover::after {
+    opacity: 1;
+}
+
+.valentine-slider-image {
+    width: 100%;
+    height: 600px;
+    object-fit: cover;
+    display: block;
+    transition: all 0.4s ease;
+}
+
+/* Navigation Buttons */
+.valentine-swiper .swiper-button-next,
+.valentine-swiper .swiper-button-prev {
+    color: #FF6B8B;
+    background: rgba(255, 255, 255, 0.9);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.valentine-swiper .swiper-button-next:after,
+.valentine-swiper .swiper-button-prev:after {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.valentine-swiper .swiper-button-next:hover,
+.valentine-swiper .swiper-button-prev:hover {
+    background: #FF6B8B;
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(255, 107, 139, 0.4);
+}
+
+/* Pagination */
+.valentine-swiper .swiper-pagination {
+    bottom: 20px;
+}
+
+.valentine-swiper .swiper-pagination-bullet {
+    width: 12px;
+    height: 12px;
+    background: #fff;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.valentine-swiper .swiper-pagination-bullet-active {
+    background: #FF6B8B;
+    opacity: 1;
+    width: 30px;
+    border-radius: 6px;
+}
+
+/* Add cursor pointer to entire slide */
+.valentine-swiper .swiper-slide {
+    cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .valentine-swiper {
+        height: 300px;
+    }
+    
+    .valentine-slider-image {
+        height: 300px;
+    }
+    
+    .valentine-swiper .swiper-button-next,
+    .valentine-swiper .swiper-button-prev {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .valentine-swiper .swiper-button-next:after,
+    .valentine-swiper .swiper-button-prev:after {
+        font-size: 16px;
+    }
+    
+    .valentine-swiper .swiper-pagination {
+        bottom: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .valentine-swiper {
+        height: 200px;
+    }
+    
+    .valentine-slider-image {
+        height: 200px;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const valentineSwiper = new Swiper('.valentine-swiper', {
+        loop: true,
+        autoplay: {
+            delay: 5000,
+            disableOnInteraction: false,
+        },
+        speed: 800,
+        effect: 'fade',
+        fadeEffect: {
+            crossFade: true
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+    });
+    
+    // Add click tracking for analytics (optional)
+    document.querySelectorAll('.valentine-slide-link').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            console.log('Valentine banner clicked:', this.href);
+            // You can add analytics tracking here if needed
+        });
+    });
+});
+</script>
+{% endif %}

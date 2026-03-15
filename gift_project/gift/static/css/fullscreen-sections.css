@@ -1,0 +1,45 @@
+/* Natural Section Layout with Smooth Scrolling */
+
+/* Smooth scroll behavior only */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Natural section spacing - let content determine height */
+.main-hero,
+.custom-gift-section,
+.categories-section,
+.bulk-gifting-section,
+.featured-products,
+.deal-of-day,
+.trending-products,
+.value-props,
+.testimonials,
+.cta-section {
+    padding: 80px 0;
+}
+
+/* Hero section gets a bit more space */
+.main-hero {
+    padding: 100px 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .main-hero,
+    .custom-gift-section,
+    .categories-section,
+    .bulk-gifting-section,
+    .featured-products,
+    .deal-of-day,
+    .trending-products,
+    .value-props,
+    .testimonials,
+    .cta-section {
+        padding: 60px 0;
+    }
+    
+    .main-hero {
+        padding: 80px 0;
+    }
+}

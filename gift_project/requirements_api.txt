@@ -1,0 +1,4 @@
+# API Dependencies for Next.js Frontend Integration
+djangorestframework==3.14.0
+django-cors-headers==4.3.1
+django-filter==23.5

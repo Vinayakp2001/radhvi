@@ -1,0 +1,134 @@
+{% extends 'gift/base.html' %}
+{% load static %}
+
+{% block title %}UPI Payment - Radhvi{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-qrcode text-primary fa-4x mb-3"></i>
+                        <h2 class="fw-bold">UPI Payment</h2>
+                        <p class="text-muted">Scan QR code or use UPI ID to complete payment</p>
+                    </div>
+                    
+                    <!-- QR Code Placeholder -->
+                    <div class="text-center mb-4">
+                        <div class="bg-light p-4 d-inline-block rounded">
+                            <div id="qrcode" class="mb-3"></div>
+                            <small class="text-muted">Scan with any UPI app</small>
+                        </div>
+                    </div>
+                    
+                    <!-- UPI ID -->
+                    <div class="card border mb-4">
+                        <div class="card-body text-center">
+                            <h6 class="fw-semibold mb-2">UPI ID</h6>
+                            <div class="input-group">
+                                <input type="text" class="form-control text-center" 
+                                       value="{{ upi_id }}" readonly id="upiId">
+                                <button class="btn btn-outline-secondary" type="button" 
+                                        onclick="copyUPI()">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                            <small class="text-muted mt-2 d-block">
+                                Copy and paste in your UPI app
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <!-- Payment Details -->
+                    <div class="border rounded p-4 mb-4">
+                        <h6 class="fw-semibold mb-3">Payment Details</h6>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Order ID:</span>
+                            <span class="fw-semibold">{{ order.order_id }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Amount:</span>
+                            <span class="fw-semibold">₹{{ order.total_amount }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Merchant:</span>
+                            <span>Radhvi</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Manual Transaction ID Entry -->
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-receipt me-2"></i>Transaction ID
+                            </label>
+                            <input type="text" name="transaction_id" class="form-control" 
+                                   placeholder="Enter transaction ID from your UPI app" required>
+                            <small class="text-muted">
+                                After payment, enter the transaction ID received in your UPI app
+                            </small>
+                        </div>
+                        
+                        <!-- upipayment.html में cancel button fix करें: -->
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-check-circle me-2"></i>Verify Payment
+                            </button>
+                            
+                            <!-- ✅ FIXED: Cancel button -->
+                            <a href="{% url 'order_detail' order.order_id %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                    
+                    <!-- Help Text -->
+                    <div class="alert alert-info mt-4">
+                        <h6><i class="fas fa-info-circle me-2"></i>How to Pay:</h6>
+                        <ol class="mb-0 ps-3">
+                            <li>Open your UPI app (Google Pay, PhonePe, Paytm, etc.)</li>
+                            <li>Tap on "Scan QR Code" or "Send Money"</li>
+                            <li>Scan the QR code above or enter UPI ID manually</li>
+                            <li>Enter amount: ₹{{ order.total_amount }}</li>
+                            <li>Complete the payment</li>
+                            <li>Enter the transaction ID received and click "Verify Payment"</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function copyUPI() {
+        const upiId = document.getElementById('upiId');
+        upiId.select();
+        upiId.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(upiId.value);
+        showToast('UPI ID copied to clipboard!', 'success');
+    }
+    
+    // Generate QR code using JavaScript library
+    // You'll need to include qrcode.js library
+    function generateQRCode() {
+        const upiString = `upi://pay?pa={{ upi_id }}&pn=Radhvi&am={{ order.total_amount }}&cu=INR&tn=Order {{ order.order_id }}`;
+        if (typeof QRCode !== 'undefined') {
+            new QRCode(document.getElementById("qrcode"), {
+                text: upiString,
+                width: 200,
+                height: 200,
+            });
+        }
+    }
+    
+    // Call on page load
+    document.addEventListener('DOMContentLoaded', generateQRCode);
+</script>
+{% endblock %}

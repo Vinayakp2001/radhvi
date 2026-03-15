@@ -1,0 +1,92 @@
+/* Full-Screen Section Layout */
+
+/* Make major sections take full viewport height */
+.main-hero,
+.custom-gift-section,
+.categories-section,
+.bulk-gifting-section,
+.featured-products,
+.deal-of-day,
+.trending-products,
+.value-props,
+.testimonials,
+.cta-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ensure content is centered and fits within viewport */
+.main-hero .container,
+.custom-gift-section .container,
+.categories-section .container,
+.bulk-gifting-section .container,
+.featured-products .container,
+.deal-of-day .container,
+.trending-products .container,
+.value-props .container,
+.testimonials .container,
+.cta-section .container {
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+/* Smooth scroll behavior */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Optional: Add scroll snap for better UX */
+body {
+    scroll-snap-type: y mandatory;
+}
+
+.main-hero,
+.custom-gift-section,
+.categories-section,
+.bulk-gifting-section,
+.featured-products,
+.deal-of-day,
+.trending-products,
+.value-props,
+.testimonials,
+.cta-section {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 768px) {
+    /* On mobile, allow sections to be taller if needed */
+    .main-hero,
+    .custom-gift-section,
+    .categories-section,
+    .bulk-gifting-section,
+    .featured-products,
+    .deal-of-day,
+    .trending-products,
+    .value-props,
+    .testimonials,
+    .cta-section {
+        min-height: auto;
+        padding: 60px 0;
+    }
+    
+    /* Disable scroll snap on mobile for better usability */
+    body {
+        scroll-snap-type: none;
+    }
+}
+
+/* Adjust padding to fit content better */
+.main-hero { padding: 40px 0; }
+.custom-gift-section { padding: 40px 0; }
+.categories-section { padding: 40px 0; }
+.bulk-gifting-section { padding: 40px 0; }
+.featured-products { padding: 40px 0; }
+.deal-of-day { padding: 40px 0; }
+.trending-products { padding: 40px 0; }
+.value-props { padding: 40px 0; }
+.testimonials { padding: 40px 0; }
+.cta-section { padding: 40px 0; }

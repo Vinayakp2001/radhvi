@@ -1,0 +1,15 @@
+# Core Django
+Django==4.2.7
+django-crispy-forms==2.1
+
+# Image handling
+Pillow==10.1.0
+
+# Shiprocket Integration
+requests==2.31.0
+celery==5.3.4
+redis==5.0.1
+django-celery-beat==2.5.0
+
+# Utilities
+python-decouple==3.8

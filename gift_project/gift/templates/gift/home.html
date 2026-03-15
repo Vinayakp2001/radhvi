@@ -1,0 +1,661 @@
+{% extends 'gift/base.html' %}
+{% load static %}
+
+{% block title %}Premium Gifts Online | Radhvi - Emotions, Crafted Perfectly{% endblock %}
+
+{% block meta_description %}Discover premium gifts for birthdays, anniversaries, weddings & corporate gifting. Curated collection with free shipping, secure payments & express delivery across India.{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/fullscreen-sections.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Slider -->
+{% include 'gift/includes/hero_slider.html' %}
+
+<!-- Main Hero Section -->
+<section class="main-hero bg-light position-relative overflow-hidden">
+    <div class="container py-6 py-lg-8">
+        <div class="row align-items-center">
+            <!-- Hero Content -->
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <div class="pe-lg-5">
+                    <!-- Trust Badges -->
+                    <div class="trust-indicators mb-4">
+                        <span class="trust-badge">
+                            <i class="fas fa-check-circle text-success me-1"></i> Trusted by 25K+ Customers
+                        </span>
+                        <span class="trust-badge">
+                            <i class="fas fa-shipping-fast text-primary me-1"></i> Free Shipping
+                        </span>
+                    </div>
+
+                    <!-- Main Heading -->
+                    <h1 class="display-4 fw-bold mb-4">
+                        <span class="text-dark">Premium Gifts for</span>
+                        <span class="text-primary d-block">Every Special Moment</span>
+                    </h1>
+                    
+                    <!-- Subtitle -->
+                    <p class="lead text-muted mb-4">
+                        Curated collection of premium gifts for birthdays, anniversaries, weddings, 
+                        corporate gifting, and all special occasions. Expertly crafted, beautifully packaged.
+                    </p>
+
+                    <!-- Key Features -->
+                    <div class="features-list mb-5">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="feature-item d-flex align-items-center">
+                                    <div class="feature-icon bg-primary-light rounded-circle d-flex align-items-center justify-content-center me-3">
+                                        <i class="fas fa-gift text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">Premium Quality</h6>
+                                        <p class="text-muted small mb-0">Handpicked items</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="feature-item d-flex align-items-center">
+                                    <div class="feature-icon bg-success-light rounded-circle d-flex align-items-center justify-content-center me-3">
+                                        <i class="fas fa-shipping-fast text-success"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">Free Shipping</h6>
+                                        <p class="text-muted small mb-0">Pan India</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="feature-item d-flex align-items-center">
+                                    <div class="feature-icon bg-warning-light rounded-circle d-flex align-items-center justify-content-center me-3">
+                                        <i class="fas fa-shield-alt text-warning"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">Secure Payment</h6>
+                                        <p class="text-muted small mb-0">100% Safe</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="feature-item d-flex align-items-center">
+                                    <div class="feature-icon bg-info-light rounded-circle d-flex align-items-center justify-content-center me-3">
+                                        <i class="fas fa-headset text-info"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">24/7 Support</h6>
+                                        <p class="text-muted small mb-0">Expert assistance</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CTA Buttons -->
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="{% url 'product_list' %}" class="btn btn-primary btn-lg px-5">
+                            <i class="fas fa-shopping-bag me-2"></i> Shop Collection
+                        </a>
+                        <a href="#categories" class="btn btn-outline-primary btn-lg">
+                            <i class="fas fa-th-large me-2"></i> Browse Categories
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Image -->
+            <div class="col-lg-6">
+                <div class="position-relative">
+                    <div class="hero-image-main">
+                        <img src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" 
+                             alt="Premium Gift Collection" class="img-fluid rounded-4 shadow-lg">
+                    </div>
+                    
+                    <!-- Floating Stats Card -->
+                    <div class="floating-card stats-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="stat-icon bg-primary rounded-circle d-flex align-items-center justify-content-center me-3">
+                                    <i class="fas fa-star text-white"></i>
+                                </div>
+                                <div>
+                                    <h3 class="mb-0">4.8/5</h3>
+                                    <small class="text-muted">Customer Rating</small>
+                                </div>
+                            </div>
+                            <div class="rating-stars">
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star text-warning"></i>
+                                <i class="fas fa-star-half-alt text-warning"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Floating Offer Card -->
+                    <div class="floating-card offer-card">
+                        <div class="card-body text-center">
+                            <div class="offer-badge bg-danger text-white">SPECIAL OFFER</div>
+                            <h4 class="my-2">Get 15% Off</h4>
+                            <p class="text-muted small mb-2">On your first order</p>
+                            <div class="coupon-code">WELCOME15</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Custom Gift Service Section -->
+{% include 'gift/includes/custom_gift_service.html' %}
+
+<!-- Categories Section - Temporarily Hidden -->
+{% comment %}
+<section id="categories" class="categories-section py-6 bg-white">
+    <div class="container">
+        <div class="text-center mb-6">
+            <h2 class="display-6 fw-bold mb-3">Shop by Category</h2>
+            <p class="text-muted lead">Carefully curated collections for every occasion</p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Valentine's Category Card (First Position) -->
+            {% include 'gift/includes/valentine_category.html' %}
+            
+            {% for category in categories %}
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <a href="{% url 'product_list' %}?category={{ category.slug }}" class="category-card">
+                    <div class="card border-0 shadow-sm h-100 hover-lift">
+                        <div class="card-body p-4 text-center">
+                            <div class="category-icon mb-4">
+                                <div class="icon-wrapper bg-light rounded-3 p-4">
+                                    {% if category.icon and ':' in category.icon %}
+                                        <span class="iconify display-4" data-icon="{{ category.icon }}" style="font-size: 3rem;"></span>
+                                    {% else %}
+                                        <span class="display-4">{{ category.icon|default:"🎁" }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <h5 class="fw-semibold mb-2">{{ category.name }}</h5>
+                            <p class="text-muted small mb-0">{{ category.products.count }} Premium Items</p>
+                        </div>
+                        <div class="card-footer bg-transparent border-0 pt-0">
+                            <span class="text-primary small">Explore Collection <i class="fas fa-arrow-right ms-1"></i></span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <div class="empty-state">
+                    <i class="fas fa-box-open fa-4x text-muted mb-4"></i>
+                    <h4>Categories Coming Soon</h4>
+                    <p class="text-muted">We're preparing amazing collections for you</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="text-center mt-5">
+            <a href="{% url 'product_list' %}" class="btn btn-outline-primary btn-lg">
+                <i class="fas fa-eye me-2"></i> View All Categories
+            </a>
+        </div>
+    </div>
+</section>
+{% endcomment %}
+
+<!-- Bulk Gifting Section -->
+{% include 'gift/includes/bulk_gifting_section.html' %}
+
+<!-- Featured Products - Temporarily Hidden -->
+{% comment %}
+<section class="featured-products py-6 bg-light">
+    <div class="container">
+        <div class="section-header d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <h2 class="display-6 fw-bold mb-2">Featured Collection</h2>
+                <p class="text-muted lead">Handpicked premium gifts</p>
+            </div>
+            <a href="{% url 'product_list' %}?is_featured=true" class="btn btn-primary">
+                View All <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+        </div>
+
+        {% if featured_products %}
+        <div class="row g-4">
+            {% for product in featured_products %}
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                {% include 'gift/includes/product_card.html' with product=product %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-6">
+            <div class="empty-state">
+                <i class="fas fa-star fa-4x text-muted mb-4"></i>
+                <h4>Featured Products Coming Soon</h4>
+                <p class="text-muted mb-4">Our premium collection is being prepared</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endcomment %}
+
+<!-- Deal of the Day - Temporarily Hidden -->
+{% comment %}
+{% if deal_of_day %}
+<section class="deal-of-day py-6 bg-gradient-primary text-white">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <div class="deal-content">
+                    <!-- Deal Header -->
+                    <div class="d-flex align-items-center mb-4">
+                        <span class="badge bg-warning text-dark fs-6 px-3 py-2 me-3">
+                            <i class="fas fa-bolt me-1"></i> DEAL OF THE DAY
+                        </span>
+                        <span class="badge bg-danger fs-6 px-3 py-2">
+                            <i class="fas fa-clock me-1"></i> LIMITED TIME
+                        </span>
+                    </div>
+
+                    <!-- Product Details -->
+                    <h2 class="display-5 fw-bold mb-3">{{ deal_of_day.name }}</h2>
+                    <p class="lead mb-4">{{ deal_of_day.short_description }}</p>
+
+                    <!-- Price & Discount -->
+                    <div class="price-display mb-4">
+                        <div class="d-flex align-items-center gap-4">
+                            <div>
+                                <h1 class="display-4 fw-bold">₹{{ deal_of_day.discounted_price|default:deal_of_day.price }}</h1>
+                                {% if deal_of_day.discounted_price %}
+                                <div class="d-flex align-items-center mt-2">
+                                    <del class="h4 opacity-75 me-3">₹{{ deal_of_day.price }}</del>
+                                    <span class="badge bg-danger fs-5 px-3 py-2">
+                                        SAVE {{ deal_of_day.discount_percentage }}%
+                                    </span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Countdown Timer -->
+                    <div class="countdown-wrapper mb-5">
+                        <h5 class="mb-3">Offer ends in:</h5>
+                        <div class="countdown d-flex gap-3">
+                            <div class="countdown-box">
+                                <div class="countdown-value" id="hours">23</div>
+                                <div class="countdown-label">Hours</div>
+                            </div>
+                            <div class="countdown-separator">:</div>
+                            <div class="countdown-box">
+                                <div class="countdown-value" id="minutes">59</div>
+                                <div class="countdown-label">Minutes</div>
+                            </div>
+                            <div class="countdown-separator">:</div>
+                            <div class="countdown-box">
+                                <div class="countdown-value" id="seconds">59</div>
+                                <div class="countdown-label">Seconds</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CTA & Stock -->
+                    <div class="d-flex align-items-center gap-4">
+                        <a href="{% url 'product_detail' deal_of_day.slug %}" class="btn btn-light btn-lg px-5">
+                            <i class="fas fa-shopping-cart me-2"></i> Add to Cart
+                        </a>
+                        <div class="stock-info">
+                            <div class="d-flex justify-content-between mb-2">
+                                <small>Hurry! Only a few left</small>
+                                <small class="fw-semibold">75% Sold</small>
+                            </div>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar bg-warning" style="width: 75%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="deal-image-wrapper">
+                    {% if deal_of_day.images.first %}
+                    <img src="{{ deal_of_day.images.first.image.url }}" 
+                         alt="{{ deal_of_day.name }}" 
+                         class="img-fluid rounded-4 shadow-lg">
+                    {% else %}
+                    <div class="placeholder-image bg-white rounded-4 shadow-lg d-flex align-items-center justify-content-center" 
+                         style="height: 400px;">
+                        <i class="fas fa-gift fa-6x text-primary"></i>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endcomment %}
+
+<!-- Valentine's Promotional Section -->
+{% include 'gift/includes/valentine_promo_section.html' %}
+
+<!-- Hot Deal Section -->
+{% include 'gift/includes/hot_deal_section.html' %}
+
+<!-- 80 Roses Bouquet Deal Section -->
+{% include 'gift/includes/roses_deal_section.html' %}
+
+<!-- Trending Products - Temporarily Hidden -->
+{% comment %}
+<section class="trending-products py-6">
+    <div class="container">
+        <div class="section-header d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <h2 class="display-6 fw-bold mb-2">Trending Now</h2>
+                <p class="text-muted lead">Most popular this week</p>
+            </div>
+            <a href="{% url 'product_list' %}?is_trending=true" class="btn btn-outline-primary">
+                View All <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+        </div>
+
+        {% if trending_products %}
+        <div class="row g-4">
+            {% for product in trending_products %}
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                {% include 'gift/includes/product_card.html' with product=product %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <div class="empty-state">
+                <i class="fas fa-chart-line fa-4x text-muted mb-4"></i>
+                <h4>Trending Products Coming Soon</h4>
+                <p class="text-muted">Discover what's popular among our customers</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endcomment %}
+
+<!-- Value Propositions -->
+<section class="value-props py-6 bg-white">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="value-card text-center p-4">
+                    <div class="value-icon bg-primary-light rounded-circle mx-auto mb-4">
+                        <i class="fas fa-gift fa-2x text-primary"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Premium Quality</h4>
+                    <p class="text-muted mb-0">Handpicked, high-quality gifts with premium packaging</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="value-card text-center p-4">
+                    <div class="value-icon bg-success-light rounded-circle mx-auto mb-4">
+                        <i class="fas fa-shipping-fast fa-2x text-success"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Free Shipping</h4>
+                    <p class="text-muted mb-0">Free delivery on orders above ₹999 across India</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="value-card text-center p-4">
+                    <div class="value-icon bg-warning-light rounded-circle mx-auto mb-4">
+                        <i class="fas fa-shield-alt fa-2x text-warning"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">Secure Payment</h4>
+                    <p class="text-muted mb-0">100% secure payment with multiple options</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="value-card text-center p-4">
+                    <div class="value-icon bg-info-light rounded-circle mx-auto mb-4">
+                        <i class="fas fa-headset fa-2x text-info"></i>
+                    </div>
+                    <h4 class="fw-bold mb-3">24/7 Support</h4>
+                    <p class="text-muted mb-0">Dedicated customer support for all your queries</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="testimonials py-6 bg-light">
+    <div class="container">
+        <div class="text-center mb-6">
+            <h2 class="display-6 fw-bold mb-3">Trusted by Thousands</h2>
+            <p class="text-muted lead">What our customers say about us</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="testimonial-card h-100">
+                    <div class="testimonial-body p-4">
+                        <div class="rating mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                        <p class="testimonial-text mb-4">
+                            "The gift was beautifully packaged and delivered right on time. 
+                            My wife loved the personalized touch. Excellent service!"
+                        </p>
+                        <div class="testimonial-author d-flex align-items-center">
+                            <div class="author-avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3">
+                                RS
+                            </div>
+                            <div>
+                                <h6 class="mb-1">Rajesh Sharma</h6>
+                                <small class="text-muted">Mumbai • Verified Buyer</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="testimonial-card h-100">
+                    <div class="testimonial-body p-4">
+                        <div class="rating mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star-half-alt text-warning"></i>
+                        </div>
+                        <p class="testimonial-text mb-4">
+                            "Corporate gifting made easy! Ordered 50 gifts for our employees 
+                            and everything was perfect. Highly recommended for business gifting."
+                        </p>
+                        <div class="testimonial-author d-flex align-items-center">
+                            <div class="author-avatar bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-3">
+                                AP
+                            </div>
+                            <div>
+                                <h6 class="mb-1">Anjali Patel</h6>
+                                <small class="text-muted">Delhi • HR Manager</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="testimonial-card h-100">
+                    <div class="testimonial-body p-4">
+                        <div class="rating mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                        </div>
+                        <p class="testimonial-text mb-4">
+                            "Perfect anniversary gift! The quality exceeded expectations 
+                            and the delivery was exactly as promised. Will definitely order again."
+                        </p>
+                        <div class="testimonial-author d-flex align-items-center">
+                            <div class="author-avatar bg-info text-white rounded-circle d-flex align-items-center justify-content-center me-3">
+                                VK
+                            </div>
+                            <div>
+                                <h6 class="mb-1">Vikram Khanna</h6>
+                                <small class="text-muted">Bangalore • Verified Buyer</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section py-6 bg-primary text-white">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h2 class="display-5 fw-bold mb-4">Ready to Find the Perfect Gift?</h2>
+                <p class="lead mb-5">
+                    Join thousands of satisfied customers who trust us for their gifting needs. 
+                    Premium quality, timely delivery, and exceptional service guaranteed.
+                </p>
+                <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+                    <a href="{% url 'product_list' %}" class="btn btn-light btn-lg px-5">
+                        <i class="fas fa-shopping-bag me-2"></i> Start Shopping
+                    </a>
+                    <a href="{% url 'contact' %}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-headset me-2"></i> Contact Support
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Countdown Timer
+        function updateCountdown() {
+            const now = new Date();
+            const end = new Date();
+            end.setHours(23, 59, 59, 999);
+            
+            const diff = end - now;
+            
+            if (diff < 0) {
+                // Reset for next day
+                end.setDate(end.getDate() + 1);
+                return updateCountdown();
+            }
+            
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            const hoursEl = document.getElementById('hours');
+            const minutesEl = document.getElementById('minutes');
+            const secondsEl = document.getElementById('seconds');
+            
+            if (hoursEl) hoursEl.textContent = hours.toString().padStart(2, '0');
+            if (minutesEl) minutesEl.textContent = minutes.toString().padStart(2, '0');
+            if (secondsEl) secondsEl.textContent = seconds.toString().padStart(2, '0');
+        }
+        
+        // Only run countdown if elements exist
+        if (document.getElementById('hours')) {
+            setInterval(updateCountdown, 1000);
+            updateCountdown();
+        }
+        
+        // Animate numbers on scroll
+        function animateCounter(element, target) {
+            let current = 0;
+            const increment = target / 200;
+            
+            function update() {
+                if (current < target) {
+                    current += increment;
+                    element.textContent = Math.floor(current);
+                    setTimeout(update, 10);
+                } else {
+                    element.textContent = target;
+                }
+            }
+            
+            update();
+        }
+        
+        // Intersection Observer for animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counters = entry.target.querySelectorAll('.counter');
+                    counters.forEach(counter => {
+                        const target = parseInt(counter.getAttribute('data-target'));
+                        animateCounter(counter, target);
+                    });
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        // Observe stats section
+        const statsSection = document.querySelector('.main-hero');
+        if (statsSection) {
+            observer.observe(statsSection);
+        }
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Add hover effects to cards
+        const cards = document.querySelectorAll('.category-card, .feature-item, .value-card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transition = 'all 0.3s ease';
+            });
+        });
+        
+        // Initialize AOS if available
+        if (typeof AOS !== 'undefined') {
+            AOS.init({
+                duration: 800,
+                once: true,
+                offset: 100
+            });
+        }
+    });
+</script>
+{% endblock %}

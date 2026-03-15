@@ -1,0 +1,201 @@
+{% load static %}
+
+<!-- Hero Slider Section -->
+<section class="hero-slider-section">
+    <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+        <!-- Carousel Items -->
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="hero-image-wrapper">
+                    <img src="{% static 'images/hero/slider-1.jpeg' %}" class="d-block w-100" alt="Luxury Romance Bouquet">
+                    <div class="hero-overlay"></div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="hero-image-wrapper">
+                    <img src="{% static 'images/hero/slider-2.jpeg' %}" class="d-block w-100" alt="Turn Memories Into a Beautiful Surprise">
+                    <div class="hero-overlay"></div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="hero-image-wrapper">
+                    <img src="{% static 'images/hero/slider-3.jpeg' %}" class="d-block w-100" alt="Luxury Wrapped in Love">
+                    <div class="hero-overlay"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modern Carousel Controls -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+            <span class="hero-control-icon">
+                <i class="fas fa-chevron-left"></i>
+            </span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+            <span class="hero-control-icon">
+                <i class="fas fa-chevron-right"></i>
+            </span>
+        </button>
+
+        <!-- Modern Indicators -->
+        <div class="hero-indicators">
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+        </div>
+    </div>
+</section>
+
+<style>
+.hero-slider-section {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.hero-slider-section .carousel-item {
+    height: 600px;
+    position: relative;
+}
+
+.hero-image-wrapper {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+}
+
+.hero-slider-section .carousel-item img {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+    transform: scale(1);
+    transition: transform 8s ease-out;
+}
+
+.hero-slider-section .carousel-item.active img {
+    animation: kenBurns 8s ease-out forwards;
+}
+
+@keyframes kenBurns {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.1);
+    }
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.3) 100%);
+    pointer-events: none;
+}
+
+/* Modern Control Buttons */
+.carousel-control-prev,
+.carousel-control-next {
+    width: 60px;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.hero-slider-section:hover .carousel-control-prev,
+.hero-slider-section:hover .carousel-control-next {
+    opacity: 1;
+}
+
+.hero-control-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    color: #FF0033;
+    font-size: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.hero-control-icon:hover {
+    background: #FF0033;
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(255,0,51,0.4);
+}
+
+/* Modern Indicators */
+.hero-indicators {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    z-index: 15;
+}
+
+.hero-indicators button {
+    width: 40px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.5);
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.hero-indicators button.active {
+    background: #FF0033;
+    width: 60px;
+}
+
+.hero-indicators button:hover {
+    background: rgba(255, 255, 255, 0.8);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .hero-slider-section .carousel-item {
+        height: 400px;
+    }
+    
+    .hero-control-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+    
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 50px;
+        opacity: 1;
+    }
+    
+    .hero-indicators {
+        bottom: 20px;
+    }
+    
+    .hero-indicators button {
+        width: 30px;
+        height: 3px;
+    }
+    
+    .hero-indicators button.active {
+        width: 45px;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-slider-section .carousel-item {
+        height: 300px;
+    }
+}
+</style>

@@ -1,0 +1,781 @@
+{% load static %}
+<header>
+    <!-- Announcement Bar -->
+    <div class="announcement-bar bg-dark text-white py-2">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8 text-center text-md-start">
+                    <div class="announcement-marquee">
+                        <span class="me-4">🎉 Festive Sale Live Now - Up to 50% OFF!</span>
+                        <span class="me-4">🚚 Free Shipping on Orders Above ₹999</span>
+                        <span>🎁 Special Offers for New Customers</span>
+                    </div>
+                </div>
+                <div class="col-md-4 text-end d-none d-md-block">
+                    <div class="d-flex align-items-center justify-content-end gap-3">
+                        <a href="tel:+919876543210" class="text-white text-decoration-none small">
+                            <i class="fas fa-headset me-1"></i> +91 98765 43210
+                        </a>
+                        <a href="{% url 'track_order' %}" class="text-white text-decoration-none small">
+                            <i class="fas fa-truck me-1"></i> Track Order
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+        <div class="container">
+            <!-- Logo -->
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <!-- Radhvi Logo - Replace with actual logo image -->
+                <img src="{% static 'images/radhvi-logo.png' %}" 
+                     alt="Radhvi" 
+                     class="radhvi-logo"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                
+                <!-- Fallback Text Logo -->
+                <div class="text-logo" style="display: none;">
+                    <span class="fw-bold fs-3" style="color: #E91E63;">Radhvi</span>
+                    <div class="logo-tag small text-muted">Emotions, Crafted Perfectly</div>
+                </div>
+            </a>
+
+            <!-- Mobile Toggle -->
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" 
+                    data-bs-target="#navbarContent" aria-expanded="false">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Search Bar - Desktop -->
+            <div class="d-none d-lg-flex mx-4 flex-grow-1">
+                <form action="{% url 'product_list' %}" method="get" class="w-100">
+                    <div class="input-group search-bar">
+                        <input type="text" name="search" class="form-control" 
+                               placeholder="Search gifts, categories, brands..." 
+                               value="{{ request.GET.search|default:'' }}">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Action Icons -->
+            <div class="d-flex align-items-center">
+                <!-- Compare Button -->
+                <a href="{% url 'compare' %}" class="nav-link me-3 position-relative d-none d-md-block">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-info">
+                        0
+                    </span>
+                </a>
+                
+                <!-- Notification Bell -->
+                <a href="{% url 'notifications' %}" class="nav-link me-3 position-relative d-none d-md-block">
+                    <i class="fas fa-bell"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
+                        3
+                    </span>
+                </a>
+
+                {% if user.is_authenticated %}
+                <!-- User Dropdown -->
+                <div class="dropdown me-3">
+                    <a href="#" class="d-flex align-items-center text-decoration-none" data-bs-toggle="dropdown">
+                        <div class="position-relative">
+                            <div class="avatar-circle bg-primary text-white rounded-circle d-flex align-items-center justify-content-center">
+                                {{ user.username|first|upper }}
+                            </div>
+                        </div>
+                        <div class="ms-2 d-none d-md-block">
+                            <div class="small fw-medium">{{ user.username|truncatechars:12 }}</div>
+                            <div class="text-muted x-small">My Account</div>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+                        <li class="dropdown-header">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar-circle bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2">
+                                    {{ user.username|first|upper }}
+                                </div>
+                                <div>
+                                    <div class="fw-medium">{{ user.username }}</div>
+                                    <div class="text-muted small">{{ user.email|truncatechars:20 }}</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'profile' %}">
+                            <i class="fas fa-user-circle me-2"></i>My Profile
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'order_history' %}">
+                            <i class="fas fa-shopping-bag me-2"></i>My Orders
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'wishlist' %}">
+                            <i class="fas fa-heart me-2"></i>Wishlist
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'address_book' %}">
+                            <i class="fas fa-map-marker-alt me-2"></i>Address Book
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'change_password' %}">
+                            <i class="fas fa-lock me-2"></i>Change Password
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'compare' %}">
+                            <i class="fas fa-exchange-alt me-2"></i>Compare
+                            <span class="badge bg-info float-end">0</span>
+                        </a></li>
+                        <li><a class="dropdown-item" href="{% url 'notifications' %}">
+                            <i class="fas fa-bell me-2"></i>Notifications
+                            <span class="badge bg-warning float-end">3</span>
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form method="post" action="{% url 'logout' %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-item text-danger border-0 bg-transparent">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+<!-- User dropdown already exists -->
+{% else %}
+<a href="{% url 'login' %}" class="btn btn-outline-primary me-2">
+    <i class="fas fa-sign-in-alt me-1"></i>Login
+</a>
+<a href="{% url 'register' %}" class="btn btn-primary d-none d-md-inline-block">
+    <i class="fas fa-user-plus me-1"></i>Register
+</a>
+{% endif %}
+
+                <!-- Wishlist -->
+                <a href="{% url 'wishlist' %}" class="nav-link me-3 position-relative">
+                    <i class="fas fa-heart"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {% if user.is_authenticated %}{{ wishlist_count }}{% else %}0{% endif %}
+                    </span>
+                </a>
+
+                <!-- Cart -->
+                <a href="{% url 'cart' %}" class="nav-link position-relative">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+                        {% if user.is_authenticated %}{{ cart_count }}{% else %}0{% endif %}
+                    </span>
+                    <span class="d-none d-lg-inline ms-1 fw-medium">
+                        ₹{% if user.is_authenticated %}{{ cart_total|default:0 }}{% else %}0{% endif %}
+                    </span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Bottom Navigation & Mobile Search -->
+    <div class="container">
+        <div class="collapse navbar-collapse bg-white shadow-sm rounded-bottom border-top" id="navbarContent">
+            <!-- Mobile Search -->
+            <div class="my-3 d-lg-none px-3">
+                <form action="{% url 'product_list' %}" method="get">
+                    <div class="input-group">
+                        <input type="text" name="search" class="form-control" 
+                               placeholder="Search products...">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Mobile Quick Actions -->
+                <div class="d-flex justify-content-around mt-3">
+                    <a href="{% url 'track_order' %}" class="btn btn-outline-secondary btn-sm">
+                        <i class="fas fa-truck me-1"></i>Track Order
+                    </a>
+                    <a href="{% url 'compare' %}" class="btn btn-outline-secondary btn-sm">
+                        <i class="fas fa-exchange-alt me-1"></i>Compare
+                    </a>
+                    <a href="{% url 'notifications' %}" class="btn btn-outline-secondary btn-sm position-relative">
+                        <i class="fas fa-bell me-1"></i>Notifications
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning" style="font-size: 0.5rem;">
+                            3
+                        </span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Main Navigation -->
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">
+                        <i class="fas fa-home me-1"></i>Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if '/products/' in request.path %}active{% endif %}" 
+                       href="{% url 'product_list' %}">
+                        <i class="fas fa-store me-1"></i>Shop All
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                        <i class="fas fa-th-large me-1"></i>Categories
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-lg p-3 border-0 shadow">
+                        <div class="row">
+                            {% for category in categories|slice:":6" %}
+                            <div class="col-lg-4 col-md-6 mb-3">
+                                <a class="dropdown-item p-2" href="{% url 'product_list' %}?category={{ category.slug }}">
+                                    <div class="d-flex align-items-center">
+                                        <span class="category-icon me-3">
+                                            {% if category.icon and ':' in category.icon %}
+                                                <span class="iconify" data-icon="{{ category.icon }}" style="font-size: 1.5rem;"></span>
+                                            {% else %}
+                                                {{ category.icon|default:"🎁" }}
+                                            {% endif %}
+                                        </span>
+                                        <div>
+                                            <div class="fw-medium">{{ category.name }}</div>
+                                            <div class="text-muted x-small">{{ category.products.count }} items</div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="text-center mt-2">
+                            <a href="{% url 'product_list' %}" class="btn btn-outline-primary btn-sm">
+                                View All Categories
+                            </a>
+                        </div>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'product_list' %}?sort=discount">
+                        <i class="fas fa-tag me-1"></i>Hot Deals
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'product_list' %}?is_featured=true">
+                        <i class="fas fa-star me-1"></i>Featured
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                        <i class="fas fa-gift me-1"></i>Occasions
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><h6 class="dropdown-header">Celebrations</h6></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-birthday-cake me-2"></i>Birthday</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-ring me-2"></i>Anniversary</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-graduation-cap me-2"></i>Graduation</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><h6 class="dropdown-header">Festivals</h6></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-star me-2"></i>Diwali</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-heart me-2"></i>Valentine's</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-tree me-2"></i>Christmas</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'about' %}">
+                        <i class="fas fa-info-circle me-1"></i>About
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'contact' %}">
+                        <i class="fas fa-phone me-1"></i>Contact
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Offers Bar Mobile -->
+            <div class="d-lg-none p-3 border-top">
+                <div class="row text-center">
+                    <div class="col-4">
+                        <div class="offer-item">
+                            <i class="fas fa-shipping-fast text-primary"></i>
+                            <div class="small mt-1">Free Shipping</div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="offer-item">
+                            <i class="fas fa-shield-alt text-primary"></i>
+                            <div class="small mt-1">Secure</div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="offer-item">
+                            <i class="fas fa-award text-primary"></i>
+                            <div class="small mt-1">Premium</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Offers Bar Desktop -->
+    <div class="offers-bar bg-light border-top d-none d-lg-block">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="d-flex justify-content-between py-2">
+                        <div class="offer-item d-flex align-items-center">
+                            <i class="fas fa-shipping-fast text-primary me-2"></i>
+                            <span>Free Shipping on Orders Above ₹999</span>
+                        </div>
+                        <div class="offer-item d-flex align-items-center">
+                            <i class="fas fa-shield-alt text-primary me-2"></i>
+                            <span>100% Secure Payment</span>
+                        </div>
+                        <div class="offer-item d-flex align-items-center">
+                            <i class="fas fa-headset text-primary me-2"></i>
+                            <span>24/7 Customer Support</span>
+                        </div>
+                        <div class="offer-item d-flex align-items-center">
+                            <i class="fas fa-undo text-primary me-2"></i>
+                            <span>Easy 30-Day Returns</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<style>
+    /* Announcement Bar */
+    .announcement-bar {
+        background: linear-gradient(90deg, #1a237e, #283593);
+        font-size: 0.875rem;
+        min-height: 40px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .announcement-marquee {
+        overflow: hidden;
+        white-space: nowrap;
+        display: inline-block;
+        animation: marquee 30s linear infinite;
+        padding-right: 100%;
+    }
+    
+    @keyframes marquee {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-100%); }
+    }
+    
+    /* Logo */
+    .logo-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.25rem;
+    }
+    
+    .logo-tag {
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+    }
+    
+    /* Search Bar */
+    .search-bar {
+        border-radius: 6px;
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .search-bar input {
+        border: 1px solid #dee2e6;
+        border-right: none;
+        padding: 0.75rem 1rem;
+    }
+    
+    .search-bar input:focus {
+        box-shadow: none;
+        border-color: #0d6efd;
+    }
+    
+    .search-bar .btn {
+        padding: 0.75rem 1.5rem;
+    }
+    
+    /* Action Icons */
+    .nav-link {
+        color: #495057;
+        font-weight: 500;
+        padding: 0.5rem 0.75rem !important;
+        border-radius: 4px;
+        position: relative;
+    }
+    
+    .nav-link:hover {
+        color: #0d6efd;
+        background: rgba(13, 110, 253, 0.1);
+    }
+    
+    .nav-link.active {
+        color: #0d6efd;
+        background: rgba(13, 110, 253, 0.1);
+        font-weight: 600;
+    }
+    
+    /* Avatar */
+    .avatar-circle {
+        width: 36px;
+        height: 36px;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+    
+    /* Dropdown Menu */
+    .dropdown-menu {
+        border-radius: 8px;
+        border: 1px solid rgba(0,0,0,0.1);
+        margin-top: 10px;
+    }
+    
+    .dropdown-header {
+        padding: 0.75rem 1rem;
+        background: #f8f9fa;
+        border-radius: 8px 8px 0 0;
+    }
+    
+    /* Badges */
+    .badge {
+        font-size: 0.65rem;
+        padding: 0.2rem 0.4rem;
+        min-width: 18px;
+        height: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* Category Icon */
+    .category-icon {
+        font-size: 1.5rem;
+        width: 40px;
+        text-align: center;
+    }
+    
+    /* Offers Bar */
+    .offers-bar {
+        background: #f8f9fa;
+        border-top: 1px solid #dee2e6;
+        font-size: 0.875rem;
+    }
+    
+    .offer-item {
+        color: #495057;
+    }
+    
+    .offer-item i {
+        font-size: 1rem;
+    }
+    
+    /* Mobile Navigation */
+    @media (max-width: 991.98px) {
+        .navbar-collapse {
+            border-top: 1px solid #dee2e6;
+            margin-top: 0;
+        }
+        
+        .nav-link {
+            padding: 0.75rem 1rem !important;
+        }
+        
+        .dropdown-menu {
+            border: none;
+            box-shadow: none;
+            padding-left: 2rem;
+        }
+        
+        .announcement-marquee {
+            animation: none;
+            white-space: normal;
+            text-align: center;
+        }
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            font-size: 1rem;
+        }
+        
+        .offers-bar .offer-item {
+            text-align: center;
+            margin: 0.5rem 0;
+        }
+    }
+    
+    /* Button Styles */
+    .btn-outline-primary {
+        border-color: #0d6efd;
+        color: #0d6efd;
+    }
+    
+    .btn-outline-primary:hover {
+        background-color: #0d6efd;
+        color: white;
+    }
+    
+    /* Animations */
+    .nav-link, .dropdown-item {
+        transition: all 0.2s ease;
+    }
+    
+    .dropdown-menu {
+        animation: fadeIn 0.2s ease;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Mobile menu close on click
+        const navLinks = document.querySelectorAll('.nav-link');
+        const navbarCollapse = document.querySelector('.navbar-collapse');
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (navbarCollapse.classList.contains('show')) {
+                    const bsCollapse = new bootstrap.Collapse(navbarCollapse);
+                    bsCollapse.hide();
+                }
+            });
+        });
+        
+        // Initialize tooltips
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+        
+        // Update badge counts
+        function updateBadgeCounts() {
+            const badges = document.querySelectorAll('.badge');
+            badges.forEach(badge => {
+                const count = parseInt(badge.textContent);
+                if (count > 0) {
+                    badge.style.display = 'flex';
+                } else {
+                    badge.style.display = 'none';
+                }
+            });
+        }
+        
+        updateBadgeCounts();
+        
+        // Pause marquee on hover
+        const marquee = document.querySelector('.announcement-marquee');
+        if (marquee) {
+            marquee.addEventListener('mouseenter', function() {
+                this.style.animationPlayState = 'paused';
+            });
+            
+            marquee.addEventListener('mouseleave', function() {
+                this.style.animationPlayState = 'running';
+            });
+        }
+        
+        // Add hover effects for dropdowns on desktop
+        if (window.innerWidth >= 992) {
+            const dropdowns = document.querySelectorAll('.dropdown');
+            dropdowns.forEach(dropdown => {
+                dropdown.addEventListener('mouseenter', function() {
+                    const dropdownMenu = this.querySelector('.dropdown-menu');
+                    if (dropdownMenu) {
+                        dropdownMenu.classList.add('show');
+                    }
+                });
+                
+                dropdown.addEventListener('mouseleave', function() {
+                    const dropdownMenu = this.querySelector('.dropdown-menu');
+                    if (dropdownMenu) {
+                        dropdownMenu.classList.remove('show');
+                    }
+                });
+            });
+        }
+    });
+</script>
+
+<style>
+/* Clean Radhvi Logo Styling - No Effects */
+.radhvi-logo {
+    height: 55px;
+    width: auto;
+    max-width: 200px;
+    object-fit: contain;
+    /* Removed all shadows and hover effects for clean look */
+}
+
+.text-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+}
+
+.text-logo span {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, #E91E63 0%, #FF6B8B 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 10px rgba(233, 30, 99, 0.2);
+}
+
+.logo-tag {
+    font-size: 0.65rem;
+    letter-spacing: 1.5px;
+    margin-top: -2px;
+    color: #666;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+/* Navbar Enhancements */
+.navbar {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.98) !important;
+    border-bottom: 1px solid rgba(233, 30, 99, 0.1);
+    transition: all 0.3s ease;
+}
+
+.navbar.scrolled {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Search Bar Modern Style */
+.search-bar {
+    border-radius: 50px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+.search-bar:focus-within {
+    box-shadow: 0 4px 16px rgba(233, 30, 99, 0.2);
+    transform: translateY(-1px);
+}
+
+.search-bar input {
+    border: 2px solid transparent;
+    padding: 0.85rem 1.2rem;
+    font-size: 0.95rem;
+}
+
+.search-bar input:focus {
+    border-color: #E91E63;
+}
+
+.search-bar .btn {
+    padding: 0.85rem 1.8rem;
+    background: linear-gradient(135deg, #E91E63 0%, #FF6B8B 100%);
+    border: none;
+}
+
+.search-bar .btn:hover {
+    background: linear-gradient(135deg, #C2185B 0%, #E91E63 100%);
+    transform: scale(1.05);
+}
+
+/* Action Icons Modern Style */
+.nav-link {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    color: #E91E63 !important;
+    transform: translateY(-2px);
+}
+
+.nav-link .badge {
+    font-size: 0.65rem;
+    padding: 0.25rem 0.45rem;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* Buttons Modern Style */
+.btn-primary {
+    background: linear-gradient(135deg, #E91E63 0%, #FF6B8B 100%);
+    border: none;
+    border-radius: 50px;
+    padding: 0.65rem 1.8rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(233, 30, 99, 0.3);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #C2185B 0%, #E91E63 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
+}
+
+.btn-outline-primary {
+    border: 2px solid #E91E63;
+    color: #E91E63;
+    border-radius: 50px;
+    padding: 0.6rem 1.8rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+    background: linear-gradient(135deg, #E91E63 0%, #FF6B8B 100%);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(233, 30, 99, 0.3);
+}
+
+/* Mobile Logo */
+@media (max-width: 768px) {
+    .radhvi-logo {
+        height: 45px;
+        max-width: 160px;
+    }
+    
+    .text-logo span {
+        font-size: 1.4rem;
+    }
+    
+    .logo-tag {
+        font-size: 0.6rem;
+    }
+}
+
+/* Smooth Animations */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.navbar {
+    animation: fadeInDown 0.5s ease;
+}
+</style>
+
+</header>

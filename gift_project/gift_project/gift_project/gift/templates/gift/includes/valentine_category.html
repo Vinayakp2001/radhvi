@@ -1,0 +1,62 @@
+{% load static %}
+{% comment %}
+Valentine's Day Category Card
+Displays as a special category card in the categories section
+{% endcomment %}
+
+{% if valentine_campaign and valentine_campaign.show_category_card %}
+<div class="col-xl-3 col-lg-4 col-md-6">
+    <a href="{% url 'product_list' %}?category={{ valentine_campaign.category_slug|default:'valentines' }}" 
+       class="valentine-category-card">
+        <div class="card border-0 shadow-sm h-100 valentine-card-special">
+            <div class="card-body p-4 text-center">
+                <!-- Special Badge -->
+                <div class="valentine-badge-corner">
+                    <span>SPECIAL</span>
+                </div>
+                
+                <!-- Category Icon -->
+                <div class="category-icon mb-4">
+                    <div class="icon-wrapper valentine-icon-wrapper p-4">
+                        {% load static %}
+                        {% if valentine_campaign %}
+                            <img src="{% static 'images/promotions/valentines/radhvi-valentine-icon.png' %}" 
+                                 alt="Valentine's Gifts" 
+                                 class="valentine-category-icon"
+                                 onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\'font-size:60px;\'>💝</span>';">
+                        {% else %}
+                            <span style='font-size:60px;'>💝</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Category Title -->
+                <h5 class="fw-semibold mb-2 valentine-category-title">
+                    💝 {{ valentine_campaign.category_name|default:"Valentine's Special" }}
+                </h5>
+                
+                <!-- Product Count -->
+                <p class="text-muted small mb-3">
+                    {% if valentine_products_count %}
+                        {{ valentine_products_count }} Romantic Gift{{ valentine_products_count|pluralize }}
+                    {% else %}
+                        Exclusive Collection
+                    {% endif %}
+                </p>
+                
+                <!-- Discount Tag -->
+                <div class="valentine-discount-tag">
+                    {{ valentine_campaign.discount_percentage }}% OFF
+                </div>
+            </div>
+            
+            <!-- Card Footer -->
+            <div class="card-footer bg-transparent border-0 pt-0 pb-3">
+                <span class="text-danger small fw-semibold">
+                    Explore Collection <i class="fas fa-arrow-right ms-1"></i>
+                </span>
+            </div>
+        </div>
+    </a>
+</div>
+{% endif %}

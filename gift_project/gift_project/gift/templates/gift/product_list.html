@@ -1,0 +1,344 @@
+{% extends 'gift/base.html' %}
+{% load static %}
+{% load gift_filters %}
+
+{% block title %}Shop Gifts - Browse Our Collection{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Filters Sidebar -->
+        <div class="col-lg-3 col-xl-2 d-none d-lg-block bg-white border-end py-4">
+            <div class="sticky-top" style="top: 100px;">
+                <h5 class="fw-bold mb-4"><i class="fas fa-filter me-2"></i> Filters</h5>
+                
+                <!-- Categories -->
+                <div class="mb-4">
+                    <h6 class="fw-semibold mb-3">Categories</h6>
+                    <div class="list-group list-group-flush">
+                        <a href="{% url 'product_list' %}" 
+                           class="list-group-item list-group-item-action border-0 rounded {% if not selected_category %}active{% endif %}">
+                            All Categories
+                        </a>
+                        {% for category in categories %}
+                        <a href="{% url 'product_list' %}?category={{ category.slug }}" 
+                           class="list-group-item list-group-item-action border-0 rounded {% if selected_category == category.slug %}active{% endif %}">
+                            {{ category.icon }} {{ category.name }}
+                            <span class="badge bg-light text-dark float-end">{{ category.products.count }}</span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Price Range -->
+                <div class="mb-4">
+                    <h6 class="fw-semibold mb-3">Price Range</h6>
+                    <div class="btn-group-vertical w-100">
+                        <a href="{% url 'product_list' %}?min_price=0&max_price=500" 
+                           class="btn btn-outline-secondary text-start">
+                            Under ₹500
+                        </a>
+                        <a href="{% url 'product_list' %}?min_price=500&max_price=1000" 
+                           class="btn btn-outline-secondary text-start">
+                            ₹500 - ₹1000
+                        </a>
+                        <a href="{% url 'product_list' %}?min_price=1000&max_price=2000" 
+                           class="btn btn-outline-secondary text-start">
+                            ₹1000 - ₹2000
+                        </a>
+                        <a href="{% url 'product_list' %}?min_price=2000" 
+                           class="btn btn-outline-secondary text-start">
+                            Above ₹2000
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Brands -->
+                {% if brands %}
+                <div class="mb-4">
+                    <h6 class="fw-semibold mb-3">Brands</h6>
+                    <div class="list-group list-group-flush">
+                        {% for brand in brands %}
+                        <a href="{% url 'product_list' %}?brand={{ brand.slug }}" 
+                           class="list-group-item list-group-item-action border-0 rounded {% if selected_brand == brand.slug %}active{% endif %}">
+                            {{ brand.name }}
+                            <span class="badge bg-light text-dark float-end">{{ brand.products.count }}</span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Stock Status -->
+                <div class="mb-4">
+                    <h6 class="fw-semibold mb-3">Stock Status</h6>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="inStock" 
+                               onchange="window.location='{% url 'product_list' %}?in_stock='+(this.checked?'true':'')">
+                        <label class="form-check-label" for="inStock">
+                            In Stock Only
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Clear Filters -->
+                {% if selected_category or selected_brand or search_query %}
+                <div class="mt-4">
+                    <a href="{% url 'product_list' %}" class="btn btn-outline-danger w-100">
+                        <i class="fas fa-times me-2"></i> Clear All Filters
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Products Main Area -->
+        <div class="col-lg-9 col-xl-10 py-4">
+            <!-- Page Header -->
+            <div class="mb-4">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item active">Products</li>
+                    </ol>
+                </nav>
+                
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="h2 fw-bold mb-2">
+                            {% if selected_category %}
+                            {% for category in categories %}
+                                {% if category.slug == selected_category %}
+                                    {{ category.name }}
+                                {% endif %}
+                            {% endfor %}
+                            {% elif search_query %}
+                                Search Results for "{{ search_query }}"
+                            {% else %}
+                                All Products
+                            {% endif %}
+                        </h1>
+                        <p class="text-muted mb-0">{{ page_obj.paginator.count }} products found</p>
+                    </div>
+                    
+                    <div class="d-flex align-items-center gap-3">
+                        <!-- Mobile Filter Button -->
+                        <button class="btn btn-outline-primary d-lg-none" type="button" 
+                                data-bs-toggle="offcanvas" data-bs-target="#mobileFilters">
+                            <i class="fas fa-filter"></i>
+                        </button>
+                        
+                        <!-- Sort Dropdown -->
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" 
+                                    data-bs-toggle="dropdown">
+                                <i class="fas fa-sort me-2"></i> 
+                                {% if sort_by == 'price_low' %}Price: Low to High
+                                {% elif sort_by == 'price_high' %}Price: High to Low
+                                {% elif sort_by == 'rating' %}Highest Rated
+                                {% elif sort_by == 'popular' %}Most Popular
+                                {% elif sort_by == 'discount' %}Best Discount
+                                {% else %}Newest First{% endif %}
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'product_list' %}?sort=newest{% if selected_category %}&category={{ selected_category }}{% endif %}">Newest First</a></li>
+                                <li><a class="dropdown-item" href="{% url 'product_list' %}?sort=price_low{% if selected_category %}&category={{ selected_category }}{% endif %}">Price: Low to High</a></li>
+                                <li><a class="dropdown-item" href="{% url 'product_list' %}?sort=price_high{% if selected_category %}&category={{ selected_category }}{% endif %}">Price: High to Low</a></li>
+                                <li><a class="dropdown-item" href="{% url 'product_list' %}?sort=rating{% if selected_category %}&category={{ selected_category }}{% endif %}">Highest Rated</a></li>
+                                <li><a class="dropdown-item" href="{% url 'product_list' %}?sort=popular{% if selected_category %}&category={{ selected_category }}{% endif %}">Most Popular</a></li>
+                                <li><a class="dropdown-item" href="{% url 'product_list' %}?sort=discount{% if selected_category %}&category={{ selected_category }}{% endif %}">Best Discount</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Search Box -->
+            <div class="mb-4">
+                <form method="get" class="input-group">
+                    <input type="text" name="search" class="form-control rounded-start" 
+                           placeholder="Search products by name, description, category..." 
+                           value="{{ search_query }}">
+                    <button class="btn btn-primary rounded-end" type="submit">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Active Filters -->
+            {% if selected_category or selected_brand or search_query %}
+            <div class="mb-4">
+                <div class="d-flex flex-wrap gap-2">
+                    {% if selected_category %}
+                    <span class="badge bg-primary p-2">
+                        Category: {{ categories|get_category:selected_category }}
+                        <a href="{% url 'product_list' %}{% if search_query %}?search={{ search_query }}{% endif %}" 
+                           class="text-white ms-2">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </span>
+                    {% endif %}
+                    
+                    {% if selected_brand %}
+                    <span class="badge bg-primary p-2">
+                        Brand: {{ brands|get_brand:selected_brand }}
+                        <a href="{% url 'product_list' %}{% if search_query %}?search={{ search_query }}{% endif %}" 
+                           class="text-white ms-2">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </span>
+                    {% endif %}
+                    
+                    {% if search_query %}
+                    <span class="badge bg-primary p-2">
+                        Search: "{{ search_query }}"
+                        <a href="{% url 'product_list' %}{% if selected_category %}?category={{ selected_category }}{% endif %}" 
+                           class="text-white ms-2">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Products Grid -->
+            {% if products %}
+            <div class="row g-4">
+                {% for product in products %}
+                <div class="col-xl-3 col-lg-4 col-md-6">
+                    {% include 'gift/includes/product_card.html' with product=product %}
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Pagination -->
+            {% if page_obj.paginator.num_pages > 1 %}
+            <nav aria-label="Page navigation" class="mt-5">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                    {% endif %}
+                    
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}">{{ num }}</a>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if search_query %}&search={{ search_query }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+                <p class="text-center text-muted mt-2">
+                    Showing {{ page_obj.start_index }} - {{ page_obj.end_index }} of {{ page_obj.paginator.count }} products
+                </p>
+            </nav>
+            {% endif %}
+            
+            {% else %}
+            <!-- No Products Found -->
+            <div class="text-center py-5">
+                <div class="mb-4">
+                    <i class="fas fa-box-open fa-4x text-muted"></i>
+                </div>
+                <h3 class="mb-3">No Products Found</h3>
+                <p class="text-muted mb-4">
+                    {% if search_query %}
+                        Sorry, we couldn't find any products matching "{{ search_query }}"
+                    {% elif selected_category %}
+                        No products available in this category yet
+                    {% else %}
+                        No products available yet
+                    {% endif %}
+                </p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="{% url 'product_list' %}" class="btn btn-primary">
+                        <i class="fas fa-redo me-2"></i> Clear Filters
+                    </a>
+                    {% if user.is_authenticated %}
+                    <a href="/admin/gift/product/add/" class="btn btn-outline-primary">
+                        <i class="fas fa-plus me-2"></i> Add Product
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Mobile Filters Offcanvas -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="mobileFilters">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title">Filters</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+        <!-- Copy filter content from sidebar here for mobile -->
+        <h6 class="fw-semibold mb-3">Categories</h6>
+        <div class="list-group list-group-flush mb-4">
+            <a href="{% url 'product_list' %}" 
+               class="list-group-item list-group-item-action border-0 rounded {% if not selected_category %}active{% endif %}">
+                All Categories
+            </a>
+            {% for category in categories %}
+            <a href="{% url 'product_list' %}?category={{ category.slug }}" 
+               class="list-group-item list-group-item-action border-0 rounded {% if selected_category == category.slug %}active{% endif %}">
+                {{ category.icon }} {{ category.name }}
+            </a>
+            {% endfor %}
+        </div>
+        
+        <h6 class="fw-semibold mb-3">Price Range</h6>
+        <div class="btn-group-vertical w-100 mb-4">
+            <a href="{% url 'product_list' %}?min_price=0&max_price=500" 
+               class="btn btn-outline-secondary text-start">
+                Under ₹500
+            </a>
+            <a href="{% url 'product_list' %}?min_price=500&max_price=1000" 
+               class="btn btn-outline-secondary text-start">
+                ₹500 - ₹1000
+            </a>
+            <a href="{% url 'product_list' %}?min_price=1000&max_price=2000" 
+               class="btn btn-outline-secondary text-start">
+                ₹1000 - ₹2000
+            </a>
+            <a href="{% url 'product_list' %}?min_price=2000" 
+               class="btn btn-outline-secondary text-start">
+                Above ₹2000
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Mobile filter toggle
+    $('#mobileFilters').on('show.bs.offcanvas', function () {
+        $('body').addClass('offcanvas-open');
+    }).on('hide.bs.offcanvas', function () {
+        $('body').removeClass('offcanvas-open');
+    });
+    
+    // Filter form submission
+    $('input[type="checkbox"]').on('change', function() {
+        $(this).closest('form').submit();
+    });
+</script>
+{% endblock %}

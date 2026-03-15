@@ -1,0 +1,404 @@
+{% extends 'gift/base.html' %}
+{% load static %}
+
+{% block title %}Return/Exchange Request - Radhvi{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'order_history' %}">My Orders</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'order_detail' order.order_id %}">Order {{ order.order_id }}</a></li>
+            <li class="breadcrumb-item active">Return/Exchange</li>
+        </ol>
+    </nav>
+    
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Return Header -->
+            <div class="card border-0 shadow mb-4">
+                <div class="card-body text-center p-5">
+                    <i class="fas fa-exchange-alt text-primary fa-4x mb-4"></i>
+                    <h1 class="fw-bold mb-3">Return/Exchange Request</h1>
+                    <p class="text-muted">Submit a return or exchange request for your order</p>
+                    
+                    <div class="alert alert-info mt-3">
+                        <h6 class="fw-semibold"><i class="fas fa-info-circle me-2"></i>Return Policy</h6>
+                        <ul class="mb-0 ps-3">
+                            <li>Returns accepted within 7 days of delivery</li>
+                            <li>Items must be in original condition with tags</li>
+                            <li>Refund will be processed within 5-7 business days</li>
+                            <li>Shipping charges are non-refundable</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Order Info -->
+            <div class="card border-0 shadow mb-4">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-4">Order Information</h5>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <h6 class="fw-semibold">Order Details</h6>
+                            <p class="mb-1"><strong>Order ID:</strong> {{ order.order_id }}</p>
+                            <p class="mb-1"><strong>Order Date:</strong> {{ order.created_at|date:"d M Y" }}</p>
+                            <p class="mb-1"><strong>Delivery Date:</strong> {{ order.updated_at|date:"d M Y" }}</p>
+                            <p class="mb-0"><strong>Total Amount:</strong> ₹{{ order.total_amount }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <h6 class="fw-semibold">Shipping Address</h6>
+                            <p class="mb-1">{{ order.customer_name }}</p>
+                            <p class="mb-1">{{ order.shipping_address }}</p>
+                            <p class="mb-0">{{ order.shipping_city }}, {{ order.shipping_state }} - {{ order.shipping_pincode }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Return Form -->
+            <div class="card border-0 shadow">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-4">Request Details</h5>
+                    
+                    <form method="post" id="returnForm">
+                        {% csrf_token %}
+                        
+                        <!-- Select Items -->
+                        <div class="mb-4">
+                            <h6 class="fw-semibold mb-3">Select Items to Return/Exchange</h6>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th style="width: 50px;">Select</th>
+                                            <th>Product</th>
+                                            <th>Price</th>
+                                            <th>Qty</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in order.items.all %}
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" 
+                                                       name="items[]" 
+                                                       value="{{ item.id }}" 
+                                                       class="form-check-input return-item">
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    {% if item.product.images.first %}
+                                                    <img src="{{ item.product.images.first.image.url }}" 
+                                                         alt="{{ item.product.name }}"
+                                                         class="me-3 rounded" 
+                                                         style="width: 50px; height: 50px; object-fit: cover;">
+                                                    {% endif %}
+                                                    <div>
+                                                        <h6 class="mb-0">{{ item.product_name }}</h6>
+                                                        <small class="text-muted">SKU: {{ item.product.sku }}</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>₹{{ item.product_price }}</td>
+                                            <td>{{ item.quantity }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Request Type -->
+                        <div class="mb-4">
+                            <h6 class="fw-semibold mb-3">Request Type</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-check card border p-3 mb-3">
+                                        <input class="form-check-input" type="radio" name="return_type" 
+                                               id="return" value="return" checked>
+                                        <label class="form-check-label w-100" for="return">
+                                            <h6 class="fw-semibold mb-1">Return for Refund</h6>
+                                            <p class="text-muted small mb-0">Get your money back</p>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check card border p-3 mb-3">
+                                        <input class="form-check-input" type="radio" name="return_type" 
+                                               id="exchange" value="exchange">
+                                        <label class="form-check-label w-100" for="exchange">
+                                            <h6 class="fw-semibold mb-1">Exchange Item</h6>
+                                            <p class="text-muted small mb-0">Get a different size/color/item</p>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Reason -->
+                        <div class="mb-4">
+                            <h6 class="fw-semibold mb-3">Reason for Return/Exchange</h6>
+                            <div class="row">
+                                {% for reason in reasons %}
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="reason" 
+                                               id="reason{{ forloop.counter }}" value="{{ reason.value }}">
+                                        <label class="form-check-label" for="reason{{ forloop.counter }}">
+                                            {{ reason.label }}
+                                        </label>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <!-- Description -->
+                        <div class="mb-4">
+                            <h6 class="fw-semibold mb-3">Additional Details</h6>
+                            <textarea name="description" class="form-control" rows="4" 
+                                      placeholder="Please provide additional details about your return/exchange request..."></textarea>
+                            <small class="text-muted">Please be specific about any issues with the product</small>
+                        </div>
+                        
+                        <!-- Upload Images -->
+                        <div class="mb-4">
+                            <h6 class="fw-semibold mb-3">Upload Images (Optional)</h6>
+                            <p class="text-muted small mb-3">Upload images of the product to help us process your request faster</p>
+                            <div class="border rounded p-3 text-center">
+                                <i class="fas fa-cloud-upload-alt text-muted fa-3x mb-3"></i>
+                                <p class="mb-2">Drag & drop images here or</p>
+                                <input type="file" id="imageUpload" multiple accept="image/*" style="display: none;">
+                                <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('imageUpload').click()">
+                                    <i class="fas fa-upload me-2"></i>Browse Files
+                                </button>
+                                <div id="fileList" class="mt-3"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Refund Method -->
+                        <div class="mb-4" id="refundSection">
+                            <h6 class="fw-semibold mb-3">Refund Method</h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check card border p-3">
+                                        <input class="form-check-input" type="radio" name="refund_method" 
+                                               id="original" value="original" checked>
+                                        <label class="form-check-label w-100" for="original">
+                                            <h6 class="fw-semibold mb-1">Original Payment Method</h6>
+                                            <p class="text-muted small mb-0">Refund to original payment source</p>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="form-check card border p-3">
+                                        <input class="form-check-input" type="radio" name="refund_method" 
+                                               id="wallet" value="wallet">
+                                        <label class="form-check-label w-100" for="wallet">
+                                            <h6 class="fw-semibold mb-1">Radhvi Wallet</h6>
+                                            <p class="text-muted small mb-0">Store credit for future purchases</p>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Exchange Details (Hidden by default) -->
+                        <div class="mb-4" id="exchangeSection" style="display: none;">
+                            <h6 class="fw-semibold mb-3">Exchange Details</h6>
+                            <div class="mb-3">
+                                <label class="form-label">What would you like instead?</label>
+                                <input type="text" class="form-control" name="exchange_for" 
+                                       placeholder="e.g., Different size, Different color, Different product">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Preferred Size (if applicable)</label>
+                                <select class="form-select" name="exchange_size">
+                                    <option value="">Select Size</option>
+                                    <option value="s">Small (S)</option>
+                                    <option value="m">Medium (M)</option>
+                                    <option value="l">Large (L)</option>
+                                    <option value="xl">Extra Large (XL)</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Preferred Color (if applicable)</label>
+                                <input type="text" class="form-control" name="exchange_color" 
+                                       placeholder="e.g., Red, Blue, Black">
+                            </div>
+                        </div>
+                        
+                        <!-- Terms & Conditions -->
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" id="returnTerms" required>
+                            <label class="form-check-label small" for="returnTerms">
+                                I agree to the <a href="#" target="_blank">Return Policy</a> and confirm that the items are in original condition with all tags attached.
+                            </label>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-paper-plane me-2"></i>Submit Request
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Next Steps -->
+            <div class="card border-0 shadow mt-4">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">What Happens Next?</h5>
+                    <div class="row text-center">
+                        <div class="col-md-3 mb-3">
+                            <div class="step-number">1</div>
+                            <h6 class="fw-semibold mt-2">Submit Request</h6>
+                            <p class="text-muted small">Fill out this form</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="step-number">2</div>
+                            <h6 class="fw-semibold mt-2">Get Approval</h6>
+                            <p class="text-muted small">Within 24 hours</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="step-number">3</div>
+                            <h6 class="fw-semibold mt-2">Ship Item</h6>
+                            <p class="text-muted small">Free pickup available</p>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="step-number">4</div>
+                            <h6 class="fw-semibold mt-2">Get Refund</h6>
+                            <p class="text-muted small">5-7 business days</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .step-number {
+        width: 40px;
+        height: 40px;
+        background: #007bff;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin: 0 auto;
+    }
+    
+    .return-item:checked + label {
+        background-color: #f8f9fa;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Define reasons in JavaScript since we don't have them in context
+    const reasons = [
+        {value: 'wrong_item', label: 'Wrong item delivered'},
+        {value: 'defective', label: 'Product is defective'},
+        {value: 'damaged', label: 'Product arrived damaged'},
+        {value: 'not_as_described', label: 'Not as described'},
+        {value: 'wrong_size', label: 'Wrong size'},
+        {value: 'wrong_color', label: 'Wrong color'},
+        {value: 'changed_mind', label: 'Changed my mind'},
+        {value: 'better_price', label: 'Found better price'},
+        {value: 'gift_return', label: 'Gift return'},
+        {value: 'other', label: 'Other reason'}
+    ];
+    
+    // Populate reasons dynamically
+    document.addEventListener('DOMContentLoaded', function() {
+        const reasonContainer = document.querySelector('.row');
+        if (reasons.length > 0) {
+            let html = '';
+            reasons.forEach((reason, index) => {
+                html += `
+                <div class="col-md-6 mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="reason" 
+                               id="reason${index + 1}" value="${reason.value}" ${index === 0 ? 'checked' : ''}>
+                        <label class="form-check-label" for="reason${index + 1}">
+                            ${reason.label}
+                        </label>
+                    </div>
+                </div>
+                `;
+            });
+            document.querySelector('.row').innerHTML = html;
+        }
+        
+        // File upload preview
+        document.getElementById('imageUpload').addEventListener('change', function(e) {
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = '';
+            
+            Array.from(e.target.files).forEach((file, index) => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const div = document.createElement('div');
+                        div.className = 'd-flex align-items-center mb-2';
+                        div.innerHTML = `
+                            <img src="${e.target.result}" class="me-2" style="width: 50px; height: 50px; object-fit: cover;">
+                            <div class="flex-grow-1">
+                                <small class="d-block">${file.name}</small>
+                                <small class="text-muted">${(file.size / 1024).toFixed(2)} KB</small>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="this.parentElement.remove()">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        `;
+                        fileList.appendChild(div);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    });
+    
+    // Show/hide sections based on request type
+    $('input[name="return_type"]').change(function() {
+        if ($(this).val() === 'exchange') {
+            $('#exchangeSection').slideDown();
+            $('#refundSection').slideUp();
+        } else {
+            $('#exchangeSection').slideUp();
+            $('#refundSection').slideDown();
+        }
+    });
+    
+    // Form validation
+    $('#returnForm').submit(function(e) {
+        // Check if at least one item is selected
+        const selectedItems = $('.return-item:checked').length;
+        if (selectedItems === 0) {
+            e.preventDefault();
+            showToast('Please select at least one item to return/exchange', 'warning');
+            return false;
+        }
+        
+        // Check terms
+        if (!$('#returnTerms').is(':checked')) {
+            e.preventDefault();
+            showToast('Please accept the return policy terms', 'warning');
+            return false;
+        }
+        
+        return true;
+    });
+</script>
+{% endblock %}

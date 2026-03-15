@@ -1,0 +1,551 @@
+<footer class="footer bg-dark text-white position-relative">
+    <!-- Top Wave Design -->
+    <div class="footer-wave position-absolute top-0 start-0 w-100">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" 
+                  class="shape-fill"></path>
+        </svg>
+    </div>
+    
+    <div class="container position-relative z-1">
+        <!-- Main Footer Content -->
+        <div class="row g-5 py-5">
+            <!-- Company Info with Animation -->
+            <div class="col-lg-4 col-md-6">
+                <div class="company-info" data-aos="fade-up">
+                    <a href="/" class="navbar-brand text-white mb-4 d-block logo-hover">
+                        <div class="logo-container d-inline-flex align-items-center">
+                            <div class="logo-circle me-3 float-animation">
+                                <i class="fas fa-gift"></i>
+                            </div>
+                            <span class="h3 fw-bold">Gift<span class="gradient-text">Shop</span></span>
+                        </div>
+                    </a>
+                    <p class="text-light mb-4 fs-6">
+                        Your one-stop destination for perfect gifts for every occasion. 
+                        We deliver happiness wrapped in love across India!
+                    </p>
+                    
+                    <!-- Trust Badges -->
+                    <div class="trust-badges mb-4">
+                        <div class="badge-item d-inline-flex align-items-center me-3 mb-2">
+                            <i class="fas fa-shield-alt text-success me-2"></i>
+                            <span>100% Secure</span>
+                        </div>
+                        <div class="badge-item d-inline-flex align-items-center me-3 mb-2">
+                            <i class="fas fa-truck text-info me-2"></i>
+                            <span>Free Shipping</span>
+                        </div>
+                        <div class="badge-item d-inline-flex align-items-center mb-2">
+                            <i class="fas fa-headset text-warning me-2"></i>
+                            <span>24/7 Support</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Social Media with Hover Effects -->
+                    <div class="social-icons-wrapper">
+                        <h6 class="mb-3">Follow Us</h6>
+                        <div class="social-icons d-flex gap-3">
+                            <a href="#" class="social-icon facebook" data-bs-toggle="tooltip" title="Facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="social-icon instagram" data-bs-toggle="tooltip" title="Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="social-icon twitter" data-bs-toggle="tooltip" title="Twitter">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="social-icon youtube" data-bs-toggle="tooltip" title="YouTube">
+                                <i class="fab fa-youtube"></i>
+                            </a>
+                            <a href="#" class="social-icon pinterest" data-bs-toggle="tooltip" title="Pinterest">
+                                <i class="fab fa-pinterest-p"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Links with Icons -->
+            <div class="col-lg-2 col-md-6">
+                <div class="footer-section" data-aos="fade-up" data-aos-delay="100">
+                    <h5 class="footer-heading mb-4">Quick Links</h5>
+                    <div class="footer-links">
+                        <a href="/" class="footer-link">
+                            <i class="fas fa-home me-2"></i> Home
+                        </a>
+                        <a href="{% url 'product_list' %}" class="footer-link">
+                            <i class="fas fa-store me-2"></i> Shop All
+                        </a>
+                        <a href="{% url 'product_list' %}?is_featured=true" class="footer-link">
+                            <i class="fas fa-star me-2"></i> Featured
+                        </a>
+                        <a href="{% url 'product_list' %}?sort=discount" class="footer-link">
+                            <i class="fas fa-tag me-2"></i> Best Deals
+                        </a>
+                        <a href="{% url 'product_list' %}?is_new_arrival=true" class="footer-link">
+                            <i class="fas fa-bolt me-2"></i> New Arrivals
+                        </a>
+                        <a href="{% url 'about' %}" class="footer-link">
+                            <i class="fas fa-info-circle me-2"></i> About Us
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Customer Service -->
+            <div class="col-lg-2 col-md-6">
+                <div class="footer-section" data-aos="fade-up" data-aos-delay="150">
+                    <h5 class="footer-heading mb-4">Customer Service</h5>
+                    <div class="footer-links">
+                        <a href="{% url 'contact' %}" class="footer-link">
+                            <i class="fas fa-headset me-2"></i> Contact Us
+                        </a>
+                        <a href="{% url 'faq' %}" class="footer-link">
+                            <i class="fas fa-question-circle me-2"></i> FAQ
+                        </a>
+                        <a href="#" class="footer-link">
+                            <i class="fas fa-shipping-fast me-2"></i> Shipping Policy
+                        </a>
+                        <a href="#" class="footer-link">
+                            <i class="fas fa-undo me-2"></i> Return Policy
+                        </a>
+                        <a href="#" class="footer-link">
+                            <i class="fas fa-lock me-2"></i> Privacy Policy
+                        </a>
+                        <a href="#" class="footer-link">
+                            <i class="fas fa-file-contract me-2"></i> Terms of Service
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contact & Newsletter -->
+            <div class="col-lg-4 col-md-6">
+                <div class="footer-section" data-aos="fade-up" data-aos-delay="200">
+                    <h5 class="footer-heading mb-4">Stay Connected</h5>
+                    
+                    <!-- Contact Info with Icons -->
+                    <div class="contact-info mb-4">
+                        <div class="contact-item d-flex align-items-center mb-3">
+                            <div class="contact-icon bg-primary rounded-circle d-flex align-items-center justify-content-center me-3">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Our Address</h6>
+                                <small>123 Gift Street, Mumbai, Maharashtra 400001</small>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item d-flex align-items-center mb-3">
+                            <div class="contact-icon bg-success rounded-circle d-flex align-items-center justify-content-center me-3">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Call Us</h6>
+                                <small>+91 98765 43210</small>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item d-flex align-items-center mb-3">
+                            <div class="contact-icon bg-warning rounded-circle d-flex align-items-center justify-content-center me-3">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Email Us</h6>
+                                <small>support@Radhvi.com</small>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item d-flex align-items-center">
+                            <div class="contact-icon bg-info rounded-circle d-flex align-items-center justify-content-center me-3">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">Business Hours</h6>
+                                <small>Mon-Sat: 10AM - 8PM | Sun: 11AM - 6PM</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Newsletter Subscription -->
+                    <div class="newsletter-wrapper glass-effect p-4 rounded-3">
+                        <h6 class="mb-3">Get Exclusive Offers!</h6>
+                        <p class="small text-light mb-3">Subscribe to our newsletter and get 10% off your first order.</p>
+                        
+                        <form id="newsletter-form" class="needs-validation" novalidate>
+                            <div class="input-group mb-3">
+                                <input type="email" class="form-control" placeholder="Enter your email" required>
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="privacyCheck" required>
+                                <label class="form-check-label small" for="privacyCheck">
+                                    I agree to receive marketing emails
+                                </label>
+                            </div>
+                        </form>
+                        
+                        <div class="mt-3">
+                            <small class="text-light">
+                                <i class="fas fa-shield-alt me-1"></i> We respect your privacy. Unsubscribe anytime.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Payment & Security Section -->
+        <div class="row py-4 border-top border-secondary">
+            <div class="col-lg-8">
+                <div class="d-flex flex-wrap align-items-center">
+                    <!-- Payment Methods -->
+                    <div class="me-4 mb-3">
+                        <h6 class="mb-2">Secure Payments</h6>
+                        <div class="payment-methods d-flex flex-wrap gap-2">
+                            <div class="payment-icon" data-bs-toggle="tooltip" title="Visa">
+                                <i class="fab fa-cc-visa fa-2x"></i>
+                            </div>
+                            <div class="payment-icon" data-bs-toggle="tooltip" title="Mastercard">
+                                <i class="fab fa-cc-mastercard fa-2x"></i>
+                            </div>
+                            <div class="payment-icon" data-bs-toggle="tooltip" title="American Express">
+                                <i class="fab fa-cc-amex fa-2x"></i>
+                            </div>
+                            <div class="payment-icon" data-bs-toggle="tooltip" title="PayPal">
+                                <i class="fab fa-cc-paypal fa-2x"></i>
+                            </div>
+                            <div class="payment-icon" data-bs-toggle="tooltip" title="UPI">
+                                <i class="fas fa-rupee-sign fa-2x"></i>
+                            </div>
+                            <div class="payment-icon" data-bs-toggle="tooltip" title="Google Pay">
+                                <i class="fab fa-google-pay fa-2x"></i>
+                            </div>
+                            <div class="payment-icon" data-bs-toggle="tooltip" title="PhonePe">
+                                <i class="fas fa-mobile-alt fa-2x"></i>
+                            </div>
+                            <div class="payment-icon" data-bs-toggle="tooltip" title="Net Banking">
+                                <i class="fas fa-university fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Security Badges -->
+                    <div class="mb-3">
+                        <h6 class="mb-2">100% Secure</h6>
+                        <div class="security-badges d-flex flex-wrap gap-2">
+                            <div class="security-badge" data-bs-toggle="tooltip" title="SSL Secured">
+                                <i class="fas fa-lock fa-2x text-success"></i>
+                            </div>
+                            <div class="security-badge" data-bs-toggle="tooltip" title="PCI Compliant">
+                                <i class="fas fa-shield-alt fa-2x text-info"></i>
+                            </div>
+                            <div class="security-badge" data-bs-toggle="tooltip" title="Verified Merchant">
+                                <i class="fas fa-check-circle fa-2x text-warning"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Download App -->
+            <div class="col-lg-4 text-lg-end">
+                <div class="app-download">
+                    <h6 class="mb-3">Download Our App</h6>
+                    <div class="d-flex flex-column flex-sm-row gap-3 justify-content-lg-end">
+                        <a href="#" class="app-btn btn btn-dark border d-inline-flex align-items-center">
+                            <i class="fab fa-google-play me-2"></i>
+                            <div>
+                                <small>Get it on</small>
+                                <div class="fw-bold">Google Play</div>
+                            </div>
+                        </a>
+                        <a href="#" class="app-btn btn btn-dark border d-inline-flex align-items-center">
+                            <i class="fab fa-apple me-2"></i>
+                            <div>
+                                <small>Download on the</small>
+                                <div class="fw-bold">App Store</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom Copyright Bar -->
+        <div class="row py-3 border-top border-secondary">
+            <div class="col-md-6">
+                <p class="mb-0 text-light">
+                    &copy; <span id="currentYear"></span> Radhvi. All rights reserved.
+                </p>
+                <small class="text-muted">
+                    Made with <i class="fas fa-heart text-danger"></i> in India
+                </small>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <div class="footer-links d-inline-flex flex-wrap gap-3">
+                    <a href="{% url 'privacy' %}" class="text-light">Privacy Policy</a>
+                    <a href="{% url 'terms' %}" class="text-light">Terms & Conditions</a>
+                    <a href="{% url 'faq' %}" class="text-light">FAQ</a>
+                    <a href="#" class="text-light">Sitemap</a>
+                    <a href="#" class="text-light">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Back to Top Button -->
+        <button id="backToTop" class="btn btn-primary rounded-circle shadow-lg position-fixed" 
+                style="bottom: 30px; right: 30px; width: 50px; height: 50px; z-index: 1000;">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+    </div>
+</footer>
+
+<style>
+    /* Footer Styles */
+    .footer {
+        background: linear-gradient(135deg, #1A1A2E 0%, #16213E 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .footer::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    }
+    
+    .footer-wave {
+        top: -50px;
+        height: 50px;
+        transform: rotate(180deg);
+    }
+    
+    .footer-wave svg {
+        width: 100%;
+        height: 100%;
+        fill: rgba(255, 255, 255, 0.02);
+    }
+    
+    .logo-circle {
+        width: 50px;
+        height: 50px;
+        background: var(--gradient-primary);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+    }
+    
+    .footer-heading {
+        position: relative;
+        padding-bottom: 10px;
+        font-weight: 600;
+    }
+    
+    .footer-heading::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 40px;
+        height: 3px;
+        background: var(--gradient-primary);
+        border-radius: 2px;
+    }
+    
+    .footer-links {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .footer-link {
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        padding: 5px 0;
+        position: relative;
+    }
+    
+    .footer-link:hover {
+        color: white;
+        transform: translateX(5px);
+    }
+    
+    .footer-link::before {
+        content: '→';
+        position: absolute;
+        left: -20px;
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
+    
+    .footer-link:hover::before {
+        left: -15px;
+        opacity: 1;
+        color: var(--primary);
+    }
+    
+    .social-icons-wrapper .social-icons {
+        display: flex;
+        gap: 15px;
+    }
+    
+    .social-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-size: 1.1rem;
+    }
+    
+    .social-icon.facebook {
+        background: #1877F2;
+    }
+    
+    .social-icon.instagram {
+        background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
+    }
+    
+    .social-icon.twitter {
+        background: #1DA1F2;
+    }
+    
+    .social-icon.youtube {
+        background: #FF0000;
+    }
+    
+    .social-icon.pinterest {
+        background: #BD081C;
+    }
+    
+    .social-icon:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .contact-icon {
+        width: 40px;
+        height: 40px;
+        color: white;
+    }
+    
+    .payment-icon, .security-badge {
+        width: 45px;
+        height: 45px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .payment-icon:hover, .security-badge:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-3px);
+    }
+    
+    .app-btn {
+        transition: all 0.3s ease;
+        padding: 10px 15px;
+        border-radius: 10px;
+    }
+    
+    .app-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .trust-badges .badge-item {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+    }
+    
+    /* Newsletter Form */
+    .newsletter-wrapper {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .footer-wave {
+            display: none;
+        }
+        
+        .footer-section {
+            margin-bottom: 30px;
+        }
+        
+        .payment-methods, .security-badges {
+            justify-content: center;
+        }
+        
+        .text-md-end {
+            text-align: center !important;
+        }
+    }
+</style>
+
+<script>
+    // Set current year in copyright
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+    
+    // Back to top button
+    const backToTop = document.getElementById('backToTop');
+    
+    window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) {
+            backToTop.style.display = 'flex';
+        } else {
+            backToTop.style.display = 'none';
+        }
+    });
+    
+    backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    
+    // Newsletter form validation
+    document.getElementById('newsletter-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const email = this.querySelector('input[type="email"]');
+        const checkbox = this.querySelector('input[type="checkbox"]');
+        
+        if (!email.value || !checkbox.checked) {
+            // Show error
+            email.classList.add('is-invalid');
+            return;
+        }
+        
+        // Success - show notification
+        alert('Thank you for subscribing! Check your email for 10% off coupon.');
+        this.reset();
+    });
+    
+    // Initialize tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+</script>
