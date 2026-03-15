@@ -109,7 +109,7 @@ export default async function CollectionsPage({ searchParams }: CollectionsPageP
               <div className="flex-1">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
                   <p className="text-gray-600 mb-4 sm:mb-0">
-                    Showing {products.length > 0 ? (currentPage - 1) * pageSize + 1 : 0}-{Math.min((currentPage - 1) * pageSize + products.length, totalCount)} of {totalCount} products
+                    Showing {products.length > 0 ? (currentPage - 1) * pageSize + 1 : 0}-{Math.min((currentPage - 1) * pageSize + products.length, totalCount)} of {totalCount} products [DEBUG: len={products.length} total={totalCount} pages={totalPages}]
                   </p>
                   
                   <ProductSort currentSort={sort} options={sortOptions} />
