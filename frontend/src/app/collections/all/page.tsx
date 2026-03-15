@@ -60,6 +60,9 @@ export default async function CollectionsPage({ searchParams }: CollectionsPageP
   const products = data.results || [];
   const totalCount = data.count || 0;
   const totalPages = Math.ceil(totalCount / pageSize);
+  
+  // Server log - appears in PM2 logs
+  console.log(`[COLLECTIONS] count=${data.count} results=${products.length} totalPages=${totalPages} url=${apiUrl}`);
 
   const categories = await apiServices.fetchCategories();
 
