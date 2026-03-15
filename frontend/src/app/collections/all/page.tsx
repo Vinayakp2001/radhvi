@@ -50,8 +50,13 @@ export default async function CollectionsPage({ searchParams }: CollectionsPageP
   
   const response = await fetch(apiUrl, {
     cache: 'no-store', // Disable caching for pagination
-  });  
-  const data = await response.json();
+  });
+  
+  if (!response.ok) {
+    console.error('API fetch failed:', response.status, response.statusText, apiUrl);
+  }
+  
+  const data = await response.json().catch(() => ({}));
   const products = data.results || [];
   const totalCount = data.count || 0;
   const totalPages = Math.ceil(totalCount / pageSize);
