@@ -11,6 +11,9 @@ import { apiServices } from '@/lib/api-services';
 import type { Metadata } from 'next';
 import PaginationControls from '@/components/PaginationControls';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: 'All Products - Premium Gifts Collection | Radhvi',
   description: 'Browse our complete collection of premium gifts. Find the perfect gift for any occasion.',
