@@ -27,7 +27,7 @@ export default function AddressesPage() {
 
   const loadAddresses = async () => {
     try {
-      const response = await api.get('/api/addresses/');
+      const response = await api.get('/addresses/');
       setAddresses(response.data);
     } catch (error) {
       console.error('Failed to load addresses:', error);
