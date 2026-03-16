@@ -502,7 +502,7 @@ PHONEPE_SALT_INDEX = os.getenv('PHONEPE_SALT_INDEX', '1')
 PHONEPE_BASE_URL = os.getenv('PHONEPE_BASE_URL', 'https://api-preprod.phonepe.com/apis/pg-sandbox')
 
 # PhonePe Redirect and Callback URLs
-PHONEPE_REDIRECT_URL = f'{SITE_DOMAIN}/payment/success/'
+PHONEPE_REDIRECT_URL = f'{SITE_DOMAIN}/orders'
 PHONEPE_CALLBACK_URL = f'{SITE_DOMAIN}/api/webhooks/phonepe/'
 
 # PhonePe Settings

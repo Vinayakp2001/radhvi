@@ -253,7 +253,7 @@ class PhonePeService:
                 "merchantTransactionId": merchant_transaction_id,
                 "merchantUserId": f"USER_{user_info.get('user_id', 'GUEST')}",
                 "amount": amount_paise,
-                "redirectUrl": f"{self.redirect_url}?order_id={order_id}",
+                "redirectUrl": f"{settings.SITE_DOMAIN}/orders/{order_id}/confirmation",
                 "redirectMode": "POST",
                 "callbackUrl": self.callback_url,
                 "mobileNumber": user_info.get('phone', ''),
