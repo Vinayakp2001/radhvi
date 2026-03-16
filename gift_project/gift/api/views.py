@@ -626,8 +626,6 @@ def initiate_checkout(request):
             }, status=status.HTTP_201_CREATED)
 
         # Online payment flow: create PhonePe payment request
-        from gift.payment.phonepe_service import PhonePeService, PaymentInitiationError
-
         phonepe_service = PhonePeService()
 
         user_info = {
