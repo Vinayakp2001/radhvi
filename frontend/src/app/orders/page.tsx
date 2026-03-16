@@ -8,7 +8,7 @@ import { api } from '@/lib/api';
 
 export default function OrdersPage() {
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading: authLoading } = useAuth();
   
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -16,16 +16,17 @@ export default function OrdersPage() {
   const [hasMore, setHasMore] = useState(false);
 
   useEffect(() => {
+    if (authLoading) return;
     if (!isAuthenticated) {
       router.push('/login?redirect=/orders');
       return;
     }
     loadOrders();
-  }, [isAuthenticated, page]);
+  }, [isAuthenticated, authLoading, page]);
 
   const loadOrders = async () => {
     try {
-      const response = await api.get(`/api/orders/?page=${page}`);
+      const response = await api.get(`/orders/?page=${page}`);
       setOrders(response.data.results || response.data);
       setHasMore(!!response.data.next);
     } catch (error) {

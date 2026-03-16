@@ -10,7 +10,7 @@ import AddressForm from '@/components/AddressForm';
 
 export default function AddressesPage() {
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, loading: authLoading } = useAuth();
   
   const [addresses, setAddresses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -18,12 +18,13 @@ export default function AddressesPage() {
   const [editingAddress, setEditingAddress] = useState<any>(null);
 
   useEffect(() => {
+    if (authLoading) return;
     if (!isAuthenticated) {
       router.push('/login?redirect=/account/addresses');
       return;
     }
     loadAddresses();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, authLoading]);
 
   const loadAddresses = async () => {
     try {

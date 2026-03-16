@@ -9,7 +9,7 @@ import Script from 'next/script';
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, loading: authLoading } = useAuth();
   const { state: cartState, clearCart } = useCart();
   
   const cart = cartState.cart;
@@ -30,11 +30,13 @@ export default function CheckoutPage() {
   });
   
   const [savedAddresses, setSavedAddresses] = useState<any[]>([]);
+  const [addressesLoading, setAddressesLoading] = useState(true);
   const [showNewAddressForm, setShowNewAddressForm] = useState(false);
   const [shippingRates, setShippingRates] = useState<any[]>([]);
   const [selectedShipping, setSelectedShipping] = useState<any>(null);
   
   useEffect(() => {
+    if (authLoading) return;
     if (!isAuthenticated) {
       router.push('/login?redirect=/checkout');
       return;
@@ -46,14 +48,17 @@ export default function CheckoutPage() {
     }
     
     fetchSavedAddresses();
-  }, [isAuthenticated, cart]);
+  }, [isAuthenticated, authLoading, cart]);
   
   const fetchSavedAddresses = async () => {
     try {
       const response = await api.get('/addresses/');
-      setSavedAddresses(response.data);
+      const data = response.data;
+      setSavedAddresses(Array.isArray(data) ? data : (data.results || []));
     } catch (error) {
       console.error('Failed to fetch addresses:', error);
+    } finally {
+      setAddressesLoading(false);
     }
   };
   
@@ -92,7 +97,7 @@ export default function CheckoutPage() {
         delivery_pincode: shippingAddress.pincode,
         cod: false
       });
-      setShippingRates(response.data.couriers || []);
+      setShippingRates(response.data.rates || []);
       setCurrentStep(2);
     } catch (error: any) {
       alert(error.response?.data?.error || 'Failed to fetch shipping rates');
@@ -125,7 +130,7 @@ export default function CheckoutPage() {
     try {
       const checkoutData = {
         shipping_address: shippingAddress,
-        courier_id: selectedShipping.courier_company_id,
+        courier_id: selectedShipping.courier_id,
         shipping_charge: selectedShipping.rate
       };
       
@@ -253,7 +258,11 @@ export default function CheckoutPage() {
                 <div>
                   <h2 className="text-xl font-bold mb-6">Shipping Address</h2>
                   
-                  {isAuthenticated && savedAddresses.length > 0 && !showNewAddressForm && (
+                  {addressesLoading ? (
+                    <div className="text-center py-4">
+                      <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-red-500 mx-auto"></div>
+                    </div>
+                  ) : isAuthenticated && savedAddresses.length > 0 && !showNewAddressForm ? (
                     <div className="mb-6">
                       <h3 className="font-semibold mb-3">Select Saved Address</h3>
                       <div className="space-y-3">
@@ -283,9 +292,7 @@ export default function CheckoutPage() {
                         + Add New Address
                       </button>
                     </div>
-                  )}
-                  
-                  {(!isAuthenticated || savedAddresses.length === 0 || showNewAddressForm) && (
+                  ) : (
                     <div>
                       {showNewAddressForm && (
                         <button
@@ -409,7 +416,7 @@ export default function CheckoutPage() {
                             key={index}
                             onClick={() => handleShippingSelect(courier)}
                             className={`p-4 border rounded-lg cursor-pointer hover:border-red-500 ${
-                              selectedShipping?.courier_company_id === courier.courier_company_id ? 'border-red-500 bg-red-50' : ''
+                              selectedShipping?.courier_id === courier.courier_id ? 'border-red-500 bg-red-50' : ''
                             }`}
                           >
                             <div className="flex items-center justify-between">
@@ -508,7 +515,13 @@ export default function CheckoutPage() {
               <div className="space-y-3 mb-4 max-h-64 overflow-y-auto">
                 {cart?.items.map((item: any) => (
                   <div key={item.id} className="flex gap-3">
-                    <div className="w-16 h-16 bg-gray-100 rounded flex-shrink-0"></div>
+                    <div className="w-16 h-16 bg-gray-100 rounded flex-shrink-0 overflow-hidden">
+                      {item.product.image_url ? (
+                        <img src={item.product.image_url} alt={item.product.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full bg-gray-200" />
+                      )}
+                    </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium truncate">{item.product.name}</p>
                       <p className="text-xs text-gray-600">Qty: {item.quantity}</p>

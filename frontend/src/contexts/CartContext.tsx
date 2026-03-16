@@ -125,7 +125,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     if (token) {
       refreshCart().catch(() => {
         // Failed to load cart, user might not be authenticated
+        dispatch({ type: 'CLEAR_CART' });
       });
+    } else {
+      // No token - ensure cart is empty
+      dispatch({ type: 'CLEAR_CART' });
     }
   }, []);
 
