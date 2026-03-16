@@ -601,7 +601,7 @@ def initiate_checkout(request):
 
         # COD flow: confirm order immediately and trigger Shiprocket sync
         if payment_method == 'cod':
-            order.payment_status = 'paid'
+            order.payment_status = 'pending'
             order.status = 'confirmed'
             order.save(update_fields=['payment_status', 'status'])
 
@@ -613,6 +613,13 @@ def initiate_checkout(request):
             except Exception as e:
                 import logging as _logging
                 _logging.getLogger(__name__).warning(f"Could not trigger Shiprocket sync for COD order: {str(e)}")
+                # Fallback: sync directly
+                try:
+                    from gift.shipping.services import ShippingService as _SS
+                    _ss = _SS()
+                    _ss.create_shipment(order)
+                except Exception as _e2:
+                    _logging.getLogger(__name__).warning(f"Direct Shiprocket sync also failed: {_e2}")
 
             return Response({
                 'message': 'Order placed successfully',
