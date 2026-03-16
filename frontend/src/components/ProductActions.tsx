@@ -12,134 +12,115 @@ interface ProductActionsProps {
 }
 
 export default function ProductActions({ productId, productName }: ProductActionsProps) {
-  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+  const [cartStatus, setCartStatus] = useState<'idle' | 'adding' | 'added' | 'error'>('idle');
   const [isAddingToWishlist, setIsAddingToWishlist] = useState(false);
   const [isInWishlist, setIsInWishlist] = useState(false);
   const { addToCart } = useCart();
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (isAuthenticated) {
-      checkWishlistStatus();
-    }
+    if (isAuthenticated) checkWishlistStatus();
   }, [isAuthenticated, productId]);
 
   const checkWishlistStatus = async () => {
     try {
-      const inWishlist = await wishlistAPI.checkWishlist(productId);
-      setIsInWishlist(inWishlist);
-    } catch (error) {
-      console.error('Failed to check wishlist status:', error);
-    }
+      setIsInWishlist(await wishlistAPI.checkWishlist(productId));
+    } catch { /* ignore */ }
   };
 
   const handleAddToCart = async () => {
-    if (!isAuthenticated) {
-      alert('Please login to add items to cart');
-      router.push('/login');
-      return;
-    }
-
-    setIsAddingToCart(true);
+    if (!isAuthenticated) { router.push('/login?redirect=' + window.location.pathname); return; }
+    setCartStatus('adding');
     try {
-      await addToCart(productId, 1);
-      alert(`${productName} added to cart!`);
-    } catch (error) {
-      console.error('Failed to add to cart:', error);
-      alert('Failed to add to cart. Please try again.');
-    } finally {
-      setIsAddingToCart(false);
+      await addToCart(productId, quantity);
+      setCartStatus('added');
+      setTimeout(() => setCartStatus('idle'), 2500);
+    } catch {
+      setCartStatus('error');
+      setTimeout(() => setCartStatus('idle'), 2500);
     }
   };
 
   const handleBuyNow = async () => {
-    if (!isAuthenticated) {
-      alert('Please login to proceed');
-      router.push('/login');
-      return;
-    }
-    
-    setIsAddingToCart(true);
+    if (!isAuthenticated) { router.push('/login?redirect=' + window.location.pathname); return; }
+    setCartStatus('adding');
     try {
-      // Add product to cart
-      await addToCart(productId, 1);
-      // Redirect to checkout page
+      await addToCart(productId, quantity);
       router.push('/checkout');
-    } catch (error) {
-      console.error('Failed to add to cart:', error);
-      alert('Failed to proceed. Please try again.');
-    } finally {
-      setIsAddingToCart(false);
+    } catch {
+      setCartStatus('error');
+      setTimeout(() => setCartStatus('idle'), 2500);
     }
   };
 
   const handleWishlist = async () => {
-    if (!isAuthenticated) {
-      alert('Please login to add items to wishlist');
-      router.push('/login');
-      return;
-    }
-
+    if (!isAuthenticated) { router.push('/login?redirect=' + window.location.pathname); return; }
     setIsAddingToWishlist(true);
     try {
-      if (isInWishlist) {
-        await wishlistAPI.removeFromWishlist(productId);
-        setIsInWishlist(false);
-        alert(`${productName} removed from wishlist!`);
-      } else {
-        await wishlistAPI.addToWishlist(productId);
-        setIsInWishlist(true);
-        alert(`${productName} added to wishlist!`);
-      }
-    } catch (error) {
-      console.error('Failed to update wishlist:', error);
-      alert('Failed to update wishlist. Please try again.');
-    } finally {
-      setIsAddingToWishlist(false);
-    }
+      if (isInWishlist) { await wishlistAPI.removeFromWishlist(productId); setIsInWishlist(false); }
+      else { await wishlistAPI.addToWishlist(productId); setIsInWishlist(true); }
+    } catch { /* ignore */ } finally { setIsAddingToWishlist(false); }
   };
 
   return (
     <div className="space-y-4">
-      <div className="flex gap-4">
-        <button
-          onClick={handleAddToCart}
-          disabled={isAddingToCart}
-          className="btn btn-primary flex-1 py-3 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isAddingToCart ? 'Adding...' : 'Add to Cart'}
+      {/* Quantity Selector */}
+      <div className="flex items-center gap-3">
+        <span className="text-sm font-medium text-gray-700">Quantity</span>
+        <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+          <button onClick={() => setQuantity(q => Math.max(1, q - 1))}
+            className="w-9 h-9 flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+            </svg>
+          </button>
+          <span className="w-10 text-center text-sm font-medium text-gray-900">{quantity}</span>
+          <button onClick={() => setQuantity(q => q + 1)}
+            className="w-9 h-9 flex items-center justify-center text-gray-600 hover:bg-gray-50 transition-colors">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      {/* Cart feedback */}
+      {cartStatus === 'added' && (
+        <div className="flex items-center gap-2 text-green-600 text-sm bg-green-50 border border-green-200 rounded-lg px-3 py-2">
+          <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+          </svg>
+          Added to cart
+        </div>
+      )}
+      {cartStatus === 'error' && (
+        <p className="text-red-500 text-sm">Failed to add to cart. Please try again.</p>
+      )}
+
+      {/* Buttons */}
+      <div className="flex gap-3">
+        <button onClick={handleAddToCart} disabled={cartStatus === 'adding'}
+          className="flex-1 bg-white border-2 border-red-500 text-red-500 py-3 rounded-lg font-semibold hover:bg-red-50 disabled:opacity-50 transition-colors text-sm">
+          {cartStatus === 'adding' ? (
+            <span className="flex items-center justify-center gap-2">
+              <span className="animate-spin rounded-full h-4 w-4 border-2 border-red-500 border-t-transparent" />
+              Adding...
+            </span>
+          ) : 'Add to Cart'}
         </button>
-        <button
-          onClick={handleWishlist}
-          disabled={isAddingToWishlist}
-          className={`btn px-6 py-3 disabled:opacity-50 disabled:cursor-not-allowed ${
-            isInWishlist ? 'bg-red-500 hover:bg-red-600 text-white' : 'btn-secondary'
-          }`}
-          title={isInWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
-        >
-          <svg 
-            className="w-6 h-6" 
-            fill={isInWishlist ? 'currentColor' : 'none'} 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-            />
+        <button onClick={handleWishlist} disabled={isAddingToWishlist}
+          className={`w-12 h-12 flex items-center justify-center rounded-lg border-2 transition-colors ${isInWishlist ? 'border-red-500 bg-red-500 text-white' : 'border-gray-300 text-gray-400 hover:border-red-400 hover:text-red-400'}`}>
+          <svg className="w-5 h-5" fill={isInWishlist ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
           </svg>
         </button>
       </div>
 
-      <button
-        onClick={handleBuyNow}
-        disabled={isAddingToCart}
-        className="w-full btn bg-orange-600 hover:bg-orange-700 text-white py-3 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        {isAddingToCart ? 'Processing...' : 'Buy Now'}
+      <button onClick={handleBuyNow} disabled={cartStatus === 'adding'}
+        className="w-full bg-red-500 text-white py-3 rounded-lg font-semibold hover:bg-red-600 disabled:opacity-50 transition-colors text-sm">
+        Buy Now
       </button>
     </div>
   );

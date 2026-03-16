@@ -18,7 +18,21 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   title: 'Radhvi - Thoughtful Gifts for Every Occasion',
-  description: 'Discover unique and thoughtful gifts for birthdays, anniversaries, weddings, and all special occasions.',
+  description: 'Discover unique and thoughtful gifts for birthdays, anniversaries, weddings, and all special occasions. Premium gift hampers delivered across India.',
+  keywords: 'gifts, gift hampers, birthday gifts, anniversary gifts, online gifts India, premium gifts',
+  openGraph: {
+    title: 'Radhvi - Thoughtful Gifts for Every Occasion',
+    description: 'Discover unique and thoughtful gifts for birthdays, anniversaries, weddings, and all special occasions.',
+    url: 'https://radhvi.in',
+    siteName: 'Radhvi',
+    locale: 'en_IN',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Radhvi - Thoughtful Gifts for Every Occasion',
+    description: 'Premium gift hampers delivered across India.',
+  },
   icons: {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },
