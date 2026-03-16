@@ -1,31 +1,35 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   typescript: {
-    // Dangerously allow production builds to successfully complete even if type errors exist
     ignoreBuildErrors: true,
   },
   images: {
-    domains: ['localhost', 'radhvi.in', 'www.radhvi.in', 'images.unsplash.com'],
     unoptimized: process.env.NODE_ENV === 'development',
     remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'radhvi.in',
+        pathname: '/media/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.radhvi.in',
+        pathname: '/media/**',
+      },
       {
         protocol: 'http',
         hostname: 'localhost',
         port: '8000',
         pathname: '/media/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
     ],
   },
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
-  },
-  async rewrites() {
-    return [
-      {
-        source: '/media/:path*',
-        destination: 'http://localhost:8000/media/:path*',
-      },
-    ];
   },
 }
 
