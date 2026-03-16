@@ -189,7 +189,7 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
 
 # Custom Settings
 SITE_NAME = "Radhvi"
-SITE_DOMAIN = "localhost:8000"
+SITE_DOMAIN = os.getenv('SITE_DOMAIN', 'http://localhost:8000')
 
 # Cart Settings
 MIN_CART_AMOUNT_FOR_FREE_SHIPPING = 1000

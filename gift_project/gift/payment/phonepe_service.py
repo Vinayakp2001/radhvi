@@ -49,15 +49,13 @@ class PhonePeService:
     
     def __init__(self):
         """Initialize PhonePe service with configuration"""
-        self.merchant_id = settings.PHONEPE_MERCHANT_ID
-        self.salt_key = settings.PHONEPE_SALT_KEY
-        self.salt_index = settings.PHONEPE_SALT_INDEX
-        self.base_url = settings.PHONEPE_BASE_URL
-        self.redirect_url = settings.PHONEPE_REDIRECT_URL
-        self.callback_url = settings.PHONEPE_CALLBACK_URL
-        
-        # Validate configuration
-        self._validate_configuration()
+        self.merchant_id = getattr(settings, 'PHONEPE_MERCHANT_ID', '')
+        self.salt_key = getattr(settings, 'PHONEPE_SALT_KEY', '')
+        self.salt_index = getattr(settings, 'PHONEPE_SALT_INDEX', '1')
+        self.base_url = getattr(settings, 'PHONEPE_BASE_URL', '')
+        self.redirect_url = getattr(settings, 'PHONEPE_REDIRECT_URL', '')
+        self.callback_url = getattr(settings, 'PHONEPE_CALLBACK_URL', '')
+        self._configured = self._check_configuration()
         
         # API endpoints
         self.pay_endpoint = "/pg/v1/pay"
@@ -69,6 +67,23 @@ class PhonePeService:
         
         logger.info("PhonePe service initialized")
     
+    def _check_configuration(self):
+        """
+        Check if PhonePe is configured without raising exceptions.
+        Returns True if configured, False otherwise.
+        """
+        required = [self.merchant_id, self.salt_key, self.salt_index, self.base_url]
+        if not all(v and v not in ['', 'your_key_here'] for v in required):
+            logger.warning("PhonePe is not fully configured — online payments will be unavailable")
+            return False
+        try:
+            int(self.salt_index)
+        except (ValueError, TypeError):
+            logger.warning(f"Invalid PhonePe salt index: {self.salt_index}")
+            return False
+        logger.info("PhonePe service initialized")
+        return True
+
     def _validate_configuration(self):
         """
         Validate PhonePe configuration settings
@@ -228,18 +243,10 @@ class PhonePeService:
     def create_payment_request(self, amount, order_id, user_info):
         """
         Create PhonePe payment request
-        
-        Args:
-            amount: Payment amount in rupees (Decimal)
-            order_id: Unique order identifier
-            user_info: Dictionary with user details (name, email, phone)
-            
-        Returns:
-            Dictionary: Payment request response with redirect URL
-            
-        Raises:
-            PaymentInitiationError: If payment request creation fails
         """
+        if not self._configured:
+            raise PaymentInitiationError("PhonePe payment gateway is not configured. Please contact support.")
+        
         try:
             # Convert amount to paise (PhonePe uses smallest currency unit)
             amount_paise = int(Decimal(str(amount)) * 100)
@@ -294,16 +301,10 @@ class PhonePeService:
     def verify_payment(self, merchant_transaction_id):
         """
         Verify payment status using PhonePe status API
-        
-        Args:
-            merchant_transaction_id: Merchant transaction ID
-            
-        Returns:
-            Dictionary: Payment verification result
-            
-        Raises:
-            PaymentVerificationError: If verification fails
         """
+        if not self._configured:
+            raise PaymentVerificationError("PhonePe payment gateway is not configured.")
+        
         try:
             # Prepare status check endpoint
             status_endpoint = f"{self.status_endpoint}/{self.merchant_id}/{merchant_transaction_id}"

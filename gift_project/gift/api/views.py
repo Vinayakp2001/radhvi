@@ -669,8 +669,8 @@ def initiate_checkout(request):
         if 'order' in locals():
             order.delete()
         return Response(
-            {'error': f'Payment gateway error: {str(e)}'},
-            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            {'error': f'Online payment is currently unavailable. Please try Cash on Delivery.'},
+            status=status.HTTP_503_SERVICE_UNAVAILABLE
         )
     except Exception as e:
         # If any error occurs, delete the order
