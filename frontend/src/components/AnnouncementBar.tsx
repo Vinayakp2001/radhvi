@@ -2,33 +2,37 @@
 
 import { useState, useEffect } from 'react';
 
-interface AnnouncementBarProps {
-  message?: string;
-  dismissible?: boolean;
-  storageKey?: string;
-}
+const ANNOUNCEMENTS = [
+  '🎉 Free Shipping on orders above ₹999 | Use code: FREESHIP',
+  '🌸 Spring Sale is LIVE! Up to 70% off on select gifts',
+  '🎁 Holi Special Offers — Celebrate with the perfect gift',
+  '⚡ Flash Sale: Limited time deals on premium hampers',
+  '🚚 Same-day delivery available in select cities',
+  '🎊 New arrivals every week — Shop the latest collections',
+];
 
-export default function AnnouncementBar({
-  message = '🎉 Free Shipping on orders above ₹999 | Use code: FREESHIP',
-  dismissible = true,
-  storageKey = 'announcement_dismissed',
-}: AnnouncementBarProps) {
+export default function AnnouncementBar() {
   const [isVisible, setIsVisible] = useState(true);
+  const [current, setCurrent] = useState(0);
 
   useEffect(() => {
-    // Check if announcement was previously dismissed
-    if (dismissible && typeof window !== 'undefined') {
-      const dismissed = sessionStorage.getItem(storageKey);
-      if (dismissed === 'true') {
-        setIsVisible(false);
-      }
+    if (typeof window !== 'undefined') {
+      const dismissed = sessionStorage.getItem('announcement_dismissed');
+      if (dismissed === 'true') setIsVisible(false);
     }
-  }, [dismissible, storageKey]);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrent(prev => (prev + 1) % ANNOUNCEMENTS.length);
+    }, 3500);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleDismiss = () => {
     setIsVisible(false);
     if (typeof window !== 'undefined') {
-      sessionStorage.setItem(storageKey, 'true');
+      sessionStorage.setItem('announcement_dismissed', 'true');
     }
   };
 
@@ -38,35 +42,23 @@ export default function AnnouncementBar({
     <div className="bg-gradient-to-r from-primary-600 to-secondary-600 text-white">
       <div className="container-custom">
         <div className="flex items-center justify-between py-2 px-4 md:px-0">
-          {/* Message */}
-          <div className="flex-1 text-center">
-            <p className="text-sm md:text-base font-medium">
-              {message}
+          <div className="flex-1 text-center overflow-hidden">
+            <p
+              key={current}
+              className="text-sm md:text-base font-medium animate-fade-in"
+            >
+              {ANNOUNCEMENTS[current]}
             </p>
           </div>
-
-          {/* Dismiss Button */}
-          {dismissible && (
-            <button
-              onClick={handleDismiss}
-              className="ml-4 p-1 hover:bg-white/20 rounded-full transition-colors"
-              aria-label="Dismiss announcement"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-          )}
+          <button
+            onClick={handleDismiss}
+            className="ml-4 p-1 hover:bg-white/20 rounded-full transition-colors flex-shrink-0"
+            aria-label="Dismiss announcement"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
       </div>
     </div>
