@@ -23,14 +23,18 @@ export default function OccasionCard({
       <div className="card overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
         {/* Image Container */}
         <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-primary-50 to-secondary-50">
-          {image && (
-          <Image
-            src={image}
-            alt={name}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-110"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
+          {image && image !== '/placeholder-occasion.jpg' ? (
+            <Image
+              src={image}
+              alt={name}
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-110"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-red-50 to-pink-50">
+              <span className="text-6xl">🎁</span>
+            </div>
           )}
           
           {/* Overlay Gradient */}
