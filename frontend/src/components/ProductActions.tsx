@@ -31,7 +31,17 @@ export default function ProductActions({ productId, productName }: ProductAction
   };
 
   const handleAddToCart = async () => {
-    if (!isAuthenticated) { router.push('/login?redirect=' + window.location.pathname); return; }
+    if (!isAuthenticated) {
+      // Store in localStorage for guest
+      const existing = JSON.parse(localStorage.getItem('guest_cart') || '[]');
+      const idx = existing.findIndex((i: any) => i.product_id === productId);
+      if (idx >= 0) existing[idx].quantity += quantity;
+      else existing.push({ product_id: productId, quantity });
+      localStorage.setItem('guest_cart', JSON.stringify(existing));
+      setCartStatus('added');
+      setTimeout(() => setCartStatus('idle'), 2500);
+      return;
+    }
     setCartStatus('adding');
     try {
       await addToCart(productId, quantity);
@@ -44,7 +54,12 @@ export default function ProductActions({ productId, productName }: ProductAction
   };
 
   const handleBuyNow = async () => {
-    if (!isAuthenticated) { router.push('/login?redirect=' + window.location.pathname); return; }
+    if (!isAuthenticated) {
+      // Store in localStorage and go to checkout
+      localStorage.setItem('guest_cart', JSON.stringify([{ product_id: productId, quantity }]));
+      router.push('/checkout');
+      return;
+    }
     setCartStatus('adding');
     try {
       await addToCart(productId, quantity);

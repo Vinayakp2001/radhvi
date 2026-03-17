@@ -534,7 +534,21 @@ def guest_checkout(request):
 
     # Now place the order using the same logic as initiate_checkout
     try:
-        cart = Cart.objects.get(user=user)
+        # For guests, accept cart_items from request body (from localStorage)
+        guest_cart_items = request.data.get('cart_items', [])  # [{product_id, quantity}]
+
+        cart, _ = Cart.objects.get_or_create(user=user)
+
+        # If guest_cart_items provided, add them to the user's cart first
+        if guest_cart_items:
+            CartItem.objects.filter(cart=cart).delete()  # clear any existing
+            for item_data in guest_cart_items:
+                try:
+                    product = Product.objects.get(id=item_data['product_id'])
+                    CartItem.objects.create(cart=cart, product=product, quantity=item_data.get('quantity', 1))
+                except Product.DoesNotExist:
+                    pass
+
         cart_items = CartItem.objects.filter(cart=cart).select_related('product')
         if not cart_items.exists():
             return Response({'error': 'Cart is empty'}, status=status.HTTP_400_BAD_REQUEST)
