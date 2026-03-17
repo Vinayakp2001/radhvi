@@ -26,25 +26,27 @@ export default function HeroSlider() {
 
   return (
     <section className="relative w-full overflow-hidden">
-      {/* Slides */}
+      {/* Slides — first slide sets height, rest are absolute on top */}
       {SLIDES.map((slide, index) => (
         <div
           key={slide.id}
-          className={`transition-opacity duration-500 ${index === current ? 'block opacity-100' : 'hidden opacity-0'}`}
+          className={`transition-opacity duration-700 ${index === 0 ? 'relative' : 'absolute inset-0'}`}
+          style={{ opacity: index === current ? 1 : 0, zIndex: index === current ? 1 : 0 }}
         >
-          <Link href="/collections/all">
+          <Link href="/collections/all" className="block w-full">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={slide.image}
               alt={slide.alt}
               className="w-full h-auto block"
               loading={index === 0 ? 'eager' : 'lazy'}
+              draggable={false}
             />
           </Link>
         </div>
       ))}
 
-      {/* Prev / Next arrows */}
+      {/* Prev arrow */}
       <button
         onClick={prev}
         className="absolute left-3 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white rounded-full w-9 h-9 flex items-center justify-center shadow transition-colors"
@@ -54,6 +56,8 @@ export default function HeroSlider() {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>
       </button>
+
+      {/* Next arrow */}
       <button
         onClick={next}
         className="absolute right-3 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white rounded-full w-9 h-9 flex items-center justify-center shadow transition-colors"
