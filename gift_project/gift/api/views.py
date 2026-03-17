@@ -474,6 +474,176 @@ def me(request):
     })
 
 
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def guest_checkout(request):
+    """
+    Guest checkout — auto-registers user if not logged in, then places order.
+    Accepts all checkout fields + optional email/password for account creation.
+    """
+    import logging
+    logger = logging.getLogger(__name__)
+
+    email = request.data.get('email', '').strip()
+    password = request.data.get('password', '').strip()
+    full_name = request.data.get('full_name', '').strip()
+    phone = request.data.get('phone', '').strip()
+    address_line1 = request.data.get('address_line1', '').strip()
+    city = request.data.get('city', '').strip()
+    state = request.data.get('state', '').strip()
+    pincode = request.data.get('pincode', '').strip()
+    country = request.data.get('country', 'India')
+    payment_method = request.data.get('payment_method', 'cod')
+    courier_id = request.data.get('courier_id')
+
+    if not all([email, full_name, phone, address_line1, city, state, pincode]):
+        return Response({'error': 'All fields are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Get or create user
+    user = None
+    token_key = None
+    if request.user.is_authenticated:
+        user = request.user
+    else:
+        existing = User.objects.filter(email__iexact=email).first()
+        if existing:
+            # User exists — try to authenticate
+            if password:
+                from django.contrib.auth import authenticate as auth_fn
+                user = auth_fn(username=existing.username, password=password)
+                if not user:
+                    return Response({'error': 'An account with this email already exists. Please enter the correct password.'}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response({'error': 'An account with this email already exists. Please enter your password to continue.'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            # Create new account
+            if not password or len(password) < 6:
+                return Response({'error': 'Password must be at least 6 characters'}, status=status.HTTP_400_BAD_REQUEST)
+            username = email.split('@')[0] + str(User.objects.count())
+            name_parts = full_name.split(' ', 1)
+            user = User.objects.create_user(
+                username=username,
+                email=email,
+                password=password,
+                first_name=name_parts[0],
+                last_name=name_parts[1] if len(name_parts) > 1 else '',
+            )
+
+        token, _ = Token.objects.get_or_create(user=user)
+        token_key = token.key
+
+    # Now place the order using the same logic as initiate_checkout
+    try:
+        cart = Cart.objects.get(user=user)
+        cart_items = CartItem.objects.filter(cart=cart).select_related('product')
+        if not cart_items.exists():
+            return Response({'error': 'Cart is empty'}, status=status.HTTP_400_BAD_REQUEST)
+
+        subtotal = sum(
+            (item.product.discounted_price or item.product.price) * item.quantity
+            for item in cart_items
+        )
+
+        shipping_data = {
+            'customer_name': full_name,
+            'customer_phone': phone,
+            'shipping_address': address_line1,
+            'shipping_city': city,
+            'shipping_state': state,
+            'shipping_pincode': pincode,
+            'shipping_country': country,
+        }
+
+        shipping_charge = Decimal('50')
+        selected_courier_id = courier_id
+        try:
+            _ss = ShippingService()
+            _rates = _ss.get_shipping_rates(cart=list(cart_items), delivery_pincode=pincode, cod=(payment_method == 'cod'))
+            if _rates:
+                _matched = next((r for r in _rates if r['courier_id'] == courier_id), None)
+                _best = _matched or _ss.calculate_best_rate(_rates)
+                if _best:
+                    shipping_charge = Decimal(str(_best['rate']))
+                    selected_courier_id = _best['courier_id']
+        except Exception as _e:
+            logger.warning(f"Could not fetch Shiprocket rates: {_e}")
+
+        total_amount = subtotal + shipping_charge
+
+        order = Order.objects.create(
+            user=user,
+            status='pending',
+            payment_status='pending',
+            payment_method=payment_method,
+            customer_email=email,
+            subtotal=subtotal,
+            shipping_charge=shipping_charge,
+            total_amount=total_amount,
+            courier_id=selected_courier_id,
+            **shipping_data
+        )
+
+        for cart_item in cart_items:
+            OrderItem.objects.create(
+                order=order,
+                product=cart_item.product,
+                product_name=cart_item.product.name,
+                product_price=cart_item.product.discounted_price or cart_item.product.price,
+                quantity=cart_item.quantity
+            )
+
+        if payment_method == 'cod':
+            order.status = 'confirmed'
+            order.save(update_fields=['status'])
+            cart.delete()
+            try:
+                sync_order_to_shiprocket_task.delay(order.id)
+            except Exception as _e:
+                logger.warning(f"Shiprocket sync failed: {_e}")
+                try:
+                    _ss2 = ShippingService()
+                    _ss2.sync_order_to_shiprocket(order)
+                except Exception as _e2:
+                    logger.warning(f"Direct sync also failed: {_e2}")
+
+            response_data = {
+                'order_id': order.order_id,
+                'payment_method': 'cod',
+                'amount': float(total_amount),
+            }
+            if token_key:
+                response_data['token'] = token_key
+                response_data['user'] = {'email': user.email, 'first_name': user.first_name}
+            return Response(response_data, status=status.HTTP_201_CREATED)
+
+        # Online payment
+        phonepe_service = PhonePeService()
+        user_info = {'user_id': user.id, 'name': full_name, 'email': email, 'phone': phone}
+        payment_request = phonepe_service.create_payment_request(
+            amount=float(total_amount), order_id=order.order_id, user_info=user_info
+        )
+        order.phonepe_merchant_transaction_id = payment_request['merchant_transaction_id']
+        order.save()
+        response_data = {
+            'order_id': order.order_id,
+            'payment_url': payment_request['payment_url'],
+            'amount': float(total_amount),
+        }
+        if token_key:
+            response_data['token'] = token_key
+        return Response(response_data, status=status.HTTP_201_CREATED)
+
+    except Cart.DoesNotExist:
+        return Response({'error': 'Cart not found'}, status=status.HTTP_404_NOT_FOUND)
+    except PaymentInitiationError as e:
+        if 'order' in locals():
+            order.delete()
+        return Response({'error': 'Online payment unavailable. Please use Cash on Delivery.'}, status=status.HTTP_503_SERVICE_UNAVAILABLE)
+    except Exception as e:
+        if 'order' in locals():
+            order.delete()
+        return Response({'error': f'Checkout failed: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 # Checkout and Payment endpoints
 @api_view(['POST'])
@@ -617,7 +787,7 @@ def initiate_checkout(request):
                 try:
                     from gift.shipping.services import ShippingService as _SS
                     _ss = _SS()
-                    _ss.create_shipment(order)
+                    _ss.sync_order_to_shiprocket(order)
                 except Exception as _e2:
                     _logging.getLogger(__name__).warning(f"Direct Shiprocket sync also failed: {_e2}")
 

@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 from .views import (
     ProductViewSet, CategoryViewSet, OccasionViewSet,
     TestimonialViewSet, WishlistViewSet, CartViewSet, AddressViewSet,
-    register, login, logout, me,
+    register, login, logout, me, guest_checkout,
     initiate_checkout, verify_payment, payment_failed, get_shipping_rates,
     list_orders, get_order_detail, cancel_order, get_order_tracking,
     initiate_refund, check_refund_status, get_configuration_status
@@ -30,6 +30,7 @@ urlpatterns = [
     path('auth/me/', me, name='me'),
     # Checkout endpoints
     path('checkout/initiate/', initiate_checkout, name='initiate-checkout'),
+    path('checkout/guest/', guest_checkout, name='guest-checkout'),
     path('checkout/verify-payment/', verify_payment, name='verify-payment'),
     path('checkout/payment-failed/', payment_failed, name='payment-failed'),
     path('checkout/shipping-rates/', get_shipping_rates, name='shipping-rates'),
