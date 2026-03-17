@@ -9,9 +9,12 @@ import { wishlistAPI } from '@/lib/wishlist';
 interface ProductActionsProps {
   productId: number;
   productName: string;
+  price?: number;
+  discountedPrice?: number;
+  imageUrl?: string;
 }
 
-export default function ProductActions({ productId, productName }: ProductActionsProps) {
+export default function ProductActions({ productId, productName, price = 0, discountedPrice, imageUrl }: ProductActionsProps) {
   const [quantity, setQuantity] = useState(1);
   const [cartStatus, setCartStatus] = useState<'idle' | 'adding' | 'added' | 'error'>('idle');
   const [isAddingToWishlist, setIsAddingToWishlist] = useState(false);
@@ -32,11 +35,11 @@ export default function ProductActions({ productId, productName }: ProductAction
 
   const handleAddToCart = async () => {
     if (!isAuthenticated) {
-      // Store in localStorage for guest
+      const sellPrice = discountedPrice || price;
       const existing = JSON.parse(localStorage.getItem('guest_cart') || '[]');
       const idx = existing.findIndex((i: any) => i.product_id === productId);
       if (idx >= 0) existing[idx].quantity += quantity;
-      else existing.push({ product_id: productId, quantity });
+      else existing.push({ product_id: productId, quantity, name: productName, price: sellPrice, image_url: imageUrl });
       localStorage.setItem('guest_cart', JSON.stringify(existing));
       setCartStatus('added');
       setTimeout(() => setCartStatus('idle'), 2500);
@@ -55,8 +58,8 @@ export default function ProductActions({ productId, productName }: ProductAction
 
   const handleBuyNow = async () => {
     if (!isAuthenticated) {
-      // Store in localStorage and go to checkout
-      localStorage.setItem('guest_cart', JSON.stringify([{ product_id: productId, quantity }]));
+      const sellPrice = discountedPrice || price;
+      localStorage.setItem('guest_cart', JSON.stringify([{ product_id: productId, quantity, name: productName, price: sellPrice, image_url: imageUrl }]));
       router.push('/checkout');
       return;
     }

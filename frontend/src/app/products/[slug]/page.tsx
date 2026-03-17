@@ -202,7 +202,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 </div>
 
                 {/* Product Actions */}
-                <ProductActions productId={product.id} productName={product.name} />
+                <ProductActions 
+                  productId={product.id} 
+                  productName={product.name}
+                  price={parseFloat(product.price)}
+                  discountedPrice={product.discounted_price ? parseFloat(product.discounted_price) : undefined}
+                  imageUrl={product.image_url || undefined}
+                />
                 
                 {/* Trust Badges */}
                 <TrustBadges className="mt-6" />
