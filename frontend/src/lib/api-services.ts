@@ -203,6 +203,7 @@ export const productToCardProps = (product: Product) => ({
 export const occasionToCardProps = (occasion: Occasion) => {
   // Map occasion slugs to local images
   const localImageMap: Record<string, string> = {
+    'valentines-day': '/occasions/valentines.jpeg',
     'valentines': '/occasions/valentines.jpeg',
     'valentine': '/occasions/valentines.jpeg',
     'birthday': '/occasions/birthday.jpeg',
@@ -214,8 +215,8 @@ export const occasionToCardProps = (occasion: Occasion) => {
     'mothers-day': '/occasions/mothers-day.jpg',
     'fathers-day': '/occasions/fathers-day.jpg',
     'diwali': '/occasions/diwali.jpeg',
-    'rakhi': '/occasions/rakhi.png',
     'raksha-bandhan': '/occasions/rakhi.png',
+    'rakhi': '/occasions/rakhi.png',
   };
 
   // Use local image if available, otherwise fall back to API image or placeholder
