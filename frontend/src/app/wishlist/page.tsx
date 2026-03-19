@@ -1,180 +1,247 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
-import AnnouncementBar from '@/components/AnnouncementBar';
-import Link from 'next/link';
-import Image from 'next/image';
-import { wishlistAPI, WishlistItem } from '@/lib/wishlist';
-import { useAuth } from '@/contexts/AuthContext';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/AuthContext';
+import { useCart } from '@/contexts/CartContext';
+import { api } from '@/lib/api';
 
-export default function WishlistPage() {
-  const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const { isAuthenticated, loading: authLoading } = useAuth();
+type Address = {
+  name: string; phone: string; address: string;
+  city: string; state: string; pincode: string; country: string;
+};
+
+export default function CheckoutPage() {
   const router = useRouter();
+  const { isAuthenticated, loading: authLoading } = useAuth();
+  const { state: cartState } = useCart();
+  const cart = cartState.cart;
+
+  const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<'phonepe' | 'cod'>('cod');
+  const [addr, setAddr] = useState<Address>({
+    name: '', phone: '', address: '', city: '', state: '', pincode: '', country: 'India'
+  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [pincodeLoading, setPincodeLoading] = useState(false);
+  const [shippingRates, setShippingRates] = useState<any[]>([]);
+  const [selectedShipping, setSelectedShipping] = useState<any>(null);
+  const [ratesLoading, setRatesLoading] = useState(false);
 
   useEffect(() => {
-    // Wait for auth to initialize
-    if (authLoading) {
-      return;
-    }
+    if (authLoading) return;
+    if (!cart || cart.items.length === 0) router.push('/cart');
+  }, [authLoading, cart]);
 
-    if (!isAuthenticated) {
-      router.push('/login?redirect=/wishlist');
-      return;
-    }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setAddr(prev => ({ ...prev, [name]: value }));
+    if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
+  };
 
-    const loadWishlist = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        console.log('Loading wishlist...');
-        const items = await wishlistAPI.getWishlist();
-        console.log('Wishlist API response:', items);
-        console.log('Is array?', Array.isArray(items));
-        // Ensure items is always an array
-        setWishlistItems(Array.isArray(items) ? items : []);
-      } catch (err: any) {
-        console.error('Wishlist error:', err);
-        console.error('Error response:', err.response?.data);
-        setError(err.response?.data?.error || 'Failed to load wishlist');
-        setWishlistItems([]); // Set to empty array on error
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    loadWishlist();
-  }, [isAuthenticated, authLoading, router]);
-
-  const handleRemove = async (productId: number) => {
+  const handlePincodeBlur = useCallback(async () => {
+    if (!/^\d{6}$/.test(addr.pincode)) return;
+    setPincodeLoading(true);
     try {
-      await wishlistAPI.removeFromWishlist(productId);
-      setWishlistItems((items) => items.filter((item) => item.product.id !== productId));
-    } catch (err) {
-      console.error('Failed to remove item:', err);
+      const res = await fetch(`https://api.postalpincode.in/pincode/${addr.pincode}`);
+      const data = await res.json();
+      if (data[0]?.Status === 'Success' && data[0]?.PostOffice?.length > 0) {
+        const po = data[0].PostOffice[0];
+        setAddr(prev => ({ ...prev, city: prev.city || po.District, state: prev.state || po.State }));
+      }
+    } catch {} finally { setPincodeLoading(false); }
+  }, [addr.pincode]);
+
+  const validate = () => {
+    const e: Record<string, string> = {};
+    if (!addr.name.trim()) e.name = 'Required';
+    if (!addr.phone.trim() || addr.phone.replace(/\D/g, '').length < 10) e.phone = 'Valid 10-digit number required';
+    if (!addr.address.trim()) e.address = 'Required';
+    if (!addr.city.trim()) e.city = 'Required';
+    if (!addr.state.trim()) e.state = 'Required';
+    if (!/^\d{6}$/.test(addr.pincode)) e.pincode = 'Valid 6-digit pincode required';
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const fetchRates = async () => {
+    setRatesLoading(true);
+    try {
+      const res = await api.post('/checkout/shipping-rates/', { delivery_pincode: addr.pincode, cod: paymentMethod === 'cod' });
+      const rates = res.data.rates || [];
+      setShippingRates(rates);
+      if (rates.length > 0) setSelectedShipping(rates[0]);
+    } catch { setShippingRates([]); } finally { setRatesLoading(false); }
+  };
+
+  const handleContinue = async () => {
+    if (!validate()) return;
+    await fetchRates();
+    setStep(2);
+  };
+
+  const handleOrder = async () => {
+    setLoading(true);
+    try {
+      const res = await api.post('/checkout/initiate/', {
+        full_name: addr.name, phone: addr.phone, address_line1: addr.address,
+        city: addr.city, state: addr.state, pincode: addr.pincode, country: addr.country,
+        courier_id: selectedShipping?.courier_id, payment_method: paymentMethod
+      });
+      if (paymentMethod === 'cod') {
+        router.push(`/orders/${res.data.order_id}/confirmation`);
+      } else {
+        localStorage.setItem('pending_order_id', res.data.order_id);
+        window.location.href = res.data.payment_url;
+      }
+    } catch (e: any) {
+      const msg = e.response?.data?.error || 'Failed to place order.';
+      if (e.response?.status === 503 || (paymentMethod !== 'cod' && e.response?.status >= 500)) {
+        alert('Online payment unavailable. Please use Cash on Delivery.');
+        setPaymentMethod('cod');
+      } else { alert(msg); }
+      setLoading(false);
     }
   };
 
-  if (authLoading || loading) {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <AnnouncementBar message="🎉 Free Shipping on orders above ₹999" />
-        <Header />
-        <main className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading wishlist...</p>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
+  const total = Number(cart?.total_amount || 0) + Number(selectedShipping?.rate || 0);
+
+  if (authLoading) return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="animate-spin rounded-full h-10 w-10 border-2 border-red-500 border-t-transparent" />
+    </div>
+  );
+
+  const inp = (f: string) => `w-full px-3 py-2.5 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 ${errors[f] ? 'border-red-400' : 'border-gray-300'}`;
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <AnnouncementBar message="🎉 Free Shipping on orders above ₹999" />
-      <Header />
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-5xl mx-auto px-4">
+        <h1 className="text-2xl font-semibold text-gray-900 mb-6">Checkout</h1>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 space-y-4">
 
-      <main className="flex-1 bg-gray-50 py-12">
-        <div className="container-custom">
-          <h1 className="text-3xl font-bold text-gray-900 mb-8">My Wishlist</h1>
-
-          {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-              <p className="text-red-600">{error}</p>
-            </div>
-          )}
-
-          {wishlistItems.length === 0 ? (
-            <div className="bg-white rounded-lg shadow-sm p-12 text-center">
-              <svg
-                className="w-24 h-24 mx-auto mb-6 text-gray-300"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                />
-              </svg>
-              <h2 className="text-2xl font-semibold text-gray-900 mb-2">Your wishlist is empty</h2>
-              <p className="text-gray-600 mb-6">
-                Save your favorite items here to buy them later.
-              </p>
-              <Link href="/collections/all" className="btn btn-primary px-8 py-3 inline-block">
-                Explore Products
-              </Link>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {Array.isArray(wishlistItems) && wishlistItems.map((item, index) => (
-                <div key={item.id} className="bg-white rounded-lg shadow-sm overflow-hidden group">
-                  <Link href={`/products/${item.product.slug}`} className="block relative aspect-square">
-                    {item.product.image_url ? (
-                      <Image
-                        src={item.product.image_url}
-                        alt={item.product.name}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                        priority={index < 4}
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                        <span className="text-gray-400">No Image</span>
-                      </div>
-                    )}
-                    {item.product.discounted_price && (
-                      <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 rounded text-sm font-semibold">
-                        {Math.round(((parseFloat(item.product.price) - parseFloat(item.product.discounted_price)) / parseFloat(item.product.price)) * 100)}% OFF
-                      </div>
-                    )}
-                  </Link>
-                  <div className="p-4">
-                    <Link href={`/products/${item.product.slug}`}>
-                      <h3 className="font-semibold text-gray-900 mb-2 hover:text-primary-600 line-clamp-2">
-                        {item.product.name}
-                      </h3>
-                    </Link>
-                    <div className="flex items-center gap-2 mb-3">
-                      {item.product.discounted_price ? (
-                        <>
-                          <span className="text-lg font-bold text-primary-600">
-                            ₹{item.product.discounted_price}
-                          </span>
-                          <span className="text-sm text-gray-500 line-through">
-                            ₹{item.product.price}
-                          </span>
-                        </>
-                      ) : (
-                        <span className="text-lg font-bold text-gray-900">
-                          ₹{item.product.price}
-                        </span>
-                      )}
+            {/* Step 1: Address */}
+            <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                <h2 className="font-semibold text-gray-900">Delivery Address</h2>
+                {step > 1 && <button onClick={() => setStep(1)} className="text-sm text-red-500">Change</button>}
+              </div>
+              {step === 1 ? (
+                <div className="p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
+                      <input name="name" value={addr.name} onChange={handleChange} className={inp('name')} />
+                      {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
                     </div>
-                    <button
-                      onClick={() => handleRemove(item.product.id)}
-                      className="w-full btn btn-outline text-sm py-2"
-                    >
-                      Remove
-                    </button>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Phone *</label>
+                      <input name="phone" value={addr.phone} onChange={handleChange} className={inp('phone')} />
+                      {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
+                    </div>
+                    <div className="md:col-span-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Address *</label>
+                      <textarea name="address" value={addr.address} onChange={handleChange} rows={2} className={`${inp('address')} resize-none`} />
+                      {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Pincode *</label>
+                      <div className="relative">
+                        <input name="pincode" value={addr.pincode} onChange={handleChange} onBlur={handlePincodeBlur} maxLength={6} className={inp('pincode')} />
+                        {pincodeLoading && <div className="absolute right-3 top-1/2 -translate-y-1/2 animate-spin rounded-full h-4 w-4 border-2 border-red-500 border-t-transparent" />}
+                      </div>
+                      {errors.pincode && <p className="text-red-500 text-xs mt-1">{errors.pincode}</p>}
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">City *</label>
+                      <input name="city" value={addr.city} onChange={handleChange} className={inp('city')} />
+                      {errors.city && <p className="text-red-500 text-xs mt-1">{errors.city}</p>}
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">State *</label>
+                      <input name="state" value={addr.state} onChange={handleChange} className={inp('state')} />
+                      {errors.state && <p className="text-red-500 text-xs mt-1">{errors.state}</p>}
+                    </div>
                   </div>
+                  <button onClick={handleContinue} disabled={ratesLoading} className="w-full mt-6 bg-red-500 text-white py-3 rounded-lg font-medium hover:bg-red-600 disabled:opacity-50">
+                    {ratesLoading ? 'Fetching rates...' : 'Continue to Payment'}
+                  </button>
                 </div>
-              ))}
+              ) : (
+                <div className="px-6 py-4 text-sm text-gray-600">
+                  <p className="font-medium text-gray-900">{addr.name} · {addr.phone}</p>
+                  <p>{addr.address}, {addr.city}, {addr.state} - {addr.pincode}</p>
+                </div>
+              )}
             </div>
-          )}
-        </div>
-      </main>
 
-      <Footer />
+            {/* Step 2: Payment */}
+            {step === 2 && (
+              <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                <div className="px-6 py-4 border-b border-gray-100">
+                  <h2 className="font-semibold text-gray-900">Payment Method</h2>
+                </div>
+                <div className="p-6">
+                  <div className="space-y-2 mb-6">
+                    <label className={`flex items-center gap-3 p-4 border rounded-lg cursor-pointer ${paymentMethod === 'cod' ? 'border-red-500 bg-red-50' : 'border-gray-200'}`}>
+                      <input type="radio" checked={paymentMethod === 'cod'} onChange={() => setPaymentMethod('cod')} className="accent-red-500" />
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">Cash on Delivery</p>
+                        <p className="text-xs text-gray-500">Pay when your order arrives</p>
+                      </div>
+                    </label>
+                    <label className={`flex items-center gap-3 p-4 border rounded-lg cursor-pointer ${paymentMethod === 'phonepe' ? 'border-red-500 bg-red-50' : 'border-gray-200'}`}>
+                      <input type="radio" checked={paymentMethod === 'phonepe'} onChange={() => setPaymentMethod('phonepe')} className="accent-red-500" />
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">Pay Online</p>
+                        <p className="text-xs text-amber-600">Currently unavailable — please use Cash on Delivery</p>
+                      </div>
+                    </label>
+                  </div>
+                  <button onClick={handleOrder} disabled={loading} className="w-full bg-red-500 text-white py-3.5 rounded-lg font-semibold hover:bg-red-600 disabled:opacity-50">
+                    {loading ? 'Processing...' : paymentMethod === 'cod' ? `Place Order · ₹${total.toFixed(2)}` : `Pay ₹${total.toFixed(2)}`}
+                  </button>
+                  <p className="text-xs text-gray-400 text-center mt-3">By placing this order, you agree to our Terms & Conditions</p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Order Summary */}
+          <div className="lg:col-span-1">
+            <div className="bg-white rounded-xl border border-gray-200 sticky top-4">
+              <div className="px-6 py-4 border-b border-gray-100">
+                <h2 className="font-semibold text-gray-900">Order Summary</h2>
+              </div>
+              <div className="p-6">
+                <div className="space-y-3 mb-4 max-h-60 overflow-y-auto">
+                  {cart?.items.map((item: any) => (
+                    <div key={item.id} className="flex gap-3">
+                      <div className="w-14 h-14 bg-gray-100 rounded-lg flex-shrink-0 overflow-hidden">
+                        {item.product.image_url
+                          ? <img src={item.product.image_url} alt={item.product.name} className="w-full h-full object-cover" />
+                          : <div className="w-full h-full bg-gray-200" />}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-900 truncate">{item.product.name}</p>
+                        <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
+                        <p className="text-sm font-semibold text-gray-900">₹{Number(item.item_total).toFixed(2)}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="border-t border-gray-100 pt-4 space-y-2">
+                  <div className="flex justify-between text-sm text-gray-600"><span>Subtotal</span><span>₹{Number(cart?.total_amount || 0).toFixed(2)}</span></div>
+                  <div className="flex justify-between text-sm text-gray-600"><span>Shipping</span><span>{selectedShipping ? `₹${Number(selectedShipping.rate).toFixed(2)}` : '—'}</span></div>
+                  <div className="flex justify-between font-semibold text-gray-900 pt-2 border-t border-gray-100"><span>Total</span><span>₹{total.toFixed(2)}</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

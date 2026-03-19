@@ -44,6 +44,7 @@ urlpatterns = [
     path('refunds/status/<str:refund_transaction_id>/', check_refund_status, name='check-refund-status'),
     # Admin endpoints
     path('admin/phonepe-status/', get_configuration_status, name='phonepe-config-status'),
+    path('admin/', include('gift.api.admin_urls')),
     # Webhook endpoints
     path('webhooks/phonepe/', phonepe_webhook, name='phonepe-webhook'),
     path('webhooks/shiprocket/', shiprocket_webhook, name='shiprocket-webhook'),

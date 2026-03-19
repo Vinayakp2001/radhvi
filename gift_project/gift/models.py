@@ -86,7 +86,10 @@ class Product(models.Model):
     # Dimensions
     weight = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)  # in grams
     dimensions = models.CharField(max_length=100, blank=True)  # LxWxH in cm
-    
+
+    # Occasion linking (M2M — set after Occasion model is defined)
+    occasions = models.ManyToManyField('Occasion', blank=True, related_name='products')
+
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

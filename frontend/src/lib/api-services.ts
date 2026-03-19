@@ -129,10 +129,12 @@ export const apiServices = {
    */
   fetchProducts: async (params?: {
     category?: string;
+    occasion?: string;
     search?: string;
     ordering?: string;
     limit?: number;
     price_range?: string;
+    is_new_arrival?: string;
   }): Promise<Product[]> => {
     try {
       const response = await api.get('/products/', { params });

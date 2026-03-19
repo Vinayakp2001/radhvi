@@ -59,12 +59,19 @@ export default async function CollectionPage({ params, searchParams }: Collectio
     }
   }
 
-  const products = category ? await apiServices.fetchProducts({
-    category: slug,
-    search,
-    ordering: sort,
-    limit: 24,
-  }) : [];
+  const products = category
+    ? await apiServices.fetchProducts({
+        category: slug,
+        search,
+        ordering: sort,
+        limit: 24,
+      })
+    : await apiServices.fetchProducts({
+        occasion: slug,
+        search,
+        ordering: sort,
+        limit: 24,
+      });
 
   const displayName = category?.name || occasionName || slug;
 

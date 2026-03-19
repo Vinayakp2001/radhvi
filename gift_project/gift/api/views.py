@@ -48,24 +48,34 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
         return super().list(request, *args, **kwargs)
     
     def get_queryset(self):
-        """Override to add price range filtering"""
+        """Override to add price range and occasion filtering"""
         queryset = super().get_queryset()
-        
+
+        # Occasion filtering by slug (uses M2M relation)
+        occasion_slug = self.request.query_params.get('occasion', None)
+        if occasion_slug:
+            queryset = queryset.filter(occasions__slug=occasion_slug)
+
+        # is_new_arrival filter
+        is_new_arrival = self.request.query_params.get('is_new_arrival', None)
+        if is_new_arrival == 'true':
+            queryset = queryset.filter(is_new_arrival=True)
+
         # Price range filtering
         price_range = self.request.query_params.get('price_range', None)
         if price_range:
             ranges = price_range.split(',')
             from django.db.models import Q
             query = Q()
-            
+
             for range_str in ranges:
                 if '-' in range_str:
                     min_price, max_price = range_str.split('-')
                     query |= Q(price__gte=min_price, price__lte=max_price)
-            
+
             if query:
                 queryset = queryset.filter(query)
-        
+
         return queryset
     
     @action(detail=False, methods=['get'])
@@ -470,6 +480,7 @@ def me(request):
             'email': request.user.email,
             'first_name': request.user.first_name,
             'last_name': request.user.last_name,
+            'is_staff': request.user.is_staff,
         }
     })
 
