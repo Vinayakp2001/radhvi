@@ -47,16 +47,26 @@ export default async function CollectionPage({ params, searchParams }: Collectio
   const categories = await apiServices.fetchCategories();
   const category = categories.find(cat => cat.slug === slug);
   
+  // Also check occasions for this slug
+  let occasionName = '';
   if (!category) {
-    notFound();
+    const occasions = await apiServices.fetchOccasions();
+    const occasion = occasions.find(o => o.slug === slug);
+    if (occasion) {
+      occasionName = occasion.name;
+    } else {
+      notFound();
+    }
   }
 
-  const products = await apiServices.fetchProducts({
+  const products = category ? await apiServices.fetchProducts({
     category: slug,
     search,
     ordering: sort,
     limit: 24,
-  });
+  }) : [];
+
+  const displayName = category?.name || occasionName || slug;
 
   const sortOptions = [
     { value: 'name', label: 'Name (A-Z)' },
@@ -79,7 +89,7 @@ export default async function CollectionPage({ params, searchParams }: Collectio
               <span>/</span>
               <a href="/collections/all" className="hover:text-primary-600">Collections</a>
               <span>/</span>
-              <span className="text-gray-900 font-medium">{category.name}</span>
+              <span className="text-gray-900 font-medium">{displayName}</span>
             </nav>
           </div>
         </section>
@@ -89,15 +99,15 @@ export default async function CollectionPage({ params, searchParams }: Collectio
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div>
                 <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-                  {category.name}
+                  {displayName}
                 </h1>
                 <p className="text-gray-600">
-                  {search ? `Search results for "${search}"` : category.description || `Browse our ${category.name.toLowerCase()} collection`}
+                  {search ? `Search results for "${search}"` : category?.description || `Browse our ${displayName.toLowerCase()} collection`}
                 </p>
               </div>
               
               <div className="w-full md:w-96">
-                <SearchBar placeholder={`Search ${category.name.toLowerCase()}...`} className="w-full" />
+                <SearchBar placeholder={`Search ${displayName.toLowerCase()}...`} className="w-full" />
               </div>
             </div>
           </div>
@@ -139,15 +149,18 @@ export default async function CollectionPage({ params, searchParams }: Collectio
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-12">
-                  <div className="text-6xl mb-4">📦</div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    No products found
+                <div className="text-center py-20">
+                  <div className="text-7xl mb-6">🎁</div>
+                  <h3 className="text-2xl font-semibold text-gray-900 mb-3">
+                    Coming Soon!
                   </h3>
-                  <p className="text-gray-600 mb-6">
-                    {search ? `No products match "${search}"` : `No products available yet`}
+                  <p className="text-gray-500 mb-2 max-w-md mx-auto">
+                    We're curating the perfect {displayName} gifts just for you.
                   </p>
-                  <a href="/collections/all" className="btn btn-primary">
+                  <p className="text-gray-400 text-sm mb-8">
+                    Check back soon — something special is on its way.
+                  </p>
+                  <a href="/collections/all" className="inline-block bg-red-500 text-white px-8 py-3 rounded-lg font-medium hover:bg-red-600 transition-colors">
                     Browse All Products
                   </a>
                 </div>
