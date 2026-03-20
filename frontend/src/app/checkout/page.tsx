@@ -92,7 +92,7 @@ export default function CheckoutPage() {
     if (!/^\d{6}$/.test(addr.pincode)) e.pincode = 'Valid 6-digit pincode required';
     if (!isAuthenticated) {
       if (!email.trim() || !email.includes('@')) e.email = 'Valid email required';
-      if (!password || password.length < 6) e.password = 'Min 6 characters';
+      if (password && password.length < 6) e.password = 'Min 6 characters';
     }
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -180,8 +180,8 @@ export default function CheckoutPage() {
                           {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Password *</label>
-                          <input type="password" value={password} onChange={e => setPassword(e.target.value)} className={inp('password')} placeholder="Min 6 characters" />
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Password <span className="text-gray-400 font-normal">(optional — to create account)</span></label>
+                          <input type="password" value={password} onChange={e => setPassword(e.target.value)} className={inp('password')} placeholder="Leave blank to checkout without account" />
                           {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
                         </div>
                       </div>

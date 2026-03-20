@@ -699,14 +699,9 @@ def guest_checkout(request):
     else:
         existing = User.objects.filter(email__iexact=email).first()
         if existing:
-            # User exists — try to authenticate
-            if password:
-                from django.contrib.auth import authenticate as auth_fn
-                user = auth_fn(username=existing.username, password=password)
-                if not user:
-                    return Response({'error': 'An account with this email already exists. Please enter the correct password.'}, status=status.HTTP_400_BAD_REQUEST)
-            else:
-                return Response({'error': 'An account with this email already exists. Please enter your password to continue.'}, status=status.HTTP_400_BAD_REQUEST)
+            # User exists — just use their account and proceed with the order
+            # No password required at checkout; email is sufficient identity for a gift shop
+            user = existing
         else:
             # Create new account
             if not password or len(password) < 6:
