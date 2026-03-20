@@ -892,3 +892,31 @@ class Testimonial(models.Model):
     
     def __str__(self):
         return f"{self.name} - {self.city} ({self.tag})"
+
+
+class OTPRecord(models.Model):
+    """
+    Stores one-time passwords for login and password reset flows.
+    """
+    PURPOSE_CHOICES = [
+        ('login', 'Login'),
+        ('password_reset', 'Password Reset'),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='otps')
+    otp_code = models.CharField(max_length=6)
+    purpose = models.CharField(max_length=20, choices=PURPOSE_CHOICES)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    is_used = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"OTP({self.purpose}) for {self.user.email} - {'used' if self.is_used else 'active'}"
+
+    def is_valid(self):
+        """Returns True if OTP is not used and not expired."""
+        from django.utils import timezone
+        return not self.is_used and timezone.now() < self.expires_at

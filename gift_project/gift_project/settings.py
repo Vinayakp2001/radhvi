@@ -517,6 +517,24 @@ PHONEPE_WEBHOOK_SECRET = os.getenv('PHONEPE_WEBHOOK_SECRET', '')
 PAYMENT_GATEWAY = os.getenv('PAYMENT_GATEWAY', 'phonepe')
 
 # ============================================================================
+# EMAIL CONFIGURATION
+# ============================================================================
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'radhvi.in@gmail.com')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'fdks akca cpss aozh')
+DEFAULT_FROM_EMAIL = 'Radhvi Gift Shop <radhvi.in@gmail.com>'
+
+# Admin email for new order notifications (leave blank to disable)
+ADMIN_NOTIFICATION_EMAIL = os.getenv('ADMIN_NOTIFICATION_EMAIL', 'radhvi.in@gmail.com')
+
+# Frontend URL (used in email links)
+FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:3000' if DEBUG else 'https://radhvi.in')
+
+# ============================================================================
 # PAYMENT LOGGING CONFIGURATION
 # ============================================================================
 

@@ -20,6 +20,7 @@ from gift.payment.razorpay_service import RazorpayService, RazorpayError, Paymen
 from gift.payment.phonepe_service import PhonePeService, PhonePeError, PaymentInitiationError, PaymentVerificationError as PhonePeVerificationError, RefundError, get_phonepe_configuration_status
 from gift.shipping.tasks import sync_order_to_shiprocket_task
 from gift.shipping.services import ShippingService
+from gift.notifications.email_service import send_order_confirmation, send_admin_new_order
 from decimal import Decimal
 
 
@@ -485,6 +486,186 @@ def me(request):
     })
 
 
+# ─── OTP Auth Views ───────────────────────────────────────────────────────────
+
+import secrets
+import logging as _otp_logging
+from django.utils import timezone as _tz
+from datetime import timedelta
+from gift.models import OTPRecord
+from gift.notifications.email_service import send_otp_email as _send_otp_email
+
+_otp_logger = _otp_logging.getLogger(__name__)
+
+
+def _generate_and_send_otp(user, purpose):
+    """
+    Invalidate existing OTPs for user+purpose, create a new one, and send email.
+    Returns the OTPRecord on success, raises on email failure.
+    """
+    # Invalidate existing unused OTPs for this user+purpose
+    OTPRecord.objects.filter(user=user, purpose=purpose, is_used=False).delete()
+
+    # Generate cryptographically random 6-digit code
+    otp_code = str(secrets.randbelow(1000000)).zfill(6)
+
+    otp = OTPRecord.objects.create(
+        user=user,
+        otp_code=otp_code,
+        purpose=purpose,
+        expires_at=_tz.now() + timedelta(minutes=10),
+    )
+
+    _send_otp_email(user, otp_code, purpose)
+    return otp
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def forgot_password(request):
+    """
+    Step 1 of password reset: send OTP to email.
+    Always returns 200 to avoid revealing whether email is registered.
+    POST /api/auth/forgot-password/  { email }
+    """
+    email = request.data.get('email', '').strip()
+    if not email:
+        return Response({'error': 'Email is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+    user = User.objects.filter(email__iexact=email).first()
+    if user:
+        try:
+            _generate_and_send_otp(user, 'password_reset')
+        except Exception as e:
+            _otp_logger.error(f"Failed to send password reset OTP to {email}: {e}")
+
+    # Always return generic message (security: don't reveal if email exists)
+    return Response({'message': 'If this email is registered, you will receive an OTP shortly.'})
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def reset_password(request):
+    """
+    Step 2 of password reset: verify OTP and set new password.
+    POST /api/auth/reset-password/  { email, otp, new_password }
+    Returns auth token on success (auto login).
+    """
+    email = request.data.get('email', '').strip()
+    otp_code = request.data.get('otp', '').strip()
+    new_password = request.data.get('new_password', '').strip()
+
+    if not all([email, otp_code, new_password]):
+        return Response({'error': 'email, otp, and new_password are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if len(new_password) < 6:
+        return Response({'error': 'Password must be at least 6 characters'}, status=status.HTTP_400_BAD_REQUEST)
+
+    user = User.objects.filter(email__iexact=email).first()
+    if not user:
+        return Response({'error': 'Invalid OTP or email'}, status=status.HTTP_400_BAD_REQUEST)
+
+    otp_record = OTPRecord.objects.filter(
+        user=user, otp_code=otp_code, purpose='password_reset'
+    ).order_by('-created_at').first()
+
+    if not otp_record:
+        return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
+    if otp_record.is_used:
+        return Response({'error': 'OTP already used. Please request a new one.'}, status=status.HTTP_400_BAD_REQUEST)
+    if not otp_record.is_valid():
+        return Response({'error': 'OTP has expired. Please request a new one.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Reset password
+    user.set_password(new_password)
+    user.save()
+    otp_record.is_used = True
+    otp_record.save()
+
+    # Return token so user is auto-logged in
+    token, _ = Token.objects.get_or_create(user=user)
+    return Response({
+        'message': 'Password reset successfully.',
+        'token': token.key,
+        'user': {
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+        }
+    })
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def request_otp(request):
+    """
+    Send OTP for passwordless login.
+    POST /api/auth/request-otp/  { email }
+    """
+    email = request.data.get('email', '').strip()
+    if not email:
+        return Response({'error': 'Email is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+    user = User.objects.filter(email__iexact=email).first()
+    if not user:
+        return Response({'error': 'No account found with this email.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        _generate_and_send_otp(user, 'login')
+    except Exception as e:
+        _otp_logger.error(f"Failed to send login OTP to {email}: {e}")
+        return Response({'error': 'Failed to send OTP. Please try again.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    return Response({'message': 'OTP sent to your email. Valid for 10 minutes.'})
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def verify_otp(request):
+    """
+    Verify OTP and return auth token for passwordless login.
+    POST /api/auth/verify-otp/  { email, otp }
+    """
+    email = request.data.get('email', '').strip()
+    otp_code = request.data.get('otp', '').strip()
+
+    if not email or not otp_code:
+        return Response({'error': 'email and otp are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+    user = User.objects.filter(email__iexact=email).first()
+    if not user:
+        return Response({'error': 'Invalid OTP or email'}, status=status.HTTP_400_BAD_REQUEST)
+
+    otp_record = OTPRecord.objects.filter(
+        user=user, otp_code=otp_code, purpose='login'
+    ).order_by('-created_at').first()
+
+    if not otp_record:
+        return Response({'error': 'Invalid OTP'}, status=status.HTTP_400_BAD_REQUEST)
+    if otp_record.is_used:
+        return Response({'error': 'OTP already used. Please request a new one.'}, status=status.HTTP_400_BAD_REQUEST)
+    if not otp_record.is_valid():
+        return Response({'error': 'OTP has expired. Please request a new one.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    otp_record.is_used = True
+    otp_record.save()
+
+    token, _ = Token.objects.get_or_create(user=user)
+    return Response({
+        'message': 'Login successful',
+        'token': token.key,
+        'user': {
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+        }
+    })
+
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def guest_checkout(request):
@@ -630,6 +811,13 @@ def guest_checkout(request):
                     _ss2.sync_order_to_shiprocket(order)
                 except Exception as _e2:
                     logger.warning(f"Direct sync also failed: {_e2}")
+
+            # Send confirmation emails (non-blocking)
+            try:
+                send_order_confirmation(order)
+                send_admin_new_order(order)
+            except Exception as _email_err:
+                logger.warning(f"Order email failed for {order.order_id}: {_email_err}")
 
             response_data = {
                 'order_id': order.order_id,
@@ -816,6 +1004,14 @@ def initiate_checkout(request):
                 except Exception as _e2:
                     _logging.getLogger(__name__).warning(f"Direct Shiprocket sync also failed: {_e2}")
 
+            # Send confirmation emails (non-blocking)
+            try:
+                send_order_confirmation(order)
+                send_admin_new_order(order)
+            except Exception as _email_err:
+                import logging as _logging
+                _logging.getLogger(__name__).warning(f"Order email failed for {order.order_id}: {_email_err}")
+
             return Response({
                 'message': 'Order placed successfully',
                 'order_id': order.order_id,
@@ -939,7 +1135,15 @@ def verify_payment(request):
                 import logging
                 logger = logging.getLogger(__name__)
                 logger.warning(f"Could not trigger Shiprocket sync: {str(e)}")
-            
+
+            # Send confirmation emails (non-blocking)
+            try:
+                send_order_confirmation(order)
+                send_admin_new_order(order)
+            except Exception as _email_err:
+                import logging as _logging
+                _logging.getLogger(__name__).warning(f"Order email failed for {order.order_id}: {_email_err}")
+
             return Response({
                 'message': 'Payment verified successfully',
                 'order_id': order.order_id,

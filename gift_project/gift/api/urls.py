@@ -7,7 +7,8 @@ from .views import (
     register, login, logout, me, guest_checkout,
     initiate_checkout, verify_payment, payment_failed, get_shipping_rates,
     list_orders, get_order_detail, cancel_order, get_order_tracking,
-    initiate_refund, check_refund_status, get_configuration_status
+    initiate_refund, check_refund_status, get_configuration_status,
+    forgot_password, reset_password, request_otp, verify_otp,
 )
 from gift.payment.phonepe_webhooks import phonepe_webhook
 from gift.shipping.webhooks import shiprocket_webhook
@@ -28,6 +29,10 @@ urlpatterns = [
     path('auth/login/', login, name='login'),
     path('auth/logout/', logout, name='logout'),
     path('auth/me/', me, name='me'),
+    path('auth/forgot-password/', forgot_password, name='forgot-password'),
+    path('auth/reset-password/', reset_password, name='reset-password'),
+    path('auth/request-otp/', request_otp, name='request-otp'),
+    path('auth/verify-otp/', verify_otp, name='verify-otp'),
     # Checkout endpoints
     path('checkout/initiate/', initiate_checkout, name='initiate-checkout'),
     path('checkout/guest/', guest_checkout, name='guest-checkout'),

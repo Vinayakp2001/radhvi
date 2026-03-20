@@ -244,6 +244,145 @@ class EmailService:
         return results
 
 
+    def send_otp_email(self, user, otp_code, purpose):
+        """
+        Send OTP email for login or password reset.
+
+        Args:
+            user: User instance
+            otp_code: 6-digit OTP string
+            purpose: 'login' or 'password_reset'
+        """
+        if purpose == 'login':
+            subject = "Your Login OTP - Radhvi Gift Shop"
+            purpose_text = "log in to your account"
+        else:
+            subject = "Password Reset OTP - Radhvi Gift Shop"
+            purpose_text = "reset your password"
+
+        html_content = f"""
+        <html>
+        <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9;">
+            <div style="background-color: #ffffff; border-radius: 12px; padding: 40px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <h1 style="color: #c0392b; margin: 0; font-size: 28px;">🎁 Radhvi</h1>
+                    <p style="color: #666; margin: 4px 0 0;">Gift Shop</p>
+                </div>
+
+                <p style="color: #333; font-size: 16px;">Hi <strong>{user.first_name or user.username}</strong>,</p>
+                <p style="color: #555; font-size: 15px;">Use the OTP below to {purpose_text}. This code expires in <strong>10 minutes</strong>.</p>
+
+                <div style="text-align: center; margin: 32px 0;">
+                    <div style="display: inline-block; background-color: #fef3f2; border: 2px dashed #c0392b; border-radius: 12px; padding: 20px 40px;">
+                        <p style="margin: 0; font-size: 13px; color: #888; letter-spacing: 1px; text-transform: uppercase;">Your OTP</p>
+                        <p style="margin: 8px 0 0; font-size: 42px; font-weight: bold; color: #c0392b; letter-spacing: 10px;">{otp_code}</p>
+                    </div>
+                </div>
+
+                <p style="color: #555; font-size: 14px; text-align: center;">This OTP is valid for <strong>10 minutes</strong> and can only be used once.</p>
+
+                <div style="background-color: #fff8e1; border-left: 4px solid #f39c12; padding: 12px 16px; border-radius: 4px; margin: 24px 0;">
+                    <p style="margin: 0; color: #7d6608; font-size: 13px;">⚠️ If you didn't request this OTP, please ignore this email. Your account is safe.</p>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #aaa; font-size: 12px;">
+                    <p style="margin: 0;">© 2026 Radhvi Gift Shop · support@radhvi.in</p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+
+        try:
+            from django.core.mail import EmailMultiAlternatives
+            email = EmailMultiAlternatives(
+                subject=subject,
+                body=strip_tags(html_content),
+                from_email=self.from_email,
+                to=[user.email]
+            )
+            email.attach_alternative(html_content, "text/html")
+            email.send()
+            logger.info(f"✓ OTP email ({purpose}) sent to {user.email}")
+            return True
+        except Exception as e:
+            logger.error(f"✗ Failed to send OTP email to {user.email}: {str(e)}")
+            return False
+
+    def send_admin_new_order_email(self, order):
+        """
+        Send new order notification to admin.
+
+        Args:
+            order: Order instance
+        """
+        admin_email = getattr(settings, 'ADMIN_NOTIFICATION_EMAIL', '')
+        if not admin_email:
+            return False
+
+        subject = f"🛍️ New Order #{order.order_id} - ₹{order.total_amount}"
+
+        html_content = f"""
+        <html>
+        <body style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background-color: #ffffff; border-radius: 8px; padding: 30px; border: 1px solid #e0e0e0;">
+                <h2 style="color: #c0392b; margin-top: 0;">🛍️ New Order Received</h2>
+
+                <table style="width: 100%; border-collapse: collapse; font-size: 15px;">
+                    <tr style="border-bottom: 1px solid #f0f0f0;">
+                        <td style="padding: 10px 0; color: #888; width: 40%;">Order ID</td>
+                        <td style="padding: 10px 0; font-weight: bold; color: #333;">{order.order_id}</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #f0f0f0;">
+                        <td style="padding: 10px 0; color: #888;">Customer</td>
+                        <td style="padding: 10px 0; color: #333;">{order.customer_name}</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #f0f0f0;">
+                        <td style="padding: 10px 0; color: #888;">Phone</td>
+                        <td style="padding: 10px 0; color: #333;">{order.customer_phone}</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #f0f0f0;">
+                        <td style="padding: 10px 0; color: #888;">Total Amount</td>
+                        <td style="padding: 10px 0; font-weight: bold; color: #27ae60;">₹{order.total_amount}</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #f0f0f0;">
+                        <td style="padding: 10px 0; color: #888;">Payment Method</td>
+                        <td style="padding: 10px 0; color: #333;">{order.get_payment_method_display()}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px 0; color: #888;">Ship To</td>
+                        <td style="padding: 10px 0; color: #333;">{order.shipping_city}, {order.shipping_pincode}</td>
+                    </tr>
+                </table>
+
+                <div style="text-align: center; margin-top: 24px;">
+                    <a href="{self.frontend_url}/admin/orders/{order.order_id}"
+                       style="background-color: #c0392b; color: white; padding: 12px 28px; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 14px;">
+                        View Order in Admin
+                    </a>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+
+        try:
+            from django.core.mail import EmailMultiAlternatives
+            email = EmailMultiAlternatives(
+                subject=subject,
+                body=strip_tags(html_content),
+                from_email=self.from_email,
+                to=[admin_email]
+            )
+            email.attach_alternative(html_content, "text/html")
+            email.send()
+            logger.info(f"✓ Admin order notification sent for {order.order_id}")
+            return True
+        except Exception as e:
+            logger.error(f"✗ Failed to send admin order notification: {str(e)}")
+            return False
+
+
 # Convenience functions for easy import
 def send_order_confirmation(order):
     """Send order confirmation email"""
@@ -267,3 +406,15 @@ def send_order_cancelled(order, reason=None):
     """Send order cancelled email"""
     service = EmailService()
     return service.send_order_cancelled_email(order, reason)
+
+
+def send_otp_email(user, otp_code, purpose):
+    """Send OTP email for login or password reset"""
+    service = EmailService()
+    return service.send_otp_email(user, otp_code, purpose)
+
+
+def send_admin_new_order(order):
+    """Send new order notification to admin"""
+    service = EmailService()
+    return service.send_admin_new_order_email(order)
