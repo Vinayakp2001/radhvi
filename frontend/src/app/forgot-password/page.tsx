@@ -33,9 +33,9 @@ export default function ForgotPasswordPage() {
   // Auto-redirect after success
   useEffect(() => {
     if (step !== 'success') return;
-    const t = setTimeout(() => router.push('/'), 2000);
+    const t = setTimeout(() => { window.location.href = '/'; }, 2000);
     return () => clearTimeout(t);
-  }, [step, router]);
+  }, [step]);
 
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -87,8 +87,8 @@ export default function LoginPage() {
     try {
       const res = await api.post('/auth/verify-otp/', { email: otpEmail, otp: otpCode });
       authService.setAuth(res.data.token, res.data.user);
-      router.push('/');
-      router.refresh();
+      // Full page reload so AuthContext re-initializes from localStorage
+      window.location.href = '/';
     } catch (err: any) {
       setError(err.response?.data?.error || 'Invalid OTP. Please try again.');
     } finally {
