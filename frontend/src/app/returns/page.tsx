@@ -36,6 +36,14 @@ export default function ReturnsPage() {
         <section className="py-14 bg-white">
           <div className="container-custom max-w-4xl mx-auto space-y-12">
 
+            {/* Business Info Block */}
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-5">
+              <p className="font-semibold text-gray-900 text-sm mb-1">Radhvi Gift Shop</p>
+              <p className="text-sm text-gray-600">13, Chandra Chaya Colony, Opposite Silver Oak, Alwar, Rajasthan 301001, India</p>
+              <p className="text-sm text-gray-600 mt-1">Email: support@radhvi.in &nbsp;|&nbsp; Phone: +91 97993 88840</p>
+              <p className="text-sm text-gray-600">Website: https://www.radhvi.in</p>
+            </div>
+
             {/* Return Window */}
             <div className="bg-green-50 border border-green-200 rounded-xl p-6 flex items-center gap-4">
               <div className="text-4xl">📅</div>
