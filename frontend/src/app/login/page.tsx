@@ -57,16 +57,24 @@ export default function LoginPage() {
     }
   };
 
+  const [notRegistered, setNotRegistered] = useState(false);
+
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setNotRegistered(false);
     setLoading(true);
     try {
       await api.post('/auth/request-otp/', { email: otpEmail });
       setOtpStep('verify');
       setResendCooldown(30);
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to send OTP. Please try again.');
+      const msg = err.response?.data?.error || '';
+      if (msg.toLowerCase().includes('no account')) {
+        setNotRegistered(true);
+      } else {
+        setError(msg || 'Failed to send OTP. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -240,6 +248,16 @@ export default function LoginPage() {
                     >
                       {loading ? 'Sending OTP...' : 'Send OTP'}
                     </button>
+                    {notRegistered && (
+                      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
+                        <p className="text-yellow-800 text-sm mb-2">
+                          No account found with this email.
+                        </p>
+                        <Link href="/register" className="text-primary-600 hover:text-primary-700 font-medium text-sm">
+                          Register here →
+                        </Link>
+                      </div>
+                    )}
                   </form>
                 )}
 
