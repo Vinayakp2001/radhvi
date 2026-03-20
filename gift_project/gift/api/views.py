@@ -1782,3 +1782,85 @@ def get_configuration_status(request):
             {'error': f'Configuration check failed: {str(e)}'},
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+
+
+# ─── Google OAuth View ────────────────────────────────────────────────────────
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def google_auth(request):
+    """
+    Verify a Google ID token and return a DRF auth token.
+    POST /api/auth/google/  { credential: "<google_id_token>" }
+    """
+    from google.oauth2 import id_token as google_id_token
+    from google.auth.transport import requests as google_requests
+    from django.conf import settings as django_settings
+
+    google_client_id = getattr(django_settings, 'GOOGLE_CLIENT_ID', '')
+    if not google_client_id:
+        return Response(
+            {'error': 'Google auth not configured'},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+    credential = request.data.get('credential', '').strip()
+    if not credential:
+        return Response(
+            {'error': 'credential is required'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    try:
+        idinfo = google_id_token.verify_oauth2_token(
+            credential,
+            google_requests.Request(),
+            google_client_id
+        )
+    except Exception:
+        return Response(
+            {'error': 'Invalid Google token'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    if not idinfo.get('email_verified'):
+        return Response(
+            {'error': 'Google account email not verified'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    email = idinfo.get('email', '')
+    first_name = idinfo.get('given_name', '')
+    last_name = idinfo.get('family_name', '')
+
+    user = User.objects.filter(email__iexact=email).first()
+    if not user:
+        # Create new user with unusable password
+        base_username = email.split('@')[0]
+        username = base_username
+        counter = 1
+        while User.objects.filter(username=username).exists():
+            username = f"{base_username}{counter}"
+            counter += 1
+
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            first_name=first_name,
+            last_name=last_name,
+        )
+        user.set_unusable_password()
+        user.save()
+
+    token, _ = Token.objects.get_or_create(user=user)
+    return Response({
+        'message': 'Login successful',
+        'token': token.key,
+        'user': {
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+        }
+    })

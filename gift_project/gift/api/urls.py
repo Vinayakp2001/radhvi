@@ -9,6 +9,7 @@ from .views import (
     list_orders, get_order_detail, cancel_order, get_order_tracking,
     initiate_refund, check_refund_status, get_configuration_status,
     forgot_password, reset_password, request_otp, verify_otp,
+    google_auth,
 )
 from gift.payment.phonepe_webhooks import phonepe_webhook
 from gift.shipping.webhooks import shiprocket_webhook
@@ -33,6 +34,7 @@ urlpatterns = [
     path('auth/reset-password/', reset_password, name='reset-password'),
     path('auth/request-otp/', request_otp, name='request-otp'),
     path('auth/verify-otp/', verify_otp, name='verify-otp'),
+    path('auth/google/', google_auth, name='google-auth'),
     # Checkout endpoints
     path('checkout/initiate/', initiate_checkout, name='initiate-checkout'),
     path('checkout/guest/', guest_checkout, name='guest-checkout'),

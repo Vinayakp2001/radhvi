@@ -9,6 +9,7 @@ import AnnouncementBar from '@/components/AnnouncementBar';
 import { useAuth } from '@/contexts/AuthContext';
 import { api } from '@/lib/api';
 import { authService } from '@/lib/auth';
+import GoogleSignInButton from '@/components/GoogleSignInButton';
 
 type LoginMode = 'password' | 'otp';
 type OtpStep = 'email' | 'verify';
@@ -28,6 +29,7 @@ export default function LoginPage() {
   const [resendCooldown, setResendCooldown] = useState(0);
 
   const [error, setError] = useState('');
+  const [googleError, setGoogleError] = useState('');
   const [loading, setLoading] = useState(false);
   const { login, isAuthenticated } = useAuth();
   const router = useRouter();
@@ -310,6 +312,23 @@ export default function LoginPage() {
                   Register here
                 </Link>
               </p>
+            </div>
+
+            {/* Google Sign-In */}
+            <div className="mt-6">
+              <div className="relative flex items-center">
+                <div className="flex-grow border-t border-gray-200" />
+                <span className="mx-4 text-sm text-gray-400">or</span>
+                <div className="flex-grow border-t border-gray-200" />
+              </div>
+              <div className="mt-4">
+                {googleError && (
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-3">
+                    <p className="text-red-600 text-sm">{googleError}</p>
+                  </div>
+                )}
+                <GoogleSignInButton onError={setGoogleError} />
+              </div>
             </div>
           </div>
         </div>

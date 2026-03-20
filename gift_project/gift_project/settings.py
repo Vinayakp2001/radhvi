@@ -517,6 +517,12 @@ PHONEPE_WEBHOOK_SECRET = os.getenv('PHONEPE_WEBHOOK_SECRET', '')
 PAYMENT_GATEWAY = os.getenv('PAYMENT_GATEWAY', 'phonepe')
 
 # ============================================================================
+# GOOGLE OAUTH CONFIGURATION
+# ============================================================================
+
+GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID', '')
+
+# ============================================================================
 # EMAIL CONFIGURATION
 # ============================================================================
 
