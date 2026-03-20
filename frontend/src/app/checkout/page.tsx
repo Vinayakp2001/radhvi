@@ -314,8 +314,13 @@ export default function CheckoutPage() {
                 </div>
                 <div className="border-t pt-4 space-y-2">
                   <div className="flex justify-between text-sm text-gray-600"><span>Subtotal</span><span>₹{total.toFixed(2)}</span></div>
-                  <div className="flex justify-between text-sm text-gray-600"><span>Shipping</span><span>Calculated at checkout</span></div>
-                  <div className="flex justify-between font-semibold text-gray-900 pt-2 border-t"><span>Total</span><span>₹{total.toFixed(2)}</span></div>
+                  <div className="flex justify-between text-sm text-gray-600">
+                    <span>Shipping</span>
+                    <span className={total >= 999 ? 'text-green-600 font-medium' : ''}>
+                      {total >= 999 ? 'FREE' : '₹50'}
+                    </span>
+                  </div>
+                  <div className="flex justify-between font-semibold text-gray-900 pt-2 border-t"><span>Total</span><span>₹{total >= 999 ? total.toFixed(2) : (total + 50).toFixed(2)}</span></div>
                 </div>
               </div>
             </div>

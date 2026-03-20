@@ -774,6 +774,10 @@ def guest_checkout(request):
         except Exception as _e:
             logger.warning(f"Could not fetch Shiprocket rates: {_e}")
 
+        # Free shipping on orders >= ₹999
+        if subtotal >= Decimal('999'):
+            shipping_charge = Decimal('0')
+
         total_amount = subtotal + shipping_charge
 
         order = Order.objects.create(
@@ -954,6 +958,10 @@ def initiate_checkout(request):
         except Exception as _e:
             import logging as _logging
             _logging.getLogger(__name__).warning(f"Could not fetch Shiprocket rates, using default: {_e}")
+
+        # Free shipping on orders >= ₹999
+        if subtotal >= Decimal('999'):
+            shipping_charge = Decimal('0')
 
         # Calculate total
         total_amount = subtotal + shipping_charge
