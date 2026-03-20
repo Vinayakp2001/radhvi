@@ -65,28 +65,82 @@ class EmailService:
             return False
     
     def send_order_confirmation_email(self, order):
+        """Send order confirmation email after successful payment"""
+        subject = f"Order Confirmed! #{order.order_id} | Radhvi Gift Shop"
+
+        items_html = ''.join([
+            f"""<tr>
+                <td style="padding:8px 0;border-bottom:1px solid #f0f0f0;">{item.product_name}</td>
+                <td style="padding:8px 0;border-bottom:1px solid #f0f0f0;text-align:center;">{item.quantity}</td>
+                <td style="padding:8px 0;border-bottom:1px solid #f0f0f0;text-align:right;">₹{item.total_price}</td>
+            </tr>"""
+            for item in order.items.all()
+        ])
+
+        html_content = f"""
+        <html>
+        <body style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;background:#f9f9f9;">
+            <div style="background:#fff;border-radius:12px;padding:40px;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+                <div style="text-align:center;margin-bottom:30px;">
+                    <h1 style="color:#c0392b;margin:0;font-size:28px;">🎁 Radhvi</h1>
+                    <p style="color:#666;margin:4px 0 0;">Gift Shop</p>
+                </div>
+
+                <h2 style="color:#27ae60;text-align:center;">✓ Order Confirmed!</h2>
+                <p style="color:#555;text-align:center;">Hi <strong>{order.customer_name}</strong>, your order has been placed successfully.</p>
+
+                <div style="background:#f8f9fa;border-radius:8px;padding:20px;margin:20px 0;">
+                    <p style="margin:0 0 8px;"><strong>Order ID:</strong> {order.order_id}</p>
+                    <p style="margin:0 0 8px;"><strong>Payment:</strong> {order.get_payment_method_display()}</p>
+                    <p style="margin:0;"><strong>Ship to:</strong> {order.shipping_address}, {order.shipping_city}, {order.shipping_pincode}</p>
+                </div>
+
+                <table style="width:100%;border-collapse:collapse;font-size:14px;">
+                    <thead>
+                        <tr style="border-bottom:2px solid #eee;">
+                            <th style="padding:8px 0;text-align:left;color:#888;">Item</th>
+                            <th style="padding:8px 0;text-align:center;color:#888;">Qty</th>
+                            <th style="padding:8px 0;text-align:right;color:#888;">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>{items_html}</tbody>
+                </table>
+
+                <div style="margin-top:16px;text-align:right;">
+                    <p style="margin:4px 0;color:#888;">Subtotal: ₹{order.subtotal}</p>
+                    <p style="margin:4px 0;color:#888;">Shipping: ₹{order.shipping_charge}</p>
+                    <p style="margin:8px 0 0;font-size:18px;font-weight:bold;color:#333;">Total: ₹{order.total_amount}</p>
+                </div>
+
+                <div style="text-align:center;margin-top:30px;">
+                    <a href="{self.frontend_url}/orders/{order.order_id}"
+                       style="background:#c0392b;color:white;padding:12px 28px;text-decoration:none;border-radius:6px;font-weight:bold;">
+                        View Order
+                    </a>
+                </div>
+
+                <div style="text-align:center;margin-top:30px;padding-top:20px;border-top:1px solid #eee;color:#aaa;font-size:12px;">
+                    <p style="margin:0;">© 2026 Radhvi Gift Shop · support@radhvi.in</p>
+                </div>
+            </div>
+        </body>
+        </html>
         """
-        Send order confirmation email after successful payment
-        
-        Args:
-            order: Order instance
-            
-        Returns:
-            bool: True if email sent successfully
-        """
-        subject = f"Order Confirmation - {order.order_id} | Radhvi Gift Shop"
-        
-        context = {
-            'order': order,
-            'customer_name': order.customer_name,
-        }
-        
-        return self._send_email(
-            subject=subject,
-            template_name='order_confirmation.html',
-            context=context,
-            recipient_email=order.customer_email
-        )
+
+        try:
+            email = EmailMultiAlternatives(
+                subject=subject,
+                body=strip_tags(html_content),
+                from_email=self.from_email,
+                to=[order.customer_email]
+            )
+            email.attach_alternative(html_content, "text/html")
+            email.send()
+            logger.info(f"✓ Order confirmation email sent to {order.customer_email} for {order.order_id}")
+            return True
+        except Exception as e:
+            logger.error(f"✗ Failed to send order confirmation email: {str(e)}")
+            return False
     
     def send_order_shipped_email(self, order, shipment):
         """
