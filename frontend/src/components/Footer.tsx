@@ -56,7 +56,7 @@ export default function Footer() {
             <Link href="/" className="inline-block mb-6">
               <div className="h-16 w-auto">
                 <img
-                  src="/logo.png"
+                  src="/logo.png?v=2"
                   alt="Radhvi Logo"
                   className="h-full w-auto object-contain"
                 />

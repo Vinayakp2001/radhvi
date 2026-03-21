@@ -33,7 +33,7 @@ export default function Header() {
           <Link href="/" className="flex items-center gap-3">
             <div className="relative h-12 w-auto">
               <img
-                src="/logo.png"
+                src="/logo.png?v=2"
                 alt="Radhvi Logo"
                 className="h-full w-auto object-contain"
               />
