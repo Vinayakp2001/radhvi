@@ -75,7 +75,7 @@ Once an order is dispatched, it cannot be cancelled. You may initiate a return a
     title: '7. Contact Us',
     content: `For refund-related queries, contact our support team:
 
-Email: support@radhvi.in
+Email: radhvi.in@gmail.com
 Phone: +91 97993 88840
 Hours: Mon–Sat, 10 AM – 7 PM`,
   },
@@ -102,7 +102,7 @@ export default function RefundPolicyPage() {
             <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 mb-8">
               <p className="font-semibold text-gray-900 text-sm mb-1">Radhvi Gift Shop</p>
               <p className="text-sm text-gray-600">13, Chandra Chaya Colony, Opposite Silver Oak, Alwar, Rajasthan 301001, India</p>
-              <p className="text-sm text-gray-600 mt-1">Email: support@radhvi.in &nbsp;|&nbsp; Phone: +91 97993 88840</p>
+              <p className="text-sm text-gray-600 mt-1">Email: radhvi.in@gmail.com &nbsp;|&nbsp; Phone: +91 97993 88840</p>
               <p className="text-sm text-gray-600">Website: https://www.radhvi.in</p>
             </div>
 

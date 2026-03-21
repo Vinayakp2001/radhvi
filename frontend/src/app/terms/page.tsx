@@ -70,7 +70,7 @@ Our total liability for any claim shall not exceed the amount paid for the speci
     title: '9. Contact',
     content: `For questions about these terms, contact us at:
 
-Email: legal@radhvi.in
+Email: radhvi.in@gmail.com
 Address: 13, Chandra Chaya Colony, Alwar, Rajasthan 301001`,
   },
 ];
@@ -96,7 +96,7 @@ export default function TermsPage() {
             <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 mb-10">
               <p className="font-semibold text-gray-900 text-sm mb-1">Radhvi Gift Shop</p>
               <p className="text-sm text-gray-600">13, Chandra Chaya Colony, Opposite Silver Oak, Alwar, Rajasthan 301001, India</p>
-              <p className="text-sm text-gray-600 mt-1">Email: support@radhvi.in &nbsp;|&nbsp; Phone: +91 97993 88840</p>
+              <p className="text-sm text-gray-600 mt-1">Email: radhvi.in@gmail.com &nbsp;|&nbsp; Phone: +91 97993 88840</p>
               <p className="text-sm text-gray-600">Website: https://www.radhvi.in</p>
             </div>
 
@@ -120,7 +120,7 @@ export default function TermsPage() {
                   <p className="mt-2">• For prepaid orders: Full refund to the original payment method within 5–7 business days.</p>
                   <p>• For Cash on Delivery orders: No charge is applied; the order is simply cancelled.</p>
                   <p className="mt-2">Once an order is dispatched, cancellation is not possible. You may initiate a return after delivery as per our Return Policy.</p>
-                  <p className="mt-2">To cancel an order, contact us at support@radhvi.in or call +91 97993 88840.</p>
+                  <p className="mt-2">To cancel an order, contact us at radhvi.in@gmail.com or call +91 97993 88840.</p>
                 </div>
               </div>
 
@@ -129,7 +129,7 @@ export default function TermsPage() {
                 <h2 className="text-lg font-semibold text-gray-900 mb-3">11. Payment Processing</h2>
                 <div className="text-sm text-gray-600 leading-relaxed">
                   <p>Radhvi uses PhonePe as its payment gateway for processing online transactions. By making a payment on our website, you agree to PhonePe's terms of service. We do not store your card or UPI details. All transactions are encrypted and processed securely.</p>
-                  <p className="mt-2">In case of a payment failure or dispute, please contact us at support@radhvi.in with your order ID and transaction details. Refunds for failed transactions are processed within 5–7 business days.</p>
+                  <p className="mt-2">In case of a payment failure or dispute, please contact us at radhvi.in@gmail.com with your order ID and transaction details. Refunds for failed transactions are processed within 5–7 business days.</p>
                 </div>
               </div>
             </div>

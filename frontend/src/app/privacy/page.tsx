@@ -66,7 +66,7 @@ All third parties are bound by confidentiality agreements and may only use your 
 • Opt out of marketing communications
 • Lodge a complaint with a data protection authority
 
-To exercise these rights, contact us at privacy@radhvi.in.`,
+To exercise these rights, contact us at radhvi.in@gmail.com.`,
   },
   {
     title: '7. Data Retention',
@@ -84,7 +84,7 @@ To exercise these rights, contact us at privacy@radhvi.in.`,
     title: '10. Contact Us',
     content: `For privacy-related questions or requests, contact us at:
 
-Email: privacy@radhvi.in
+Email: radhvi.in@gmail.com
 Address: 13, Chandra Chaya Colony, Alwar, Rajasthan 301001`,
   },
 ];
@@ -110,7 +110,7 @@ export default function PrivacyPage() {
             <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 mb-8">
               <p className="font-semibold text-gray-900 text-sm mb-1">Radhvi Gift Shop</p>
               <p className="text-sm text-gray-600">13, Chandra Chaya Colony, Opposite Silver Oak, Alwar, Rajasthan 301001, India</p>
-              <p className="text-sm text-gray-600 mt-1">Email: privacy@radhvi.in &nbsp;|&nbsp; Phone: +91 97993 88840</p>
+              <p className="text-sm text-gray-600 mt-1">Email: radhvi.in@gmail.com &nbsp;|&nbsp; Phone: +91 97993 88840</p>
               <p className="text-sm text-gray-600">Website: https://www.radhvi.in</p>
             </div>
 

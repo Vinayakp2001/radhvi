@@ -40,7 +40,7 @@ export default function ReturnsPage() {
             <div className="bg-gray-50 border border-gray-200 rounded-xl p-5">
               <p className="font-semibold text-gray-900 text-sm mb-1">Radhvi Gift Shop</p>
               <p className="text-sm text-gray-600">13, Chandra Chaya Colony, Opposite Silver Oak, Alwar, Rajasthan 301001, India</p>
-              <p className="text-sm text-gray-600 mt-1">Email: support@radhvi.in &nbsp;|&nbsp; Phone: +91 97993 88840</p>
+              <p className="text-sm text-gray-600 mt-1">Email: radhvi.in@gmail.com &nbsp;|&nbsp; Phone: +91 97993 88840</p>
               <p className="text-sm text-gray-600">Website: https://www.radhvi.in</p>
             </div>
 
