@@ -90,7 +90,7 @@ const FAQ_DATA: FAQCategory[] = [
       },
       {
         question: 'My payment failed but money was deducted. What do I do?',
-        answer: 'If your payment was deducted but the order wasn\'t placed, the amount will be automatically refunded to your account within 5–7 business days. Contact us at support@radhvi.in if it takes longer.',
+        answer: 'If your payment was deducted but the order wasn\'t placed, the amount will be automatically refunded to your account within 5–7 business days. Contact us at radhvi.in@gmail.com if it takes longer.',
       },
       {
         question: 'Do you offer EMI options?',

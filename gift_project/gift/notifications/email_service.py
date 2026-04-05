@@ -120,7 +120,7 @@ class EmailService:
                 </div>
 
                 <div style="text-align:center;margin-top:30px;padding-top:20px;border-top:1px solid #eee;color:#aaa;font-size:12px;">
-                    <p style="margin:0;">© 2026 Radhvi Gift Shop · support@radhvi.in</p>
+                    <p style="margin:0;">© 2026 Radhvi Gift Shop · radhvi.in@gmail.com</p>
                 </div>
             </div>
         </body>
@@ -242,7 +242,7 @@ class EmailService:
             </div>
             
             <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #666;">
-                <p>Questions? Contact us at support@radhvigifts.com</p>
+                <p>Questions? Contact us at radhvi.in@gmail.com</p>
                 <p>© 2024 Radhvi Gift Shop. All rights reserved.</p>
             </div>
         </body>
@@ -340,7 +340,7 @@ class EmailService:
                 </div>
 
                 <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #aaa; font-size: 12px;">
-                    <p style="margin: 0;">© 2026 Radhvi Gift Shop · support@radhvi.in</p>
+                    <p style="margin: 0;">© 2026 Radhvi Gift Shop · radhvi.in@gmail.com</p>
                 </div>
             </div>
         </body>

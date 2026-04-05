@@ -82,8 +82,8 @@ export default function ContactPage() {
                   {
                     icon: '📧',
                     label: 'Email',
-                    value: 'support@radhvi.in',
-                    href: 'mailto:support@radhvi.in',
+                    value: 'radhvi.in@gmail.com',
+                    href: 'mailto:radhvi.in@gmail.com',
                   },
                   {
                     icon: '📞',
