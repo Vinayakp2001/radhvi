@@ -54,11 +54,11 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="lg:col-span-2">
             <Link href="/" className="inline-block mb-6">
-              <div className="h-16 w-auto">
+              <div className="bg-white rounded-xl px-4 py-2 inline-block">
                 <img
                   src="/logo.png?v=2"
                   alt="Radhvi Logo"
-                  className="h-full w-auto object-contain"
+                  className="h-16 w-auto object-contain"
                 />
               </div>
             </Link>
